@@ -35,6 +35,26 @@ public class UserInfoService {
         return ResultData.success(userInfo.getId());
     }
 
+    public ResultData login(UserInfo userInfo){
+        UserInfo user = new UserInfo();
+        user.setEmail(userInfo.getEmail());
+        user.setType(userInfo.getType());
+        user.setBaseKyleUseAnd(true);
+
+        List<UserInfo> list = userInfoMapper.baseSelectByCondition(user);
+        //仅查到1个用户才算正确
+        if(list == null || list.size() != 1){
+            return ResultData.error("用户不存在");
+        }
+        user = list.get(0);
+        if(userInfo.getPassword().equals(user.getPassword())){
+            user.setPassword("");
+            return ResultData.success(user);
+        }else {
+            return ResultData.error("密码不正确");
+        }
+    }
+
     /**
      * 修改用户信息，只修改名称、头像
      * @param id

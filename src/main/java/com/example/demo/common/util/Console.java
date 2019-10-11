@@ -15,6 +15,14 @@ public class Console {
     public static void print(String title,Object ... objects){
         System.out.println("=======" + title + "========");
         for(Object object : objects){
+            System.out.print(object + "\t");
+        }
+        System.out.println();
+    }
+
+    public static void println(String title,Object ... objects){
+        System.out.println("=======" + title + "========");
+        for(Object object : objects){
             System.out.println(object);
         }
         System.out.println();

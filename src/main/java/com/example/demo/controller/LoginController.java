@@ -41,9 +41,24 @@ public class LoginController {
     }
 
 
+    /**
+     * 暂时只支持邮箱登录
+     * @param type
+     * @param name
+     * @param password
+     * @return
+     */
     @PostMapping("/login")
     public ResponseEntity login(int type,String name,String password){
-        return MyResponse.ok();
+        Console.print("login","type:",type,"name:",name,"password:",password);
+        if(!RequestUtil.validType(type) || StringUtils.isEmpty(name,password)){
+            return MyResponse.badRequest();
+        }
+        UserInfo userInfo = new UserInfo();
+        userInfo.setType(type);
+        userInfo.setEmail(name);
+        userInfo.setPassword(password);
+        return MyResponse.ok(userInfoService.login(userInfo));
     }
 
 }

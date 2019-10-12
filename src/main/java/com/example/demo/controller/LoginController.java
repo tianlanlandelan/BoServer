@@ -61,4 +61,17 @@ public class LoginController {
         return MyResponse.ok(userInfoService.login(userInfo));
     }
 
+    @PostMapping("/forgetPassword")
+    public ResponseEntity forgetPassword(int type,String name){
+        Console.print("forgetPassword","type:",type,"name:",name);
+        if(!RequestUtil.validType(type) || StringUtils.isEmpty(name)){
+            return MyResponse.badRequest();
+        }
+        UserInfo userInfo = new UserInfo();
+        userInfo.setType(type);
+        userInfo.setEmail(name);
+        return MyResponse.ok(userInfoService.forgetPassword(userInfo));
+    }
+
+
 }

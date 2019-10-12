@@ -20,7 +20,7 @@ public class UserInfo extends BaseEntity {
 
     @FieldAttribute(value = "用户类型",notNull = true)
     @IndexAttribute
-    private int type;
+    private Integer type;
 
     @FieldAttribute(length = 200)
     private String firstName;
@@ -40,10 +40,17 @@ public class UserInfo extends BaseEntity {
     private String sid;
 
     @FieldAttribute
-    private int avatarId;
+    private Integer avatarId;
 
     @FieldAttribute
     private Date createTime = new Date();
+
+    @FieldAttribute
+    @IndexAttribute
+    private Integer status ;
+
+    public static final int FORGET_PASSWORD = 1;
+
 
     public int getId() {
         return id;
@@ -51,6 +58,30 @@ public class UserInfo extends BaseEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPassword() {
@@ -77,11 +108,11 @@ public class UserInfo extends BaseEntity {
         this.sid = sid;
     }
 
-    public int getAvatarId() {
+    public Integer getAvatarId() {
         return avatarId;
     }
 
-    public void setAvatarId(int avatarId) {
+    public void setAvatarId(Integer avatarId) {
         this.avatarId = avatarId;
     }
 
@@ -93,28 +124,12 @@ public class UserInfo extends BaseEntity {
         this.createTime = createTime;
     }
 
-    public int getType() {
-        return type;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     @Override
@@ -129,6 +144,7 @@ public class UserInfo extends BaseEntity {
                 ", sid='" + sid + '\'' +
                 ", avatarId=" + avatarId +
                 ", createTime=" + createTime +
+                ", status=" + status +
                 '}';
     }
 }

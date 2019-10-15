@@ -1,15 +1,10 @@
 package com.example.demo;
 
 import com.example.demo.common.util.Console;
-import com.example.demo.entity.ImageEntity;
 import com.example.demo.entity.UserInfo;
-import com.example.demo.entity.VideoInfo;
-import com.example.demo.mapper.ImageMapper;
 import com.example.demo.mapper.UserInfoMapper;
-import com.example.demo.mapper.VideoMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -20,16 +15,10 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 
-public class ApplicationTests {
+public class MyTests {
 
     @Resource
     UserInfoMapper userInfoMapper;
-
-    @Resource
-    ImageMapper imageMapper;
-
-    @Resource
-    VideoMapper videoMapper;
 
     @Test
     public void contextLoads() {
@@ -83,15 +72,5 @@ public class ApplicationTests {
         userInfo.setBaseKyleUseAnd(true);
         List<UserInfo> list = userInfoMapper.baseSelectByCondition(userInfo);
         Console.print("getUserInfo",list);
-    }
-
-    @Test
-    public void createImageInfoTable(){
-        imageMapper.baseCreate(new ImageEntity());
-    }
-
-    @Test
-    public void createVideoInfoTable(){
-        videoMapper.baseCreate(new VideoInfo());
     }
 }

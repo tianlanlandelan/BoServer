@@ -18,6 +18,9 @@ import java.util.List;
  * @date 2019-09-12 15:29:19
  */
 public class SqlFieldReader {
+
+
+
     /**
      * 读取表名，要求类上有@TableAttribute注解
      * @param cls 实体类型
@@ -233,16 +236,13 @@ public class SqlFieldReader {
                 .append("( \n");
 
         List<SqlField> fieldList = getFieldAnnotationList(cls);
+        /*
+        解析字段描述：是否唯一、是否必填、是否设置了最大长度等
+         */
         for(SqlField field : fieldList){
             builder.append(field.getName())
                     .append(" ")
-                    .append(TypeCaster.getType(field.getType()));
-            //设置变长类型的长度,默认变长类型的长度都是50
-            if(field.getLength() != 0){
-                builder.delete(builder.lastIndexOf("(") + 1,builder.length());
-                builder.append(field.getLength())
-                        .append(")");
-            }
+                    .append(TypeCaster.getType(field.getType(),field.getLength()));
             if(field.isNotNull()){
                 builder.append(" not null ");
             }
@@ -284,7 +284,7 @@ public class SqlFieldReader {
                     .append(" ")
                     .append(autoIncrKey.getName())
                     .append(" ")
-                    .append(TypeCaster.getType(autoIncrKey.getType()))
+                    .append(TypeCaster.getType(autoIncrKey.getType(),autoIncrKey.getLength()))
                     .append(" auto_increment primary key ; \n");
         }else if(key != null){
             builder.append("alter table ")

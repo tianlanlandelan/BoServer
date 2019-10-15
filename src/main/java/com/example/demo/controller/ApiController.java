@@ -74,9 +74,13 @@ public class ApiController {
      */
     @PostMapping
     public ResponseEntity post(@RequestBody Map<String,String> params){
+        Console.println("post Request");
         readRequest(params);
         try {
-            return restTemplate.postForEntity(getUrl(params),null,String.class,params);
+            ResponseEntity response =
+                    restTemplate.postForEntity(getUrl(params),null,String.class,params);
+            Console.println("post Response",response);
+            return response;
         }catch (HttpClientErrorException e){
             return ResponseUtils.getResponseFromException(e);
         }catch (Exception e){

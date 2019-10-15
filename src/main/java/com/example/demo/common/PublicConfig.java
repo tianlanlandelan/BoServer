@@ -16,7 +16,7 @@ public class PublicConfig {
     public static final int ResetPasswordType = 2;
 
 
-    public static final String SERVICE_URL = "http://127.0.0.1:8801";
+    public static final String SERVICE_URL = "http://127.0.0.1:8080";
 
     /**
      * 验证码有效期，5分钟

@@ -59,7 +59,12 @@ public class ApiController {
         readRequest();
         Map<String,String> map = getParam();
         try {
-            return restTemplate.getForEntity(getUrl(map), String.class,map);
+            String url = getUrl(map);
+            Console.println("form GET",url);
+            if(map == null){
+                return restTemplate.getForEntity(url, String.class);
+            }
+            return restTemplate.getForEntity(url, String.class,map);
         }catch (HttpClientErrorException e){
             return ResponseUtils.getResponseFromException(e);
         }catch (Exception e){
@@ -230,15 +235,22 @@ public class ApiController {
             }
             paramMap.put(paramName,paramValue);
         }
+        if(paramMap.size() == 0){
+            return null;
+        }
         return paramMap;
     }
     private String getUrl(Map<String,String> params){
         HashMap<String,String> headers = getHeader();
         StringBuilder builder = new StringBuilder();
+
         builder.append(PublicConfig.SERVICE_URL)
                 .append("/")
-                .append(headers.get(RequestConfig.METHOD))
-                .append("?");
+                .append(headers.get(RequestConfig.METHOD));
+        if(params == null){
+            return builder.toString();
+        }
+        builder.append("?");
         for(String key :params.keySet()){
             builder.append(key)
                     .append("={")

@@ -1,7 +1,9 @@
 package com.example.demo;
 
 import com.example.demo.common.util.Console;
+import com.example.demo.entity.TopicInfo;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.mapper.TopicInfoMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,8 @@ public class MyTests {
 
     @Resource
     UserInfoMapper userInfoMapper;
+    @Resource
+    TopicInfoMapper topicInfoMapper;
 
 
 
@@ -36,6 +40,10 @@ public class MyTests {
     @Test
     public void createUserInfoTable(){
         userInfoMapper.baseCreate(new UserInfo());
+    }
+    @Test
+    public void createTopicInfoTable(){
+        topicInfoMapper.baseCreate(new TopicInfo());
     }
 
     @Test

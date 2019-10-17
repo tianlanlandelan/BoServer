@@ -20,6 +20,8 @@ public class MyTests {
     @Resource
     UserInfoMapper userInfoMapper;
 
+
+
     @Test
     public void contextLoads() {
     }

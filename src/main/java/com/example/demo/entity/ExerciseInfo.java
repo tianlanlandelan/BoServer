@@ -1,12 +1,10 @@
 package com.example.demo.entity;
 
-import com.example.demo.common.mybatis.annotation.AutoIncrKeyAttribute;
-import com.example.demo.common.mybatis.annotation.FieldAttribute;
-import com.example.demo.common.mybatis.annotation.IndexAttribute;
-import com.example.demo.common.mybatis.annotation.TableAttribute;
+import com.example.demo.common.mybatis.BaseEntity;
+import com.example.demo.common.mybatis.annotation.*;
 
 @TableAttribute(name = "exercise_info", comment = "练习题(单选题)")
-public class ExerciseInfo {
+public class ExerciseInfo extends BaseEntity {
 
     @FieldAttribute
     @AutoIncrKeyAttribute
@@ -15,6 +13,10 @@ public class ExerciseInfo {
     @FieldAttribute
     @IndexAttribute
     private Integer topicId;
+
+    @FieldAttribute
+    @SortAttribute
+    private Integer sort;
 
     @FieldAttribute(value = "标题",length = 200)
     private String title;
@@ -132,11 +134,20 @@ public class ExerciseInfo {
         this.img = img;
     }
 
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
     @Override
     public String toString() {
         return "ExerciseInfo{" +
                 "id=" + id +
                 ", topicId=" + topicId +
+                ", sort=" + sort +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", img='" + img + '\'' +

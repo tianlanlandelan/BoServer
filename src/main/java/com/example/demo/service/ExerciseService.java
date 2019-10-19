@@ -8,6 +8,7 @@ import com.example.demo.mapper.TopicInfoMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author yangkaile
@@ -30,5 +31,13 @@ public class ExerciseService {
         }
         mapper.baseInsertAndReturnKey(exerciseInfo);
         return ResultData.success(exerciseInfo.getId());
+    }
+
+    public ResultData getAll(){
+        List<ExerciseInfo> list = mapper.baseSelectAll(new ExerciseInfo());
+        if(list == null || list.size() < 1){
+            return ResultData.error("No Excise");
+        }
+        return ResultData.success(list);
     }
 }

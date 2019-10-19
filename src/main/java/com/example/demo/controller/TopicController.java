@@ -38,9 +38,22 @@ public class TopicController {
         return MyResponse.ok(topicService.save(topicInfo));
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity getAll(){
         return MyResponse.ok(topicService.getAll());
+    }
+
+    @GetMapping
+    public ResponseEntity getById(Integer id){
+        if(id == null || id < 0){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(topicService.getById(id));
+    }
+
+    @GetMapping("getMenu")
+    public ResponseEntity getMenu(){
+        return MyResponse.ok(topicService.getMenu());
     }
 
 }

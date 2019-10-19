@@ -27,19 +27,19 @@ public class ExerciseInfo extends BaseEntity {
     @FieldAttribute(value = "图片地址",length = 200)
     private String img;
 
-    @FieldAttribute(value = "问题",length = 500)
+    @FieldAttribute(value = "问题",length = 1000)
     private String question;
 
-    @FieldAttribute(value = "A选项",length = 200)
+    @FieldAttribute(value = "A选项",length = 1000)
     private String optionA;
 
-    @FieldAttribute(value = "B选项",length = 200)
+    @FieldAttribute(value = "B选项",length = 1000)
     private String optionB;
 
-    @FieldAttribute(value = "C选项",length = 200)
+    @FieldAttribute(value = "C选项",length = 1000)
     private String optionC;
 
-    @FieldAttribute(value = "D选项",length = 200)
+    @FieldAttribute(value = "D选项",length = 1000)
     private String optionD;
 
     @FieldAttribute(value = "答案",length = 10)

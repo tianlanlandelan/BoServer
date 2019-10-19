@@ -6,7 +6,9 @@ import com.example.demo.common.mybatis.annotation.FieldAttribute;
 import com.example.demo.common.mybatis.annotation.SortAttribute;
 import com.example.demo.common.mybatis.annotation.TableAttribute;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author yangkaile
@@ -37,6 +39,9 @@ public class TopicInfo extends BaseEntity {
 
     @FieldAttribute
     private Date createTime = new Date();
+
+
+    private List<ExerciseInfo> list = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -94,6 +99,14 @@ public class TopicInfo extends BaseEntity {
         this.createTime = createTime;
     }
 
+    public List<ExerciseInfo> getList() {
+        return list;
+    }
+
+    public void setList(List<ExerciseInfo> list) {
+        this.list = list;
+    }
+
     @Override
     public String toString() {
         return "TopicInfo{" +
@@ -104,6 +117,7 @@ public class TopicInfo extends BaseEntity {
                 ", videoTitle='" + videoTitle + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
                 ", createTime=" + createTime +
+                ", list=" + list +
                 '}';
     }
 }

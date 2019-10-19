@@ -5,6 +5,7 @@ import com.example.demo.common.util.StringUtils;
 import com.example.demo.entity.ExerciseInfo;
 import com.example.demo.service.ExerciseService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +44,7 @@ public class ExerciseController {
                                String optionB,String optionC,String optionD,
                                String answer){
         if(topicId == null || topicId < 0 || !RequestUtil.validAnswer(answer) ||
-                StringUtils.isEmpty(title,content,question,optionA,optionB,optionC,optionD)) {
+                StringUtils.isEmpty(title,question,optionA,optionB,optionC,optionD)) {
             return MyResponse.badRequest();
         }
         ExerciseInfo info = new ExerciseInfo();
@@ -60,5 +61,10 @@ public class ExerciseController {
         info.setAnswer(answer);
 
         return MyResponse.ok(service.save(info));
+    }
+
+    @GetMapping
+    public ResponseEntity getAll(){
+        return MyResponse.ok(service.getAll());
     }
 }

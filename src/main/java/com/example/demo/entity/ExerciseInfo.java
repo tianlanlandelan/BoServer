@@ -3,6 +3,11 @@ package com.example.demo.entity;
 import com.example.demo.common.mybatis.BaseEntity;
 import com.example.demo.common.mybatis.annotation.*;
 
+/**
+ * @author yangkaile
+ * @date 2019-10-20 14:00:10
+ * 练习题
+ */
 @TableAttribute(name = "exercise_info", comment = "练习题(单选题)")
 public class ExerciseInfo extends BaseEntity {
 
@@ -44,6 +49,8 @@ public class ExerciseInfo extends BaseEntity {
 
     @FieldAttribute(value = "答案",length = 10)
     private String answer;
+
+    private int status;
 
     public int getId() {
         return id;
@@ -142,6 +149,14 @@ public class ExerciseInfo extends BaseEntity {
         this.sort = sort;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "ExerciseInfo{" +
@@ -157,6 +172,7 @@ public class ExerciseInfo extends BaseEntity {
                 ", optionC='" + optionC + '\'' +
                 ", optionD='" + optionD + '\'' +
                 ", answer='" + answer + '\'' +
+                ", status=" + status +
                 '}';
     }
 }

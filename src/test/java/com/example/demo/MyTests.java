@@ -1,12 +1,8 @@
 package com.example.demo;
 
 import com.example.demo.common.util.Console;
-import com.example.demo.entity.ExerciseInfo;
-import com.example.demo.entity.TopicInfo;
-import com.example.demo.entity.UserInfo;
-import com.example.demo.mapper.ExerciseMapper;
-import com.example.demo.mapper.TopicInfoMapper;
-import com.example.demo.mapper.UserInfoMapper;
+import com.example.demo.entity.*;
+import com.example.demo.mapper.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +23,10 @@ public class MyTests {
     TopicInfoMapper topicInfoMapper;
     @Resource
     ExerciseMapper exerciseMapper;
+    @Resource
+    UserScoresMapper userScoresMapper;
+    @Resource
+    ScoreInfoMapper scoreInfoMapper;
 
 
 
@@ -53,6 +53,17 @@ public class MyTests {
     public void createExerciseInfoTable(){
         exerciseMapper.baseCreate(new ExerciseInfo());
     }
+
+    @Test
+    public void createUserScoresTable(){
+        userScoresMapper.baseCreate(new UserScores());
+    }
+
+    @Test
+    public void createScoreInfoTable(){
+        scoreInfoMapper.baseCreate(new ScoreInfo());
+    }
+
 
     @Test
     public void insertUserInfo(){

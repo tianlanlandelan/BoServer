@@ -39,4 +39,16 @@ public class RequestUtil {
         return index != -1;
     }
 
+    public static boolean validInteger(Integer ... integers){
+        for(Integer integer:integers){
+            if(integer == null || integer < 0){
+                return false;
+            }
+        }
+        return true;
+    }
+    public static boolean notValidInteger(Integer ... integers){
+        return !validInteger(integers);
+    }
+
 }

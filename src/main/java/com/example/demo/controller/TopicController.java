@@ -51,9 +51,4 @@ public class TopicController {
         return MyResponse.ok(topicService.getById(id));
     }
 
-    @GetMapping("getMenu")
-    public ResponseEntity getMenu(){
-        return MyResponse.ok(topicService.getMenu());
-    }
-
 }

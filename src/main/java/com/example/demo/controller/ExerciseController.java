@@ -63,8 +63,16 @@ public class ExerciseController {
         return MyResponse.ok(service.save(info));
     }
 
-    @GetMapping
+    @GetMapping("getAll")
     public ResponseEntity getAll(){
         return MyResponse.ok(service.getAll());
+    }
+
+    @GetMapping
+    public ResponseEntity getById(Integer id){
+        if(id == null || id < 0 ){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(service.getById(id));
     }
 }

@@ -9,6 +9,12 @@ import com.example.demo.common.PublicConfig;
  * @date 2018-08-28 15:15:57
  */
 public class ServiceConfig {
+    public static final int TODO = 0;
+    public static final int DOING = 1;
+    public static final int DONE = 2;
+
+
+
     /**
      * 注册时的短信验证码发送类型
      */

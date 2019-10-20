@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 课程，包含内容和视频
  * @author yangkaile
  * @date 2019-10-15 15:06:32
  */
@@ -40,6 +41,8 @@ public class TopicInfo extends BaseEntity {
     @FieldAttribute
     private Date createTime = new Date();
 
+
+    private int status;
 
     private List<ExerciseInfo> list = new ArrayList<>();
 
@@ -107,6 +110,14 @@ public class TopicInfo extends BaseEntity {
         this.list = list;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "TopicInfo{" +
@@ -117,6 +128,7 @@ public class TopicInfo extends BaseEntity {
                 ", videoTitle='" + videoTitle + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
                 ", createTime=" + createTime +
+                ", status=" + status +
                 ", list=" + list +
                 '}';
     }

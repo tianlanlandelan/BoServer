@@ -5,8 +5,10 @@ import com.example.demo.common.util.Console;
 import com.example.demo.common.util.StringUtils;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.SendEmailService;
+import com.example.demo.service.TopicService;
 import com.example.demo.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +25,9 @@ public class LoginController {
 
     @Resource
     private SendEmailService sendEmailService;
+
+    @Resource
+    private TopicService topicService;
 
 
     @PostMapping("/register")
@@ -71,6 +76,14 @@ public class LoginController {
         userInfo.setType(type);
         userInfo.setEmail(name);
         return MyResponse.ok(userInfoService.forgetPassword(userInfo));
+    }
+
+    @GetMapping("/getMenu")
+    public ResponseEntity getMenu(Integer userId){
+        if(RequestUtil.notValidInteger(userId)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(topicService.getMenu(userId));
     }
 
 

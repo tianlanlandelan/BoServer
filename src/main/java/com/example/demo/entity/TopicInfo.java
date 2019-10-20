@@ -44,6 +44,11 @@ public class TopicInfo extends BaseEntity {
 
     private int status;
 
+    /**
+     * 是不是当前要学习的课程
+     */
+    private boolean current = false;
+
     private List<ExerciseInfo> list = new ArrayList<>();
 
     public int getId() {
@@ -118,6 +123,14 @@ public class TopicInfo extends BaseEntity {
         this.status = status;
     }
 
+    public boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(boolean current) {
+        this.current = current;
+    }
+
     @Override
     public String toString() {
         return "TopicInfo{" +
@@ -129,6 +142,7 @@ public class TopicInfo extends BaseEntity {
                 ", videoUrl='" + videoUrl + '\'' +
                 ", createTime=" + createTime +
                 ", status=" + status +
+                ", current=" + current +
                 ", list=" + list +
                 '}';
     }

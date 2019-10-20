@@ -13,8 +13,8 @@ import java.util.Date;
  * @author yangkaile
  * @date 2019-10-20 14:06:41
  */
-@TableAttribute(name = "score_info",comment = "用户得分明细")
-public class ScoreInfo extends BaseEntity {
+@TableAttribute(name = "user_exercise",comment = "用户得分明细")
+public class UserExercise extends BaseEntity {
 
     @FieldAttribute
     @AutoIncrKeyAttribute
@@ -76,7 +76,7 @@ public class ScoreInfo extends BaseEntity {
 
     @Override
     public String toString() {
-        return "ScoreInfo{" +
+        return "UserExercise{" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", exerciseId=" + exerciseId +

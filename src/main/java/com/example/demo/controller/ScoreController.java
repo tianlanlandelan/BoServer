@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.response.MyResponse;
-import com.example.demo.entity.ScoreInfo;
+import com.example.demo.entity.UserExercise;
 import com.example.demo.service.ScoreService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +22,11 @@ public class ScoreController {
         if(RequestUtil.notValidInteger(userId,exerciseId,score)){
             return MyResponse.badRequest();
         }
-        ScoreInfo scoreInfo = new ScoreInfo();
-        scoreInfo.setUserId(userId);
-        scoreInfo.setExerciseId(exerciseId);
-        scoreInfo.setScore(score);
-        return MyResponse.ok(scoreService.save(scoreInfo));
+        UserExercise userExercise = new UserExercise();
+        userExercise.setUserId(userId);
+        userExercise.setExerciseId(exerciseId);
+        userExercise.setScore(score);
+        return MyResponse.ok(scoreService.save(userExercise));
 
     }
 }

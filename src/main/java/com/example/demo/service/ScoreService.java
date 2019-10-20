@@ -35,6 +35,7 @@ public class ScoreService {
         userScores.setId(userExercise.getUserId());
         userScores = userScoresMapper.baseSelectById(userScores);
         if(userScores == null){
+            userScores = new UserScores();
             userScores.setId(userExercise.getUserId());
             userScores.setScore(userExercise.getScore());
             userScoresMapper.baseInsert(userScores);

@@ -28,8 +28,6 @@ public class MyTests {
     @Resource
     UserExerciseMapper userExerciseMapper;
 
-    @Resource
-    UserTopicMapper userTopicMapper;
 
 
 
@@ -38,10 +36,12 @@ public class MyTests {
     }
 
     @Test
-    public void userInfoTest(){
+    public void createTable(){
         createUserInfoTable();
-        insertUserInfo();
-        updateUserInfo();
+        createExerciseInfoTable();
+        createTopicInfoTable();
+        createUserExerciseTable();
+        createUserScoresTable();
     }
 
     @Test
@@ -67,17 +67,13 @@ public class MyTests {
         userExerciseMapper.baseCreate(new UserExercise());
     }
 
-    @Test
-    public void createUserTopicTable(){
-        userTopicMapper.baseCreate(new UserTopic());
-    }
 
     @Test
     public void insertUserInfo(){
         UserInfo userInfo = new UserInfo();
-        userInfo.setType(3);
-        userInfo.setEmail("guyexing@foxmail.com");
-        userInfo.setSid("A1001");
+        userInfo.setType(1);
+        userInfo.setEmail("a@a.edu");
+        userInfo.setSid("u100");
         userInfo.setPassword("123456");
         try{
             userInfoMapper.baseInsertAndReturnKey(userInfo);

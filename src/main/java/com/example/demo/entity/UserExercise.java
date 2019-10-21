@@ -22,11 +22,11 @@ public class UserExercise extends BaseEntity {
 
     @FieldAttribute
     @IndexAttribute
-    private int userId;
+    private Integer userId;
 
     @FieldAttribute
     @IndexAttribute
-    private int exerciseId;
+    private Integer exerciseId;
 
     @FieldAttribute
     private int score;
@@ -42,19 +42,19 @@ public class UserExercise extends BaseEntity {
         this.id = id;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public int getExerciseId() {
+    public Integer getExerciseId() {
         return exerciseId;
     }
 
-    public void setExerciseId(int exerciseId) {
+    public void setExerciseId(Integer exerciseId) {
         this.exerciseId = exerciseId;
     }
 

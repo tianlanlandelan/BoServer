@@ -51,6 +51,7 @@ public class ExerciseInfo extends BaseEntity {
     private String answer;
 
     private int status;
+    private Integer timer;
 
     public int getId() {
         return id;
@@ -157,6 +158,14 @@ public class ExerciseInfo extends BaseEntity {
         this.status = status;
     }
 
+    public Integer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Integer timer) {
+        this.timer = timer;
+    }
+
     @Override
     public String toString() {
         return "ExerciseInfo{" +
@@ -173,6 +182,7 @@ public class ExerciseInfo extends BaseEntity {
                 ", optionD='" + optionD + '\'' +
                 ", answer='" + answer + '\'' +
                 ", status=" + status +
+                ", timer=" + timer +
                 '}';
     }
 }

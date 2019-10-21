@@ -5,10 +5,7 @@ import com.example.demo.common.util.Console;
 import com.example.demo.common.util.StringUtils;
 import com.example.demo.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -31,7 +28,12 @@ public class UserInfoController {
         }
         return MyResponse.ok(userInfoService.update(id,firstName,lastName,avatarId));
     }
+    @PutMapping("/timer")
+    public ResponseEntity timer(Integer userId,Integer timer){
+        if(RequestUtil.notValidInteger(userId)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(userInfoService.setTimer(userId,timer));
 
-
-
+    }
 }

@@ -51,4 +51,21 @@ public class TopicController {
         return MyResponse.ok(topicService.getById(id));
     }
 
+
+    @GetMapping("/getNext")
+    public ResponseEntity getNext(Integer userId){
+        if(RequestUtil.notValidInteger(userId)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(topicService.getNext(userId));
+    }
+
+    @GetMapping("/getCurrent")
+    public ResponseEntity getCurrent(Integer userId){
+        if(RequestUtil.notValidInteger(userId)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(topicService.getCurrent(userId));
+    }
+
 }

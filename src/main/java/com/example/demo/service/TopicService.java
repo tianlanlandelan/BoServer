@@ -5,13 +5,12 @@ import com.example.demo.ServiceConfig;
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.StringUtils;
 import com.example.demo.entity.ExerciseInfo;
-import com.example.demo.entity.UserExercise;
 import com.example.demo.entity.TopicInfo;
-import com.example.demo.entity.UserTopic;
+import com.example.demo.entity.UserInfo;
 import com.example.demo.mapper.ExerciseMapper;
 import com.example.demo.mapper.UserExerciseMapper;
 import com.example.demo.mapper.TopicInfoMapper;
-import com.example.demo.mapper.UserTopicMapper;
+import com.example.demo.mapper.UserInfoMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,10 +32,11 @@ public class TopicService {
     private ExerciseMapper exerciseMapper;
 
     @Resource
-    private UserExerciseMapper userExerciseMapper;
+    private UserInfoMapper userInfoMapper;
 
     @Resource
-    private UserTopicMapper userTopicMapper;
+    private UserExerciseMapper userExerciseMapper;
+
 
     public ResultData save(TopicInfo topicInfo){
         topicInfoMapper.baseInsertAndReturnKey(topicInfo);
@@ -78,61 +78,232 @@ public class TopicService {
      * @return
      */
     public ResultData getMenu(int userId){
-        //TODO 校验user是否存在
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(userId);
+        userInfo = userInfoMapper.baseSelectById(userInfo);
+        if(userInfo == null){
+            return ResultData.error("User NotExist");
+        }
+
         List<TopicInfo> topicList = topicInfoMapper.selectAll();
         if(topicList == null || topicList.size() < 1){
             return ResultData.error("No Topic!");
         }
+
         List<ExerciseInfo> exerciseList = exerciseMapper.selectAll();
 
-        UserExercise userExercise = new UserExercise();
-        userExercise.setUserId(userId);
-
-        List<UserExercise> scoreList = userExerciseMapper.baseSelectByCondition(userExercise);
-
-        UserTopic userTopic = new UserTopic();
-        userTopic.setUserId(userId);
-        List<UserTopic> userTopicList = userTopicMapper.baseSelectByCondition(userTopic);
-
-
-        //将所有有成绩的练习置为DONE
-        for (UserExercise score : scoreList){
+        /*
+        设置练习状态
+         */
+        //如果用户当前没有要做的练习，将所有练习状态置为TODO
+        if(userInfo.getExerciseId() == null){
             for(ExerciseInfo exercise : exerciseList){
-                if(score.getExerciseId() == exercise.getId()){
-                    exercise.setStatus(ServiceConfig.DONE);
-                }
+                exercise.setStatus(ServiceConfig.TODO);
             }
-        }
-
-        //将练习添加到所属的课程中
-        for(TopicInfo topic : topicList) {
-            for (ExerciseInfo exercise : exerciseList) {
-                if (exercise.getTopicId() == topic.getId()) {
-                    topic.getList().add(exercise);
-                }
+        }else if(userInfo.getTopicOver() == UserInfo.OVER){
+            //如果用户已经完成课程，所有练习设置为DONE
+            for(ExerciseInfo exercise : exerciseList){
+                exercise.setStatus(ServiceConfig.DONE);
             }
-        }
-
-        //将学过的课程设置为DONE
-        for(UserTopic u:userTopicList){
-            for(TopicInfo topic: topicList){
-                if(topic.getId() == u.getTopicId()){
-                    topic.setStatus(ServiceConfig.DONE);
-                }
-            }
-        }
-        //如果用户还没有学习过课程，将第一课状态设置为DOING
-        if(userTopicList == null || userTopicList.size() < 1){
-            topicList.get(0).setStatus(ServiceConfig.DOING);
         }else{
-            //如果用户已经开始学习
-            for(int i = 0 ; i < topicList.size() ; i ++){
-                if(topicList.get(i).getStatus() == ServiceConfig.DONE
-                        && i < topicList.size() - 1){
-                    topicList.get(i + 1).setStatus(ServiceConfig.DOING);
+            //根据当前用户做过的练习，设置练习状态
+            for(ExerciseInfo exercise : exerciseList){
+                //没做过的练习设置为TODO
+                if(exercise.getId() > userInfo.getExerciseId()){
+                    exercise.setStatus(ServiceConfig.TODO);
+                }else if(exercise.getId() < userInfo.getExerciseId()){
+                    //做过的练习设置为DONE
+                    exercise.setStatus(ServiceConfig.DONE);
+                }else {
+                    //当前练习记录着倒计时的，说明是正在做的练习，设置为DOING
+                    if(userInfo.getTimer() != null) {
+                        exercise.setStatus(ServiceConfig.DOING);
+                    }else{
+                        //做过的练习
+                        exercise.setStatus(ServiceConfig.DONE);
+                    }
+
+                }
+
+            }
+        }
+
+        //练习添加到课程中
+        for(TopicInfo topicInfo:topicList){
+            for(ExerciseInfo exerciseInfo:exerciseList){
+                if(exerciseInfo.getTopicId() == topicInfo.getId()){
+                    topicInfo.getList().add(exerciseInfo);
                 }
             }
         }
+
+        //如果用户还没学习过课程，将第一课设置DOING
+        if(userInfo.getTopicId() == null){
+            userInfo.setTopicId(topicList.get(0).getId());
+            userInfoMapper.baseUpdateById(userInfo);
+        }
+        if(userInfo.getTopicOver() == UserInfo.OVER){
+            //如果用户已经完成课程，所有课程设置为DONE
+            for(TopicInfo topicInfo : topicList){
+                topicInfo.setStatus(ServiceConfig.DONE);
+            }
+        }else {
+            for (TopicInfo topicInfo : topicList) {
+                if (topicInfo.getId() > userInfo.getTopicId()) {
+                    topicInfo.setStatus(ServiceConfig.TODO);
+                } else if (topicInfo.getId() < userInfo.getTopicId()) {
+                    topicInfo.setStatus(ServiceConfig.DONE);
+                } else {
+                    topicInfo.setStatus(ServiceConfig.DOING);
+                }
+            }
+        }
+
         return ResultData.success(topicList);
+    }
+
+    /**
+     * 获取下一个
+     * 根据用户学习的进度，获取下一步要展示的课程或练习
+     * @param userId
+     * @return
+     */
+    public ResultData getNext(int userId){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(userId);
+        userInfo = userInfoMapper.baseSelectById(userInfo);
+        if(userInfo == null){
+            return ResultData.error("User NotExist");
+        }
+        if(userInfo.getTopicId() == null){
+            return ResultData.error("Not GetMenu");
+        }
+        if(userInfo.getTopicOver() == UserInfo.OVER){
+            return ResultData.error("Topic Over");
+        }
+        List<TopicInfo> topicList = topicInfoMapper.baseSelectAll(new TopicInfo());
+        if(topicList == null || topicList.size() < 1){
+            return ResultData.error("No Topic!");
+        }
+        List<ExerciseInfo> exerciseList = exerciseMapper.baseSelectAll(new ExerciseInfo());
+        if(exerciseList == null || exerciseList.size() < 1){
+            return ResultData.error("No Exercise!");
+        }
+        //练习添加到课程中
+        for(TopicInfo topicInfo:topicList){
+            if(StringUtils.isNotEmpty(topicInfo.getVideoUrl())){
+                topicInfo.setVideoUrl(myConfig.NGINX_PREFIX + topicInfo.getVideoUrl());
+            }
+            for(ExerciseInfo exerciseInfo:exerciseList){
+                if(exerciseInfo.getTopicId() == topicInfo.getId()){
+                    topicInfo.getList().add(exerciseInfo);
+                }
+            }
+        }
+        //判断当前课程是否有练习，如果有练习，看当前练习是否是最后一个
+        for(int i = 0 ; i < topicList.size();i++){
+            TopicInfo topicInfo = topicList.get(i);
+            if(userInfo.getTopicId() == topicInfo.getId()){
+                //当前课程有练习，判断练习
+                if(topicInfo.getList() != null && topicInfo.getList().size() > 0){
+                    for(int j = 0 ; j < topicInfo.getList().size(); j++){
+                        ExerciseInfo exerciseInfo = topicInfo.getList().get(j);
+                        //如果有下一个练习，返回下一个练习
+                        if(userInfo.getExerciseId() == null ||
+                                userInfo.getExerciseId() < exerciseInfo.getId()){
+                            userInfo.setExerciseId(exerciseInfo.getId());
+                            userInfo.setTimer(null);
+                            userInfoMapper.baseUpdateById(userInfo);
+
+                            if(StringUtils.isNotEmpty(exerciseInfo.getImg())){
+                                exerciseInfo.setImg(myConfig.NGINX_PREFIX + exerciseInfo.getImg());
+                            }
+                            return ResultData.success(exerciseInfo);
+                        }
+                    }
+                }
+                //如果还有课程，返回下一课程
+                if(i < topicList.size() - 1){
+                    userInfo.setTopicId(topicList.get(i + 1).getId());
+                    userInfoMapper.baseUpdateById(userInfo);
+                    return ResultData.success(topicList.get(i + 1));
+                }else{
+                    //如果没有课程，设置当前课程已学完
+                    userInfo.setTopicOver(UserInfo.OVER);
+                    userInfoMapper.baseUpdateById(userInfo);
+                    return ResultData.error("Topic Over");
+                }
+            }
+        }
+        return ResultData.error("Not find topic");
+    }
+
+    /**
+     * 获取当前
+     * 根据用户学习的进度，获取当前要展示的课程或练习
+     * @param userId
+     * @return
+     */
+    public ResultData getCurrent(int userId){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(userId);
+        userInfo = userInfoMapper.baseSelectById(userInfo);
+        if(userInfo == null){
+            return ResultData.error("User NotExist");
+        }
+        if(userInfo.getTopicId() == null){
+            return ResultData.error("Not GetMenu");
+        }
+        if(userInfo.getTopicOver() == UserInfo.OVER){
+            return ResultData.error("Topic Over");
+        }
+        List<TopicInfo> topicList = topicInfoMapper.baseSelectAll(new TopicInfo());
+        if(topicList == null || topicList.size() < 1){
+            return ResultData.error("No Topic!");
+        }
+        List<ExerciseInfo> exerciseList = exerciseMapper.baseSelectAll(new ExerciseInfo());
+        if(exerciseList == null || exerciseList.size() < 1){
+            return ResultData.error("No Exercise!");
+        }
+        TopicInfo topic = null;
+        //练习添加到课程中
+        for(TopicInfo topicInfo:topicList){
+            for(ExerciseInfo exerciseInfo:exerciseList){
+                if(exerciseInfo.getTopicId() == topicInfo.getId()){
+                    topicInfo.getList().add(exerciseInfo);
+                }
+            }
+        }
+        for(TopicInfo topicInfo:topicList){
+           if(userInfo.getTopicId() == topicInfo.getId()){
+               topic = topicInfo;
+           }
+        }
+        if(topic == null){
+            return ResultData.error("Not Find Topic!");
+        }
+        if(StringUtils.isNotEmpty(topic.getVideoUrl())){
+            topic.setVideoUrl(myConfig.NGINX_PREFIX + topic.getVideoUrl());
+        }
+        if(userInfo.getExerciseId() == null){
+            return ResultData.success(topic);
+        }
+        ExerciseInfo exercise = null;
+        //从当前课程中查找练习，如果查找不到，说明正在学习课程
+        for(ExerciseInfo exerciseInfo:topic.getList()){
+            if(exerciseInfo.getId() == userInfo.getExerciseId()){
+                exercise = exerciseInfo;
+            }
+        }
+        //查找不到练习，返回当前课程
+        if(exercise == null){
+           return ResultData.success(topic);
+        }else{
+            if(StringUtils.isNotEmpty(exercise.getImg())){
+                exercise.setImg(myConfig.NGINX_PREFIX + exercise.getImg());
+            }
+            exercise.setTimer(userInfo.getTimer());
+            return ResultData.success(exercise);
+        }
     }
 }

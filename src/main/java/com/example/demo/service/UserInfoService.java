@@ -100,11 +100,22 @@ public class UserInfoService {
         userInfo.setId(id);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
-            return ResultData.error("用户不存在");
+            return ResultData.error("User NotExist");
         }
         userInfo.setFirstName(firstName);
         userInfo.setLastName(lastName);
         userInfo.setAvatarId(avatarId);
+        userInfoMapper.baseUpdateById(userInfo);
+        return ResultData.success();
+    }
+    public ResultData setTimer(int userId,Integer timer){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(userId);
+        userInfo = userInfoMapper.baseSelectById(userInfo);
+        if(userInfo == null){
+            return ResultData.error("User NotExist");
+        }
+        userInfo.setTimer(timer);
         userInfoMapper.baseUpdateById(userInfo);
         return ResultData.success();
     }
@@ -127,19 +138,5 @@ public class UserInfoService {
             }
         }
         return false;
-    }
-
-
-    public ResultData register(UserInfo userInfo,String code){
-
-        try{
-            userInfoMapper.baseInsertAndReturnKey(userInfo);
-        }catch (DuplicateKeyException e){
-            Console.print("error",e.getMessage());
-            return ResultData.error("uid/uemail重复注册");
-        }
-
-        Console.print("userInfo",userInfo.getId(),userInfo);
-        return ResultData.success(userInfo.getId());
     }
 }

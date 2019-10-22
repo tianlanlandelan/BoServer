@@ -116,7 +116,7 @@ public class UserInfoService {
             return ResultData.error("User NotExist");
         }
         userInfo.setTimer(timer);
-        userInfoMapper.baseUpdateById(userInfo);
+        userInfoMapper.updateTimer(userInfo);
         return ResultData.success();
     }
 

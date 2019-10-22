@@ -38,8 +38,8 @@ public class MyTests {
     @Test
     public void createTable(){
         createUserInfoTable();
-        createExerciseInfoTable();
-        createTopicInfoTable();
+//        createExerciseInfoTable();
+//        createTopicInfoTable();
         createUserExerciseTable();
         createUserScoresTable();
     }

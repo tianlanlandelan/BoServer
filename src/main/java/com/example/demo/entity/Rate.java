@@ -30,6 +30,11 @@ public class Rate extends BaseEntity {
     @FieldAttribute("总分")
     private int score;
 
+    /**
+     * 排名，根据总分查出来的，每次通过查询获得，不入库
+     */
+    private int sort;
+
 
     public static final int VODEO_OVER = 1;
 
@@ -99,6 +104,13 @@ public class Rate extends BaseEntity {
         this.videoStatus = videoStatus;
     }
 
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
+    }
 
     @Override
     public String toString() {
@@ -110,6 +122,7 @@ public class Rate extends BaseEntity {
                 ", timer=" + timer +
                 ", topicOver=" + topicOver +
                 ", score=" + score +
+                ", sort=" + sort +
                 '}';
     }
 }

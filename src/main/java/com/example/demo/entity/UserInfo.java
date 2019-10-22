@@ -39,7 +39,7 @@ public class UserInfo extends BaseEntity {
     @IndexAttribute
     private String sid;
 
-    @FieldAttribute
+    @FieldAttribute("头像id")
     private Integer avatarId;
 
     @FieldAttribute

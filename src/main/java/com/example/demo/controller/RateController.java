@@ -4,12 +4,8 @@ import com.example.demo.common.response.MyResponse;
 import com.example.demo.entity.UserExercise;
 import com.example.demo.service.RateService;
 import com.example.demo.service.TopicService;
-import com.example.demo.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -59,6 +55,13 @@ public class RateController {
             return MyResponse.badRequest();
         }
         return MyResponse.ok(rateService.setTimer(userId,timer));
+    }
 
+    @GetMapping("/getUp")
+    public ResponseEntity getUp(Integer userId){
+        if(RequestUtil.notValidInteger(userId)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(rateService.getUp(userId));
     }
 }

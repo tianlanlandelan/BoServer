@@ -5,12 +5,10 @@ import com.example.demo.ServiceConfig;
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.StringUtils;
 import com.example.demo.entity.ExerciseInfo;
+import com.example.demo.entity.Rate;
 import com.example.demo.entity.TopicInfo;
 import com.example.demo.entity.UserInfo;
-import com.example.demo.mapper.ExerciseMapper;
-import com.example.demo.mapper.UserExerciseMapper;
-import com.example.demo.mapper.TopicInfoMapper;
-import com.example.demo.mapper.UserInfoMapper;
+import com.example.demo.mapper.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,7 +33,8 @@ public class TopicService {
     private UserInfoMapper userInfoMapper;
 
     @Resource
-    private UserExerciseMapper userExerciseMapper;
+    private RateMapper rateMapper;
+
 
 
     public ResultData save(TopicInfo topicInfo){
@@ -92,15 +91,23 @@ public class TopicService {
 
         List<ExerciseInfo> exerciseList = exerciseMapper.selectAll();
 
+        Rate rate = new Rate(userId);
+        rate = rateMapper.baseSelectById(rate);
+        if(rate == null){
+            rate = new Rate();
+            rate.setId(userId);
+            rateMapper.baseInsert(rate);
+        }
+
         /*
         设置练习状态
          */
         //如果用户当前没有要做的练习，将所有练习状态置为TODO
-        if(userInfo.getExerciseId() == null){
+        if(rate.getExerciseId() == null){
             for(ExerciseInfo exercise : exerciseList){
                 exercise.setStatus(ServiceConfig.TODO);
             }
-        }else if(userInfo.getTopicOver() == UserInfo.OVER){
+        }else if(rate.getTopicOver() == Rate.OVER){
             //如果用户已经完成课程，所有练习设置为DONE
             for(ExerciseInfo exercise : exerciseList){
                 exercise.setStatus(ServiceConfig.DONE);
@@ -109,14 +116,14 @@ public class TopicService {
             //根据当前用户做过的练习，设置练习状态
             for(ExerciseInfo exercise : exerciseList){
                 //没做过的练习设置为TODO
-                if(exercise.getId() > userInfo.getExerciseId()){
+                if(exercise.getId() > rate.getExerciseId()){
                     exercise.setStatus(ServiceConfig.TODO);
-                }else if(exercise.getId() < userInfo.getExerciseId()){
+                }else if(exercise.getId() < rate.getExerciseId()){
                     //做过的练习设置为DONE
                     exercise.setStatus(ServiceConfig.DONE);
                 }else {
                     //当前练习记录着倒计时的，说明是正在做的练习，设置为DOING
-                    if(userInfo.getTimer() != null) {
+                    if(rate.getTimer() != null) {
                         exercise.setStatus(ServiceConfig.DOING);
                     }else{
                         //做过的练习
@@ -138,23 +145,27 @@ public class TopicService {
         }
 
         //如果用户还没学习过课程，将第一课设置DOING
-        if(userInfo.getTopicId() == null){
-            userInfo.setTopicId(topicList.get(0).getId());
-            userInfoMapper.baseUpdateById(userInfo);
+        if(rate.getTopicId() == null){
+            rate.setTopicId(topicList.get(0).getId());
+            rateMapper.baseUpdateById(rate);
         }
-        if(userInfo.getTopicOver() == UserInfo.OVER){
+        if(rate.getTopicOver() == Rate.OVER){
             //如果用户已经完成课程，所有课程设置为DONE
             for(TopicInfo topicInfo : topicList){
                 topicInfo.setStatus(ServiceConfig.DONE);
+                topicInfo.setVideoStatus(ServiceConfig.DONE);
             }
         }else {
             for (TopicInfo topicInfo : topicList) {
-                if (topicInfo.getId() > userInfo.getTopicId()) {
+                if (topicInfo.getId() > rate.getTopicId()) {
                     topicInfo.setStatus(ServiceConfig.TODO);
-                } else if (topicInfo.getId() < userInfo.getTopicId()) {
+                    topicInfo.setVideoStatus(ServiceConfig.TODO);
+                } else if (topicInfo.getId() < rate.getTopicId()) {
                     topicInfo.setStatus(ServiceConfig.DONE);
+                    topicInfo.setVideoStatus(ServiceConfig.DONE);
                 } else {
                     topicInfo.setStatus(ServiceConfig.DOING);
+                    topicInfo.setVideoStatus(ServiceConfig.DONE);
                 }
             }
         }
@@ -175,10 +186,13 @@ public class TopicService {
         if(userInfo == null){
             return ResultData.error("User NotExist");
         }
-        if(userInfo.getTopicId() == null){
+        Rate rate = new Rate();
+        rate.setId(userId);
+        rate = rateMapper.baseSelectById(rate);
+        if(rate == null){
             return ResultData.error("Not GetMenu");
         }
-        if(userInfo.getTopicOver() == UserInfo.OVER){
+        if(rate.getTopicOver() == Rate.OVER){
             return ResultData.error("Topic Over");
         }
         List<TopicInfo> topicList = topicInfoMapper.baseSelectAll(new TopicInfo());
@@ -203,17 +217,17 @@ public class TopicService {
         //判断当前课程是否有练习，如果有练习，看当前练习是否是最后一个
         for(int i = 0 ; i < topicList.size();i++){
             TopicInfo topicInfo = topicList.get(i);
-            if(userInfo.getTopicId() == topicInfo.getId()){
+            if(rate.getTopicId() == topicInfo.getId()){
                 //当前课程有练习，判断练习
                 if(topicInfo.getList() != null && topicInfo.getList().size() > 0){
                     for(int j = 0 ; j < topicInfo.getList().size(); j++){
                         ExerciseInfo exerciseInfo = topicInfo.getList().get(j);
                         //如果有下一个练习，返回下一个练习
-                        if(userInfo.getExerciseId() == null ||
-                                userInfo.getExerciseId() < exerciseInfo.getId()){
-                            userInfo.setExerciseId(exerciseInfo.getId());
-                            userInfo.setTimer(null);
-                            userInfoMapper.baseUpdateById(userInfo);
+                        if(rate.getExerciseId() == null ||
+                                rate.getExerciseId() < exerciseInfo.getId()){
+                            rate.setExerciseId(exerciseInfo.getId());
+                            rate.setTimer(null);
+                            rateMapper.baseUpdateById(rate);
 
                             if(StringUtils.isNotEmpty(exerciseInfo.getImg())){
                                 exerciseInfo.setImg(myConfig.NGINX_PREFIX + exerciseInfo.getImg());
@@ -224,13 +238,13 @@ public class TopicService {
                 }
                 //如果还有课程，返回下一课程
                 if(i < topicList.size() - 1){
-                    userInfo.setTopicId(topicList.get(i + 1).getId());
-                    userInfoMapper.baseUpdateById(userInfo);
+                    rate.setTopicId(topicList.get(i + 1).getId());
+                    rateMapper.baseUpdateById(rate);
                     return ResultData.success(topicList.get(i + 1));
                 }else{
                     //如果没有课程，设置当前课程已学完
-                    userInfo.setTopicOver(UserInfo.OVER);
-                    userInfoMapper.baseUpdateById(userInfo);
+                    rate.setTopicOver(Rate.OVER);
+                    rateMapper.baseUpdateById(rate);
                     return ResultData.error("Topic Over");
                 }
             }
@@ -251,10 +265,12 @@ public class TopicService {
         if(userInfo == null){
             return ResultData.error("User NotExist");
         }
-        if(userInfo.getTopicId() == null){
+        Rate rate = new Rate(userId);
+        rate = rateMapper.baseSelectById(rate);
+        if(rate == null || rate.getTopicId() == null){
             return ResultData.error("Not GetMenu");
         }
-        if(userInfo.getTopicOver() == UserInfo.OVER){
+        if(rate.getTopicOver() == Rate.OVER){
             return ResultData.error("Topic Over");
         }
         List<TopicInfo> topicList = topicInfoMapper.baseSelectAll(new TopicInfo());
@@ -275,7 +291,7 @@ public class TopicService {
             }
         }
         for(TopicInfo topicInfo:topicList){
-           if(userInfo.getTopicId() == topicInfo.getId()){
+           if(rate.getTopicId() == topicInfo.getId()){
                topic = topicInfo;
            }
         }
@@ -285,13 +301,13 @@ public class TopicService {
         if(StringUtils.isNotEmpty(topic.getVideoUrl())){
             topic.setVideoUrl(myConfig.NGINX_PREFIX + topic.getVideoUrl());
         }
-        if(userInfo.getExerciseId() == null){
+        if(rate.getExerciseId() == null){
             return ResultData.success(topic);
         }
         ExerciseInfo exercise = null;
         //从当前课程中查找练习，如果查找不到，说明正在学习课程
         for(ExerciseInfo exerciseInfo:topic.getList()){
-            if(exerciseInfo.getId() == userInfo.getExerciseId()){
+            if(exerciseInfo.getId() == rate.getExerciseId()){
                 exercise = exerciseInfo;
             }
         }
@@ -302,7 +318,7 @@ public class TopicService {
             if(StringUtils.isNotEmpty(exercise.getImg())){
                 exercise.setImg(myConfig.NGINX_PREFIX + exercise.getImg());
             }
-            exercise.setTimer(userInfo.getTimer());
+            exercise.setTimer(rate.getTimer());
             return ResultData.success(exercise);
         }
     }

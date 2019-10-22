@@ -24,7 +24,7 @@ public class MyTests {
     @Resource
     ExerciseMapper exerciseMapper;
     @Resource
-    UserScoresMapper userScoresMapper;
+    RateMapper rateMapper;
     @Resource
     UserExerciseMapper userExerciseMapper;
 
@@ -38,10 +38,8 @@ public class MyTests {
     @Test
     public void createTable(){
         createUserInfoTable();
-//        createExerciseInfoTable();
-//        createTopicInfoTable();
         createUserExerciseTable();
-        createUserScoresTable();
+        createRateTable();
     }
 
     @Test
@@ -58,8 +56,8 @@ public class MyTests {
     }
 
     @Test
-    public void createUserScoresTable(){
-        userScoresMapper.baseCreate(new UserScores());
+    public void createRateTable(){
+        rateMapper.baseCreate(new Rate());
     }
 
     @Test

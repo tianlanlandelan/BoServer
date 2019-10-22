@@ -2,25 +2,29 @@ package com.example.demo.controller;
 
 import com.example.demo.common.response.MyResponse;
 import com.example.demo.entity.UserExercise;
-import com.example.demo.service.ScoreService;
+import com.example.demo.service.RateService;
 import com.example.demo.service.TopicService;
 import com.example.demo.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * @author yangkaile
+ * @date 2019-10-22 14:38:58
+ * 用户学习进度控制
+ */
 @RestController
-@RequestMapping("/score")
-public class ScoreController {
+@RequestMapping("/rate")
+public class RateController {
 
     @Resource
-    private ScoreService scoreService;
+    private RateService rateService;
 
-    @Resource
-    private UserInfoService userInfoService;
     @Resource
     private TopicService topicService;
 
@@ -37,7 +41,7 @@ public class ScoreController {
             return MyResponse.badRequest();
         }
         //清空计时器
-        userInfoService.setTimer(userId,null);
+        rateService.setTimer(userId,null);
         //刷进度
         topicService.getNext(userId);
 
@@ -45,7 +49,16 @@ public class ScoreController {
         userExercise.setUserId(userId);
         userExercise.setExerciseId(exerciseId);
         userExercise.setScore(score);
-        return MyResponse.ok(scoreService.save(userExercise));
+        return MyResponse.ok(rateService.save(userExercise));
+
+    }
+
+    @PutMapping
+    public ResponseEntity timer(Integer userId,Integer timer){
+        if(RequestUtil.notValidInteger(userId)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(rateService.setTimer(userId,timer));
 
     }
 }

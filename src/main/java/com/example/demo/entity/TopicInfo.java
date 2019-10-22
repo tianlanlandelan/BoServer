@@ -41,8 +41,15 @@ public class TopicInfo extends BaseEntity {
     @FieldAttribute
     private Date createTime = new Date();
 
-
+    /**
+     * 课程进行状态
+     */
     private int status;
+
+    /**
+     * 视频观看状态
+     */
+    private int videoStatus;
 
     /**
      * 是不是当前要学习的课程
@@ -131,6 +138,14 @@ public class TopicInfo extends BaseEntity {
         this.current = current;
     }
 
+    public int getVideoStatus() {
+        return videoStatus;
+    }
+
+    public void setVideoStatus(int videoStatus) {
+        this.videoStatus = videoStatus;
+    }
+
     @Override
     public String toString() {
         return "TopicInfo{" +
@@ -142,6 +157,7 @@ public class TopicInfo extends BaseEntity {
                 ", videoUrl='" + videoUrl + '\'' +
                 ", createTime=" + createTime +
                 ", status=" + status +
+                ", videoStatus=" + videoStatus +
                 ", current=" + current +
                 ", list=" + list +
                 '}';

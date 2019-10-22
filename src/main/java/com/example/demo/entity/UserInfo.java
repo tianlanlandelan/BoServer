@@ -49,25 +49,7 @@ public class UserInfo extends BaseEntity {
     @IndexAttribute
     private Integer status ;
 
-    @FieldAttribute("用户当前在学的课程")
-    private Integer topicId;
-    @FieldAttribute("课程视频是否看过")
-    private int vodeoStatus;
-    @FieldAttribute("用户当前在做的练习")
-    private Integer exerciseId;
-    @FieldAttribute("用户答题剩余时间")
-    private Integer timer;
-
-
-
-    @FieldAttribute
-    private int topicOver;
-
-    public static final int VODEO_OVER = 1;
     public static final int FORGET_PASSWORD = 1;
-    public static final int OVER = 1;
-
-
 
     public int getId() {
         return id;
@@ -149,46 +131,6 @@ public class UserInfo extends BaseEntity {
         this.status = status;
     }
 
-    public Integer getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(Integer topicId) {
-        this.topicId = topicId;
-    }
-
-    public Integer getExerciseId() {
-        return exerciseId;
-    }
-
-    public void setExerciseId(Integer exerciseId) {
-        this.exerciseId = exerciseId;
-    }
-
-    public int getTopicOver() {
-        return topicOver;
-    }
-
-    public void setTopicOver(int topicOver) {
-        this.topicOver = topicOver;
-    }
-
-    public Integer getTimer() {
-        return timer;
-    }
-
-    public void setTimer(Integer timer) {
-        this.timer = timer;
-    }
-
-    public int getVodeoStatus() {
-        return vodeoStatus;
-    }
-
-    public void setVodeoStatus(int vodeoStatus) {
-        this.vodeoStatus = vodeoStatus;
-    }
-
     @Override
     public String toString() {
         return "UserInfo{" +
@@ -202,11 +144,6 @@ public class UserInfo extends BaseEntity {
                 ", avatarId=" + avatarId +
                 ", createTime=" + createTime +
                 ", status=" + status +
-                ", topicId=" + topicId +
-                ", vodeoStatus=" + vodeoStatus +
-                ", exerciseId=" + exerciseId +
-                ", timer=" + timer +
-                ", topicOver=" + topicOver +
                 '}';
     }
 }

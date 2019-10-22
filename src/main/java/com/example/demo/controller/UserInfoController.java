@@ -28,12 +28,4 @@ public class UserInfoController {
         }
         return MyResponse.ok(userInfoService.update(id,firstName,lastName,avatarId));
     }
-    @PutMapping("/timer")
-    public ResponseEntity timer(Integer userId,Integer timer){
-        if(RequestUtil.notValidInteger(userId)){
-            return MyResponse.badRequest();
-        }
-        return MyResponse.ok(userInfoService.setTimer(userId,timer));
-
-    }
 }

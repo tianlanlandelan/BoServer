@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.common.response.ResultData;
+import com.example.demo.common.util.Console;
 import com.example.demo.entity.Rate;
 import com.example.demo.entity.UserExercise;
 import com.example.demo.entity.UserInfo;
@@ -12,6 +13,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * 用户学习进度操作
+ * 通过保存的学习进度，控制菜单栏展示的各项课程的状态，以及用户每次获取的课程
  * @author yangkaile
  * @date 2019-10-22 15:40:44
  */
@@ -82,7 +85,7 @@ public class RateService {
             return ResultData.error("No Scores");
         }
         int sort = rateMapper.selectSort(rate);
-        List<UserScores> list = null;
+        List<UserScores> list;
         //如果排名在第8名之前，显示前面所有人的得分
         if(sort <= 8){
             list = rateMapper.selectUp(rate);
@@ -117,6 +120,21 @@ public class RateService {
         UserScores userScores = new UserScores(userInfo,rate);
         userScores.setSort(sort);
         list.add(userScores);
+
+        //计算排行榜中每个人的得分相对于第一名的百分比
+        float firstScore = list.get(0).getScore();
+        float score ;
+        int percentage;
+        for(UserScores scores:list){
+            if(scores.getId() == 0){
+                continue;
+            }
+            score = scores.getScore();
+            percentage = (int)(score / firstScore * 100);
+            scores.setPercentage(percentage);
+            Console.print("getUp ","firstScore:",firstScore,"score:",score,"percentage:",percentage);
+        }
+
         return ResultData.success(list);
     }
 }

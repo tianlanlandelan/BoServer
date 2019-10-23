@@ -29,7 +29,7 @@ public interface RateMapper extends BaseMapper<Rate> {
      * @param rate
      * @return
      */
-    @Select("SELECT b.firstName,b.lastName,b.avatarId,a.score " +
+    @Select("SELECT a.id, b.firstName,b.lastName,b.avatarId,a.score " +
             "FROM rate a,user_info b " +
             "WHERE a.id = b.id AND a.score >= #{score} " +
             "ORDER BY a.score DESC " +

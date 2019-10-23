@@ -3,6 +3,12 @@ package com.example.demo.view;
 import com.example.demo.entity.Rate;
 import com.example.demo.entity.UserInfo;
 
+/**
+ * @author yangkaile
+ * @date 2019-10-22 17:29:13
+ *
+ * 用户得分情况，用于在排行榜上展示
+ */
 public class UserScores {
 
     private int id;
@@ -16,6 +22,11 @@ public class UserScores {
     private String lastName;
 
     private int avatarId;
+
+    /**
+     * 相对于第1名得分的百分比
+     */
+    private int percentage;
 
     public UserScores() {
     }
@@ -76,6 +87,14 @@ public class UserScores {
         this.avatarId = avatarId;
     }
 
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
+    }
+
     @Override
     public String toString() {
         return "UserScores{" +
@@ -85,6 +104,7 @@ public class UserScores {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", avatarId=" + avatarId +
+                ", percentage=" + percentage +
                 '}';
     }
 }

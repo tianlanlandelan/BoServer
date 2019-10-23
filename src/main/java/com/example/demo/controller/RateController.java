@@ -57,6 +57,11 @@ public class RateController {
         return MyResponse.ok(rateService.setTimer(userId,timer));
     }
 
+    /**
+     * 获取比自己排名高的用户的信息
+     * @param userId
+     * @return
+     */
     @GetMapping("/getUp")
     public ResponseEntity getUp(Integer userId){
         if(RequestUtil.notValidInteger(userId)){

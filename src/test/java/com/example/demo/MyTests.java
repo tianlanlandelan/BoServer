@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.common.util.Console;
+import com.example.demo.common.util.StringUtils;
 import com.example.demo.entity.*;
 import com.example.demo.mapper.*;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -24,7 +26,7 @@ public class MyTests {
     @Resource
     ExerciseMapper exerciseMapper;
     @Resource
-    UserScoresMapper userScoresMapper;
+    RateMapper rateMapper;
     @Resource
     UserExerciseMapper userExerciseMapper;
 
@@ -38,10 +40,8 @@ public class MyTests {
     @Test
     public void createTable(){
         createUserInfoTable();
-//        createExerciseInfoTable();
-//        createTopicInfoTable();
         createUserExerciseTable();
-        createUserScoresTable();
+        createRateTable();
     }
 
     @Test
@@ -58,8 +58,8 @@ public class MyTests {
     }
 
     @Test
-    public void createUserScoresTable(){
-        userScoresMapper.baseCreate(new UserScores());
+    public void createRateTable(){
+        rateMapper.baseCreate(new Rate());
     }
 
     @Test
@@ -104,5 +104,29 @@ public class MyTests {
         userInfo.setBaseKyleUseAnd(true);
         List<UserInfo> list = userInfoMapper.baseSelectByCondition(userInfo);
         Console.print("getUserInfo",list);
+    }
+
+    @Test
+    public void initTestData(){
+
+        for(int i = 0 ; i < 100 ; i++){
+            UserInfo userInfo = new UserInfo();
+            userInfo.setType(1);
+            userInfo.setEmail(StringUtils.getAllCharString(10));
+            userInfo.setSid(StringUtils.getAllCharString(10));
+            userInfo.setPassword("123456");
+            userInfo.setAvatarId(new Random().nextInt(10) + 1);
+            userInfo.setFirstName(StringUtils.getAllCharString(3));
+            userInfo.setLastName(StringUtils.getAllCharString(6));
+
+            try{
+                userInfoMapper.baseInsertAndReturnKey(userInfo);
+                Rate rate = new Rate(userInfo.getId());
+                rate.setScore(new Random().nextInt(2000) + 100);
+                rateMapper.baseInsert(rate);
+            }catch (DuplicateKeyException e){
+                Console.print("error",e.getMessage());
+            }
+        }
     }
 }

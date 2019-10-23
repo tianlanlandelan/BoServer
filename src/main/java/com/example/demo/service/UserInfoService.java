@@ -108,17 +108,6 @@ public class UserInfoService {
         userInfoMapper.baseUpdateById(userInfo);
         return ResultData.success();
     }
-    public ResultData setTimer(int userId,Integer timer){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setId(userId);
-        userInfo = userInfoMapper.baseSelectById(userInfo);
-        if(userInfo == null){
-            return ResultData.error("User NotExist");
-        }
-        userInfo.setTimer(timer);
-        userInfoMapper.updateTimer(userInfo);
-        return ResultData.success();
-    }
 
     /**
      * 获取用户信息，需同时指定三个条件：type/email/uid

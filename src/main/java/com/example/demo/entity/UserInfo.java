@@ -51,6 +51,13 @@ public class UserInfo extends BaseEntity {
 
     public static final int FORGET_PASSWORD = 1;
 
+    public UserInfo() {
+    }
+
+    public UserInfo(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

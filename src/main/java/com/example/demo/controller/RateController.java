@@ -69,4 +69,17 @@ public class RateController {
         }
         return MyResponse.ok(rateService.getUp(userId));
     }
+
+    /**
+     * 获取比自己排名低的
+     * @param userId
+     * @return
+     */
+    @GetMapping("/getDown")
+    public ResponseEntity getDown(Integer userId){
+        if(RequestUtil.notValidInteger(userId)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(rateService.getDown(userId));
+    }
 }

@@ -96,8 +96,7 @@ public class UserInfoService {
      * @return
      */
     public ResultData update(int id,String firstName,String lastName,int avatarId){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setId(id);
+        UserInfo userInfo = new UserInfo(id);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
             return ResultData.error("User NotExist");

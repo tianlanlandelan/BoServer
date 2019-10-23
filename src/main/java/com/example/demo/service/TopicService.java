@@ -77,8 +77,7 @@ public class TopicService {
      * @return
      */
     public ResultData getMenu(int userId){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setId(userId);
+        UserInfo userInfo = new UserInfo(userId);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
             return ResultData.error("User NotExist");
@@ -180,8 +179,7 @@ public class TopicService {
      * @return
      */
     public ResultData getNext(int userId){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setId(userId);
+        UserInfo userInfo = new UserInfo(userId);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
             return ResultData.error("User NotExist");
@@ -259,8 +257,7 @@ public class TopicService {
      * @return
      */
     public ResultData getCurrent(int userId){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setId(userId);
+        UserInfo userInfo = new UserInfo(userId);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
             return ResultData.error("User NotExist");

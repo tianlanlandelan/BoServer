@@ -73,8 +73,7 @@ public class RateService {
      * @return
      */
     public ResultData getUp(int userId){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setId(userId);
+        UserInfo userInfo = new UserInfo(userId);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if (userInfo == null) {
             return ResultData.error("User NotExist");
@@ -116,13 +115,18 @@ public class RateService {
             headList.addAll(footList);
             list = headList;
         }
-        //构建自己的得分
+        //构建自己的排行
         UserScores userScores = new UserScores(userInfo,rate);
         userScores.setSort(sort);
         list.add(userScores);
 
         //计算排行榜中每个人的得分相对于第一名的百分比
-        float firstScore = list.get(0).getScore();
+        int firstScore = list.get(0).getScore();
+
+        return ResultData.success(setPercentage4List(list,firstScore));
+    }
+
+    private List<UserScores> setPercentage4List(List<UserScores> list,int scale){
         float score ;
         int percentage;
         for(UserScores scores:list){
@@ -130,11 +134,49 @@ public class RateService {
                 continue;
             }
             score = scores.getScore();
-            percentage = (int)(score / firstScore * 100);
+            percentage = (int)(score / scale * 100);
             scores.setPercentage(percentage);
-            Console.print("getUp ","firstScore:",firstScore,"score:",score,"percentage:",percentage);
+            Console.print("getPercentage ","scale:",scale,"score:",score,"percentage:",percentage);
         }
-
-        return ResultData.success(list);
+        return  list;
     }
+
+    /**
+     * 获取比自己排行低的人的数据，只获取8个
+     * @param userId
+     * @return
+     */
+    public ResultData getDown(int userId){
+        UserInfo userInfo = new UserInfo(userId);
+        userInfo = userInfoMapper.baseSelectById(userInfo);
+        if (userInfo == null) {
+            return ResultData.error("User NotExist");
+        }
+        Rate rate = new Rate(userId);
+        rate = rateMapper.baseSelectById(rate);
+        if(rate == null){
+            return ResultData.error("No Scores");
+        }
+        int sort = rateMapper.selectSort(rate);
+        rate.setBaseKylePageSize(8);
+        List<UserScores> list = rateMapper.selectDown(rate);
+
+        //构建自己的排行
+        UserScores userScores = new UserScores(userInfo,rate);
+        userScores.setSort(sort);
+
+        //设置名次
+        for(UserScores scores:list){
+            scores.setSort(++sort);
+        }
+        list.add(userScores);
+
+
+
+        //计算排行榜中每个人的得分相对于自己分数的百分比
+        int firstScore = userScores.getScore();
+
+        return ResultData.success(setPercentage4List(list,firstScore));
+    }
+
 }

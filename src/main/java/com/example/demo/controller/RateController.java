@@ -82,4 +82,11 @@ public class RateController {
         }
         return MyResponse.ok(rateService.getDown(userId));
     }
+    @GetMapping("/getMiddle")
+    public ResponseEntity getMiddle(Integer userId){
+        if(RequestUtil.notValidInteger(userId)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(rateService.getMiddle(userId));
+    }
 }

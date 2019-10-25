@@ -10,6 +10,7 @@ import com.example.demo.view.UserScores;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +29,12 @@ public class RateService {
 
     @Resource
     private RateMapper rateMapper;
+
+    /**
+     * 排行榜上显示的行数
+     */
+    public static final int ROWS = 8;
+
 
     /**
      * 保存用户成绩
@@ -86,7 +93,7 @@ public class RateService {
         int sort = rateMapper.selectSort(rate);
         List<UserScores> list;
         //如果排名在第8名之前，显示前面所有人的得分
-        if(sort <= 8){
+        if(sort <= ROWS){
             list = rateMapper.selectUp(rate);
             int index = 1;
             for(UserScores userScores:list){
@@ -94,7 +101,7 @@ public class RateService {
             }
         }else{
             //如果排名在第8名之后，只显示前三名和后四名的
-            rate.setBaseKylePageSize(3);
+            rate.setBaseKylePageSize(ROWS/2 -1);
             List<UserScores> headList = rateMapper.selectUp(rate);
             int index = 1;
             for(UserScores userScores:headList){
@@ -102,10 +109,10 @@ public class RateService {
             }
 
             //查询后四名的
-            rate.setBaseKylePageSize(4);
-            rate.setBaseKyleStartRows(sort - 4 - 1);
+            rate.setBaseKylePageSize(ROWS/2);
+            rate.setBaseKyleStartRows(sort - ROWS/2 - 1);
             List<UserScores> footList = rateMapper.selectUp(rate);
-            index = sort - 4;
+            index = sort - ROWS/2;
             for(UserScores userScores:footList){
                 userScores.setSort(index++);
             }
@@ -158,7 +165,7 @@ public class RateService {
             return ResultData.error("No Scores");
         }
         int sort = rateMapper.selectSort(rate);
-        rate.setBaseKylePageSize(8);
+        rate.setBaseKylePageSize(ROWS);
         List<UserScores> list = rateMapper.selectDown(rate);
 
         //构建自己的排行
@@ -171,10 +178,76 @@ public class RateService {
         }
         list.add(userScores);
 
-
-
         //计算排行榜中每个人的得分相对于自己分数的百分比
         int firstScore = userScores.getScore();
+
+        return ResultData.success(setPercentage4List(list,firstScore));
+    }
+
+    /**
+     * 获取相邻的排行
+     * 比自己排行高的三个
+     * 比自己排行低的三个
+     * @param userId
+     * @return
+     */
+    public ResultData getMiddle(int userId){
+        UserInfo userInfo = new UserInfo(userId);
+        userInfo = userInfoMapper.baseSelectById(userInfo);
+        if (userInfo == null) {
+            return ResultData.error("User NotExist");
+        }
+        Rate rate = new Rate(userId);
+        rate = rateMapper.baseSelectById(rate);
+        if(rate == null){
+            return ResultData.error("No Scores");
+        }
+
+        int sort = rateMapper.selectSort(rate);
+
+
+        //构建自己的排行
+        UserScores userScores = new UserScores(userInfo,rate);
+        userScores.setSort(sort);
+
+        rate.setBaseKylePageSize(ROWS/2 -1);
+        List<UserScores> downList = rateMapper.selectDown(rate);
+        //查询比自己成绩高的人，只取最接近自己成绩的三个
+        int upSort = sort - (ROWS/2 -1);
+        if(upSort < 1){
+            upSort = 1;
+        }
+        rate.setBaseKyleStartRows(upSort);
+        List<UserScores> upList = rateMapper.selectUp(rate);
+        int firstScore;
+        if(upList != null && upList.size() > 0){
+            firstScore = upList.get(0).getScore();
+        }else{
+            firstScore = userScores.getScore();
+        }
+        //设置名次
+        for(UserScores scores:upList){
+            scores.setSort(upSort++);
+        }
+        int downSort = sort;
+
+        for(UserScores scores:downList){
+            scores.setSort(++downSort);
+        }
+
+        //构建返回的list
+        List<UserScores> list = new ArrayList<>();
+        //如果排名大于4，查询结果的第一个不是第1名，需要在前边标注一下上面还有其他人
+        if(sort > ROWS/2){
+            list.add(new UserScores());
+        }
+        list.addAll(upList);
+        list.addAll(downList);
+        list.add(new UserScores());
+        list.add(userScores);
+
+        //计算排行榜中每个人的得分相对于自己分数的百分比
+
 
         return ResultData.success(setPercentage4List(list,firstScore));
     }

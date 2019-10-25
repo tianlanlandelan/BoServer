@@ -59,8 +59,7 @@ public interface RateMapper extends BaseMapper<Rate> {
      */
     @Select("SELECT COUNT(1) " +
             "FROM rate a,user_info b " +
-            "WHERE a.id = b.id AND b.type=1 AND a.score >= #{score} " +
-            "ORDER BY a.score DESC ")
+            "WHERE a.id = b.id AND b.type=1 AND a.score >#{score}")
     Integer selectSort(Rate rate);
 
 }

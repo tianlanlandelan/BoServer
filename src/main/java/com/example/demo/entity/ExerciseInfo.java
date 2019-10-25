@@ -53,6 +53,13 @@ public class ExerciseInfo extends BaseEntity {
     private int status;
     private Integer timer;
 
+    public ExerciseInfo() {
+    }
+
+    public ExerciseInfo(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

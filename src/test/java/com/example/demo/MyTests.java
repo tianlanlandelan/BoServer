@@ -109,15 +109,15 @@ public class MyTests {
     @Test
     public void initTestData(){
 
-        for(int i = 0 ; i < 100 ; i++){
+        for(int i = 0 ; i < 20 ; i++){
             UserInfo userInfo = new UserInfo();
             userInfo.setType(1);
             userInfo.setEmail(StringUtils.getAllCharString(10));
             userInfo.setSid(StringUtils.getAllCharString(10));
             userInfo.setPassword("123456");
             userInfo.setAvatarId(new Random().nextInt(10) + 1);
-            userInfo.setFirstName(StringUtils.getAllCharString(3));
-            userInfo.setLastName(StringUtils.getAllCharString(6));
+            userInfo.setFirstName("Test"+i);
+            userInfo.setLastName(StringUtils.getAllCharString(4));
 
             try{
                 userInfoMapper.baseInsertAndReturnKey(userInfo);

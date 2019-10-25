@@ -107,7 +107,7 @@ public class RateService {
         if(rate == null){
             return ResultData.error("No Scores");
         }
-        int sort = rateMapper.selectSort(rate);
+        int sort = rateMapper.selectSort(rate) + 1;
         List<UserScores> list;
         //如果排名在第8名之前，显示前面所有人的得分
         if(sort <= ROWS){
@@ -181,7 +181,7 @@ public class RateService {
         if(rate == null){
             return ResultData.error("No Scores");
         }
-        int sort = rateMapper.selectSort(rate);
+        int sort = rateMapper.selectSort(rate) + 1;
         rate.setBaseKylePageSize(ROWS);
         List<UserScores> downList = rateMapper.selectDown(rate);
 
@@ -223,7 +223,7 @@ public class RateService {
             return ResultData.error("No Scores");
         }
 
-        int sort = rateMapper.selectSort(rate);
+        int sort = rateMapper.selectSort(rate) + 1;
 
 
         //构建自己的排行
@@ -235,8 +235,8 @@ public class RateService {
         List<UserScores> downList = rateMapper.selectDown(rate);
         //查询比自己成绩高的人，只取最接近自己成绩的2个
         int upSort = sort - MIDDLE_ROWS;
-        if(upSort < 1){
-            upSort = 1;
+        if(upSort < 0){
+            upSort = 0;
         }
         rate.setBaseKyleStartRows(upSort);
         List<UserScores> upList = rateMapper.selectUp(rate);
@@ -248,7 +248,7 @@ public class RateService {
         }
         //设置名次
         for(UserScores scores:upList){
-            scores.setSort(upSort++);
+            scores.setSort(++upSort);
         }
         int downSort = sort;
 

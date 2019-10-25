@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.Console;
+import com.example.demo.entity.ExerciseInfo;
 import com.example.demo.entity.Rate;
 import com.example.demo.entity.UserExercise;
 import com.example.demo.entity.UserInfo;
@@ -30,10 +31,18 @@ public class RateService {
     @Resource
     private RateMapper rateMapper;
 
+    @Resource
+    private ExerciseMapper exerciseMapper;
+
     /**
      * 排行榜上显示的行数
      */
     public static final int ROWS = 8;
+
+    /**
+     *
+     */
+    public static final int MIDDLE_ROWS = 2;
 
 
     /**
@@ -44,6 +53,14 @@ public class RateService {
     public ResultData save(UserExercise userExercise){
         //TODO 校验user/exercise是否存在
 
+        if(userInfoMapper.baseUpdateById(new UserInfo(userExercise.getUserId())) == null){
+            return ResultData.error("User NotExist");
+        }
+        ExerciseInfo exerciseInfo = exerciseMapper.baseSelectById(new ExerciseInfo(userExercise.getExerciseId()));
+        if(exerciseInfo == null){
+            return ResultData.error("Exercise NotExist");
+        }
+        userExercise.setAnswer(exerciseInfo.getAnswer());
         userExerciseMapper.baseInsertAndReturnKey(userExercise);
         Rate rate = new Rate(userExercise.getUserId());
         rate = rateMapper.baseSelectById(rate);
@@ -77,7 +94,7 @@ public class RateService {
      * 获取比当前用户得分高的
      * 当比用户排名高的人大于8个时，只显示前三个和后四个
      * @param userId
-     * @return
+     * @return 排行榜数据，顺序排列，自己的（最低的）在最后面
      */
     public ResultData getUp(int userId){
         UserInfo userInfo = new UserInfo(userId);
@@ -151,7 +168,7 @@ public class RateService {
     /**
      * 获取比自己排行低的人的数据，只获取8个
      * @param userId
-     * @return
+     * @return 排行榜数据，顺序排列，自己的（最高的）在前面
      */
     public ResultData getDown(int userId){
         UserInfo userInfo = new UserInfo(userId);
@@ -166,17 +183,20 @@ public class RateService {
         }
         int sort = rateMapper.selectSort(rate);
         rate.setBaseKylePageSize(ROWS);
-        List<UserScores> list = rateMapper.selectDown(rate);
+        List<UserScores> downList = rateMapper.selectDown(rate);
 
         //构建自己的排行
         UserScores userScores = new UserScores(userInfo,rate);
         userScores.setSort(sort);
 
         //设置名次
-        for(UserScores scores:list){
+        for(UserScores scores:downList){
             scores.setSort(++sort);
         }
+        List<UserScores> list = new ArrayList<>();
+        //查询到的其他人的成绩都是比自己低的，将自己的成绩放在第一个
         list.add(userScores);
+        list.addAll(downList);
 
         //计算排行榜中每个人的得分相对于自己分数的百分比
         int firstScore = userScores.getScore();
@@ -189,7 +209,7 @@ public class RateService {
      * 比自己排行高的三个
      * 比自己排行低的三个
      * @param userId
-     * @return
+     * @return 排行榜数据，按顺序排列，自己的（中间的）在中间排列
      */
     public ResultData getMiddle(int userId){
         UserInfo userInfo = new UserInfo(userId);
@@ -210,10 +230,11 @@ public class RateService {
         UserScores userScores = new UserScores(userInfo,rate);
         userScores.setSort(sort);
 
-        rate.setBaseKylePageSize(ROWS/2 -1);
+        //查询比自己成绩低的人，只取最接近自己成绩的2个
+        rate.setBaseKylePageSize(MIDDLE_ROWS);
         List<UserScores> downList = rateMapper.selectDown(rate);
-        //查询比自己成绩高的人，只取最接近自己成绩的三个
-        int upSort = sort - (ROWS/2 -1);
+        //查询比自己成绩高的人，只取最接近自己成绩的2个
+        int upSort = sort - MIDDLE_ROWS;
         if(upSort < 1){
             upSort = 1;
         }
@@ -242,9 +263,9 @@ public class RateService {
             list.add(new UserScores());
         }
         list.addAll(upList);
+        list.add(userScores);
         list.addAll(downList);
         list.add(new UserScores());
-        list.add(userScores);
 
         //计算排行榜中每个人的得分相对于自己分数的百分比
 

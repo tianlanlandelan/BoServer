@@ -20,19 +20,26 @@ public class UserExercise extends BaseEntity {
     @AutoIncrKeyAttribute
     private int id;
 
-    @FieldAttribute
+    @FieldAttribute("用户id")
     @IndexAttribute
     private Integer userId;
 
-    @FieldAttribute
+    @FieldAttribute("练习题id")
     @IndexAttribute
     private Integer exerciseId;
 
-    @FieldAttribute
+    @FieldAttribute("练习题答案")
+    private String answer;
+
+    @FieldAttribute("得分")
     private int score;
+
+    @FieldAttribute("用户的回答")
+    private String userAnswer;
 
     @FieldAttribute
     private Date createTime = new Date();
+
 
     public int getId() {
         return id;
@@ -74,13 +81,31 @@ public class UserExercise extends BaseEntity {
         this.createTime = createTime;
     }
 
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public String getUserAnswer() {
+        return userAnswer;
+    }
+
+    public void setUserAnswer(String userAnswer) {
+        this.userAnswer = userAnswer;
+    }
+
     @Override
     public String toString() {
         return "UserExercise{" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", exerciseId=" + exerciseId +
+                ", answer='" + answer + '\'' +
                 ", score=" + score +
+                ", userAnswer='" + userAnswer + '\'' +
                 ", createTime=" + createTime +
                 '}';
     }

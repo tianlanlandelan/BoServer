@@ -11,10 +11,19 @@ import com.example.demo.entity.UserInfo;
  */
 public class UserScores {
 
+    /**
+     * 用户id
+     */
     private int id;
 
+    /**
+     * 用户得分
+     */
     private int score;
 
+    /**
+     * 用户排名
+     */
     private int sort;
 
     private String firstName;

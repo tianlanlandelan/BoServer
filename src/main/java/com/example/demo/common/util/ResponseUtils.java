@@ -18,6 +18,7 @@ public class ResponseUtils {
             case FORBIDDEN:  response = MyResponse.forbidden(); break;
             case BAD_REQUEST: response = MyResponse.badRequest();break;
             case UNAUTHORIZED: response = MyResponse.unauthorized();break;
+            case INTERNAL_SERVER_ERROR: response = MyResponse.error();break;
             default:{
                 ResultData resultData = ResultData.error("未知错误");
                 response = ResponseEntity.status(exception.getStatusCode()).contentType(MediaType.APPLICATION_JSON).body(resultData);

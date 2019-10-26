@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.MyConfig;
 import com.example.demo.ServiceConfig;
 import com.example.demo.common.response.ResultData;
+import com.example.demo.common.util.Console;
 import com.example.demo.common.util.StringUtils;
 import com.example.demo.entity.ExerciseInfo;
 import com.example.demo.entity.Rate;
@@ -189,7 +190,13 @@ public class TopicService {
         rate = rateMapper.baseSelectById(rate);
         if(rate == null){
             return ResultData.error("Not GetMenu");
+        }else {
+            //清空用户计时器，只要是获取下一题，就说明当前学习已完成，重置计时器状态，避免影响下一学习内容的计时
+            rate.setTimer(null);
+            rateMapper.updateTimer(rate);
+            Console.println("getNext updateTimer",rateMapper.baseSelectById(rate));
         }
+
         if(rate.getTopicOver() == Rate.OVER){
             return ResultData.error("Topic Over");
         }
@@ -224,7 +231,6 @@ public class TopicService {
                         if(rate.getExerciseId() == null ||
                                 rate.getExerciseId() < exerciseInfo.getId()){
                             rate.setExerciseId(exerciseInfo.getId());
-                            rate.setTimer(null);
                             rateMapper.baseUpdateById(rate);
 
                             if(StringUtils.isNotEmpty(exerciseInfo.getImg())){
@@ -310,7 +316,9 @@ public class TopicService {
         }
         //查找不到练习，返回当前课程
         if(exercise == null){
-           return ResultData.success(topic);
+            topic.setList(null);
+            topic.setTimer(rate.getTimer());
+            return ResultData.success(topic);
         }else{
             if(StringUtils.isNotEmpty(exercise.getImg())){
                 exercise.setImg(myConfig.NGINX_PREFIX + exercise.getImg());

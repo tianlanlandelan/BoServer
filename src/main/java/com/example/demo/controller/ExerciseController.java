@@ -29,7 +29,6 @@ public class ExerciseController {
      * @param title
      * @param content
      * @param img
-     * @param question
      * @param optionA
      * @param optionB
      * @param optionC
@@ -39,11 +38,11 @@ public class ExerciseController {
      */
     @PostMapping
     public ResponseEntity save(Integer topicId,Integer sort,String title,String content,
-                               String img,String question,String optionA,
+                               String img,String optionA,
                                String optionB,String optionC,String optionD,
                                String answer){
         if(topicId == null || topicId < 0 || !RequestUtil.validAnswer(answer) ||
-                StringUtils.isEmpty(title,question,optionA,optionB,optionC,optionD)) {
+                StringUtils.isEmpty(title,optionA,optionB,optionC,optionD)) {
             return MyResponse.badRequest();
         }
         ExerciseInfo info = new ExerciseInfo();
@@ -52,7 +51,6 @@ public class ExerciseController {
         info.setTitle(title);
         info.setContent(content);
         info.setImg(img);
-        info.setQuestion(question);
         info.setOptionA(optionA);
         info.setOptionB(optionB);
         info.setOptionC(optionC);

@@ -32,8 +32,6 @@ public class ExerciseInfo extends BaseEntity {
     @FieldAttribute(value = "图片地址",length = 200)
     private String img;
 
-    @FieldAttribute(value = "问题",length = 1000)
-    private String question;
 
     @FieldAttribute(value = "A选项",length = 1000)
     private String optionA;
@@ -92,14 +90,6 @@ public class ExerciseInfo extends BaseEntity {
         this.content = content;
     }
 
-
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
 
     public String getOptionA() {
         return optionA;
@@ -182,7 +172,6 @@ public class ExerciseInfo extends BaseEntity {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", img='" + img + '\'' +
-                ", question='" + question + '\'' +
                 ", optionA='" + optionA + '\'' +
                 ", optionB='" + optionB + '\'' +
                 ", optionC='" + optionC + '\'' +

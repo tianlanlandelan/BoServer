@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.common.response.MyResponse;
 import com.example.demo.common.util.StringUtils;
+import com.example.demo.entity.Rate;
 import com.example.demo.entity.UserExercise;
 import com.example.demo.service.RateService;
 import com.example.demo.service.TopicService;
@@ -58,6 +59,17 @@ public class RateController {
             return MyResponse.badRequest();
         }
         return MyResponse.ok(rateService.setTimer(userId,timer));
+    }
+
+    @PutMapping("/feedback")
+    public ResponseEntity feedback(Integer userId,String feedback1,String feedback2){
+        if(RequestUtil.notValidInteger(userId) || StringUtils.isEmpty(feedback1,feedback2)){
+            return MyResponse.badRequest();
+        }
+        Rate rate = new Rate(userId);
+        rate.setFeedback1(feedback1);
+        rate.setFeedback2(feedback2);
+        return MyResponse.ok(rateService.saveFeedBack(rate));
     }
 
     /**

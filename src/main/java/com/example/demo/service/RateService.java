@@ -44,6 +44,17 @@ public class RateService {
      */
     public static final int MIDDLE_ROWS = 2;
 
+    public ResultData saveFeedBack(Rate rate){
+        Rate result = rateMapper.baseSelectById(rate);
+        if(result ==null){
+            return ResultData.error("User NotExist");
+        }else{
+            result.setFeedback1(rate.getFeedback1());
+            result.setFeedback2(rate.getFeedback2());
+            rateMapper.baseUpdateById(result);
+            return ResultData.success();
+        }
+    }
 
     /**
      * 保存用户成绩

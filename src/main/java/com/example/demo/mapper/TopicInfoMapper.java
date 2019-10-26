@@ -11,7 +11,7 @@ import java.util.List;
 public interface TopicInfoMapper extends BaseMapper<TopicInfo> {
     String topic = "topic_info";
 
-    @Select("select id,sort,title,videoTitle from " + topic)
+    @Select("select id,sort,title,title1 from " + topic)
     List<TopicInfo> selectAll();
 
 

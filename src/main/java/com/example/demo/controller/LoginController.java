@@ -30,10 +30,20 @@ public class LoginController {
     private TopicService topicService;
 
 
+    /**
+     * 注册功能
+     * @param type 用户类型
+     * @param email 邮箱
+     * @param sid 学号
+     * @param password 密码
+     * @param code 邀请码，由管理员统一设定
+     * @return
+     */
     @PostMapping("/register")
-    public ResponseEntity register(Integer type,String email,String sid,String password){
+    public ResponseEntity register(Integer type,String email,String sid,String password,String code){
         Console.print("register","type",type,"email",email,"sid",sid,"password",password);
-        if(!RequestUtil.validType(type) || StringUtils.isEmpty(email,sid,password)){
+        if(!RequestUtil.validType(type) || StringUtils.isEmpty(email,sid,password,code)
+                || !code.equals("123456")){
             return MyResponse.badRequest();
         }
         UserInfo userInfo = new UserInfo();

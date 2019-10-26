@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
  * @date 2019-05-30 09:38:05
  */
 @Configuration
-@PropertySource("classpath:config.properties")
+@PropertySource("classpath:application.properties")
 public class MyConfig {
     /**
      * Nginx 服务器地址

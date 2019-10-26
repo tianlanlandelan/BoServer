@@ -33,7 +33,7 @@ public class MyResponse {
      * @return
      */
     public static ResponseEntity badRequest(){
-        ResultData response = ResultData.error("请求参数异常");
+        ResultData response = ResultData.error("Request params error");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(response);
     }
 
@@ -62,10 +62,5 @@ public class MyResponse {
     public static ResponseEntity error(){
         ResultData response = ResultData.error("系统内部错误");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(response);
-    }
-
-    public static ResponseEntity error(String message){
-        ResultData response = ResultData.error(message);
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).contentType(MediaType.APPLICATION_JSON).body(response);
     }
 }

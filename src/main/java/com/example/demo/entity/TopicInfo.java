@@ -29,11 +29,14 @@ public class TopicInfo extends BaseEntity {
     @FieldAttribute(value = "课程标题",length = 200)
     private String title;
 
+    @FieldAttribute(value = "课程标题1",length = 200)
+    private String title1;
+
     @FieldAttribute(value = "课程内容",length = 5000)
     private String content;
 
-    @FieldAttribute(value = "视频标题",length = 200)
-    private String videoTitle;
+    @FieldAttribute(value = "ppt预览地址",length = 400)
+    private String pptUrl;
 
     @FieldAttribute(value = "视频地址",length = 400)
     private String videoUrl;
@@ -55,6 +58,7 @@ public class TopicInfo extends BaseEntity {
      * 是不是当前要学习的课程
      */
     private boolean current = false;
+    private Integer timer;
 
     private List<ExerciseInfo> list = new ArrayList<>();
 
@@ -90,13 +94,6 @@ public class TopicInfo extends BaseEntity {
         this.content = content;
     }
 
-    public String getVideoTitle() {
-        return videoTitle;
-    }
-
-    public void setVideoTitle(String videoTitle) {
-        this.videoTitle = videoTitle;
-    }
 
     public String getVideoUrl() {
         return videoUrl;
@@ -146,19 +143,45 @@ public class TopicInfo extends BaseEntity {
         this.videoStatus = videoStatus;
     }
 
+    public String getPptUrl() {
+        return pptUrl;
+    }
+
+    public void setPptUrl(String pptUrl) {
+        this.pptUrl = pptUrl;
+    }
+
+    public String getTitle1() {
+        return title1;
+    }
+
+    public void setTitle1(String title1) {
+        this.title1 = title1;
+    }
+
+    public Integer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Integer timer) {
+        this.timer = timer;
+    }
+
     @Override
     public String toString() {
         return "TopicInfo{" +
                 "id=" + id +
                 ", sort=" + sort +
                 ", title='" + title + '\'' +
+                ", title1='" + title1 + '\'' +
                 ", content='" + content + '\'' +
-                ", videoTitle='" + videoTitle + '\'' +
+                ", pptUrl='" + pptUrl + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
                 ", createTime=" + createTime +
                 ", status=" + status +
                 ", videoStatus=" + videoStatus +
                 ", current=" + current +
+                ", timer=" + timer +
                 ", list=" + list +
                 '}';
     }

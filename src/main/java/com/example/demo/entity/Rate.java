@@ -30,6 +30,12 @@ public class Rate extends BaseEntity {
     @FieldAttribute("总分")
     private int score;
 
+    @FieldAttribute("用户反馈")
+    private String feedback1;
+
+    @FieldAttribute("用户反馈")
+    private String feedback2;
+
     /**
      * 排名，根据总分查出来的，每次通过查询获得，不入库
      */
@@ -112,6 +118,22 @@ public class Rate extends BaseEntity {
         this.sort = sort;
     }
 
+    public String getFeedback1() {
+        return feedback1;
+    }
+
+    public void setFeedback1(String feedback1) {
+        this.feedback1 = feedback1;
+    }
+
+    public String getFeedback2() {
+        return feedback2;
+    }
+
+    public void setFeedback2(String feedback2) {
+        this.feedback2 = feedback2;
+    }
+
     @Override
     public String toString() {
         return "Rate{" +
@@ -122,6 +144,8 @@ public class Rate extends BaseEntity {
                 ", timer=" + timer +
                 ", topicOver=" + topicOver +
                 ", score=" + score +
+                ", feedback1='" + feedback1 + '\'' +
+                ", feedback2='" + feedback2 + '\'' +
                 ", sort=" + sort +
                 '}';
     }

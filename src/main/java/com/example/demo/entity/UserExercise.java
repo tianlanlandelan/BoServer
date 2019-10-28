@@ -34,6 +34,9 @@ public class UserExercise extends BaseEntity {
     @FieldAttribute("得分")
     private int score;
 
+    @FieldAttribute("答题所花费的时间")
+    private int time;
+
     @FieldAttribute("用户的回答")
     private String userAnswer;
 
@@ -97,6 +100,14 @@ public class UserExercise extends BaseEntity {
         this.userAnswer = userAnswer;
     }
 
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
     @Override
     public String toString() {
         return "UserExercise{" +
@@ -105,6 +116,7 @@ public class UserExercise extends BaseEntity {
                 ", exerciseId=" + exerciseId +
                 ", answer='" + answer + '\'' +
                 ", score=" + score +
+                ", time=" + time +
                 ", userAnswer='" + userAnswer + '\'' +
                 ", createTime=" + createTime +
                 '}';

@@ -39,11 +39,6 @@ public class RateController {
         if(RequestUtil.notValidInteger(userId,exerciseId,score) || StringUtils.isEmpty(answer)){
             return MyResponse.badRequest();
         }
-        //清空计时器
-        rateService.setTimer(userId,null);
-        //刷进度
-        topicService.getNext(userId);
-
         UserExercise userExercise = new UserExercise();
         userExercise.setUserId(userId);
         userExercise.setExerciseId(exerciseId);

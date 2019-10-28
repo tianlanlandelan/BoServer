@@ -23,6 +23,12 @@ import java.util.List;
 @Service
 public class RateService {
     @Resource
+    private RateService rateService;
+
+    @Resource
+    private TopicService topicService;
+
+    @Resource
     private UserInfoMapper userInfoMapper;
 
     @Resource
@@ -45,6 +51,8 @@ public class RateService {
     public static final int MIDDLE_ROWS = 2;
 
     public ResultData saveFeedBack(Rate rate){
+
+
         Rate result = rateMapper.baseSelectById(rate);
         if(result ==null){
             return ResultData.error("User NotExist");
@@ -62,7 +70,8 @@ public class RateService {
      * @return
      */
     public ResultData save(UserExercise userExercise){
-        //TODO 校验user/exercise是否存在
+
+
 
         if(userInfoMapper.baseUpdateById(new UserInfo(userExercise.getUserId())) == null){
             return ResultData.error("User NotExist");
@@ -71,13 +80,23 @@ public class RateService {
         if(exerciseInfo == null){
             return ResultData.error("Exercise NotExist");
         }
-        userExercise.setAnswer(exerciseInfo.getAnswer());
-        userExerciseMapper.baseInsertAndReturnKey(userExercise);
+
         Rate rate = new Rate(userExercise.getUserId());
         rate = rateMapper.baseSelectById(rate);
         if(rate == null){
-
+            return ResultData.error("Rate NotExist");
         }else {
+            int time = rate.getTimer();
+            time = 90 - time;
+            //添加答题记录
+            userExercise.setTime(time);
+            userExercise.setAnswer(exerciseInfo.getAnswer());
+            userExerciseMapper.baseInsertAndReturnKey(userExercise);
+            //清空计时器
+            rateService.setTimer(userExercise.getUserId(),null);
+            //刷新学习进度
+            topicService.getNext(userExercise.getUserId());
+            //刷新总分
             rate.setScore(rate.getScore() + userExercise.getScore());
             rateMapper.baseUpdateById(rate);
         }
@@ -245,7 +264,7 @@ public class RateService {
         rate.setBaseKylePageSize(MIDDLE_ROWS);
         List<UserScores> downList = rateMapper.selectDown(rate);
         //查询比自己成绩高的人，只取最接近自己成绩的2个
-        int upSort = sort - MIDDLE_ROWS;
+        int upSort = sort - MIDDLE_ROWS - 1;
         if(upSort < 0){
             upSort = 0;
         }

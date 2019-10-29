@@ -13,7 +13,16 @@ public class ServiceConfig {
     public static final int DOING = 1;
     public static final int DONE = 2;
 
+    /**
+     * 每个课程倒计时330秒
+     */
+    public static final int TOPIC_TIME = 330;
 
+
+    /**
+     * 每个练习倒计时90秒
+     */
+    public static final int EXERCISE_TIME = 90;
 
     /**
      * 注册时的短信验证码发送类型

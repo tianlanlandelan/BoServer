@@ -6,6 +6,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
+/**
+ *
+ * @author yangkaile
+ * @date 2019-10-28 14:16:07
+ */
 public class ResponseUtils {
     /**
      * 根据组件返回的错误码重组应答报文
@@ -20,7 +25,7 @@ public class ResponseUtils {
             case UNAUTHORIZED: response = MyResponse.unauthorized();break;
             case INTERNAL_SERVER_ERROR: response = MyResponse.error();break;
             default:{
-                ResultData resultData = ResultData.error("未知错误");
+                ResultData resultData = ResultData.error("ERROR");
                 response = ResponseEntity.status(exception.getStatusCode()).contentType(MediaType.APPLICATION_JSON).body(resultData);
             }
         }

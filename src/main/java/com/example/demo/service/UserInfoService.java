@@ -1,8 +1,13 @@
 package com.example.demo.service;
 
+import com.example.demo.Languages;
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.Console;
+import com.example.demo.entity.Rate;
+import com.example.demo.entity.UserExercise;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.mapper.RateMapper;
+import com.example.demo.mapper.UserExerciseMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -26,11 +31,9 @@ public class UserInfoService {
      */
     public ResultData insert(UserInfo userInfo){
         if(checkExist(userInfo)){
-            return ResultData.error("uid/uemail重复注册");
+            return ResultData.error(Languages.RE_REGISTER);
         }
         userInfoMapper.baseInsertAndReturnKey(userInfo);
-
-        Console.print("insert",userInfo.getId(),userInfo);
         return ResultData.success(userInfo.getId());
     }
 
@@ -48,13 +51,13 @@ public class UserInfoService {
     public ResultData login(UserInfo userInfo){
         UserInfo user = getUserByEmailAndType(userInfo);
         if(user == null){
-            return ResultData.error("用户不存在");
+            return ResultData.error(Languages.NO_USER);
         }
         if(userInfo.getPassword().equals(user.getPassword())){
             user.setPassword("");
             return ResultData.success(user);
         }else {
-            return ResultData.error("密码不正确");
+            return ResultData.error(Languages.PASSWORD_WRONG);
         }
     }
 
@@ -81,10 +84,10 @@ public class UserInfoService {
     public ResultData forgetPassword(UserInfo userInfo){
         UserInfo user = getUserByEmailAndType(userInfo);
         if(user == null){
-            return ResultData.error("用户不存在");
+            return ResultData.error(Languages.NO_USER);
         }
         user.setStatus(UserInfo.FORGET_PASSWORD);
-        return ResultData.success("已通知系统管理员，请耐心等待");
+        return ResultData.success(Languages.NOTIFIED_ADMIN);
     }
 
     /**
@@ -99,7 +102,7 @@ public class UserInfoService {
         UserInfo userInfo = new UserInfo(id);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
-            return ResultData.error("User NotExist");
+            return ResultData.error(Languages.NO_USER);
         }
         userInfo.setFirstName(firstName);
         userInfo.setLastName(lastName);
@@ -119,12 +122,38 @@ public class UserInfoService {
         userInfo.setEmail(info.getEmail());
         userInfo.setBaseKyleUseAnd(false);
         List<UserInfo> list = userInfoMapper.baseSelectByCondition(userInfo);
-        Console.print("getUserInfo",list);
         for(UserInfo user : list){
             if(user.getType().equals(info.getType())){
                 return true;
             }
         }
         return false;
+    }
+
+    @Resource
+    private UserExerciseMapper userExerciseMapper;
+
+    @Resource
+    private RateMapper rateMapper;
+
+    /**
+     * 删除用户，同时删除用户学习进度和答题记录
+     * @param userId
+     * @return
+     */
+    public ResultData delete(int userId){
+
+        Rate rate = new Rate(userId);
+        rateMapper.baseDeleteById(rate);
+
+        UserExercise userExercise = new UserExercise();
+        userExercise.setUserId(userId);
+        userExercise.setBaseKyleUseAnd(false);
+        userExerciseMapper.baseDeleteByCondition(userExercise);
+
+        UserInfo userInfo = new UserInfo(userId);
+        userInfoMapper.baseDeleteById(userInfo);
+
+        return  ResultData.success();
     }
 }

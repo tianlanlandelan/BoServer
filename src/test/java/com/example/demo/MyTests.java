@@ -29,8 +29,17 @@ public class MyTests {
     RateMapper rateMapper;
     @Resource
     UserExerciseMapper userExerciseMapper;
+    @Resource
+    AppConfigMapper appConfigMapper;
 
+    @Resource
+    UserTopicMapper userTopicMapper;
 
+    @Test
+    public void init(){
+        AppConfig appConfig = new AppConfig(AppConfig.INVITE_CODE,"123456");
+        appConfigMapper.baseInsert(appConfig);
+    }
 
 
     @Test
@@ -44,8 +53,18 @@ public class MyTests {
         createUserInfoTable();
         createUserExerciseTable();
         createRateTable();
+        createAppConfigTable();
+        createUserTopicTable();
     }
 
+    @Test
+    public void createUserTopicTable(){
+        userTopicMapper.baseCreate(new UserTopic());
+    }
+    @Test
+    public void createAppConfigTable(){
+        appConfigMapper.baseCreate(new AppConfig());
+    }
     @Test
     public void createUserInfoTable(){
         userInfoMapper.baseCreate(new UserInfo());

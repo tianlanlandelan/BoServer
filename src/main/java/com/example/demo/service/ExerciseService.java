@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.Languages;
 import com.example.demo.MyConfig;
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.StringUtils;
@@ -32,7 +33,7 @@ public class ExerciseService {
         topicInfo.setId(exerciseInfo.getTopicId());
         topicInfo = topicInfoMapper.baseSelectById(topicInfo);
         if(topicInfo == null){
-            return ResultData.error("Topic NotExist");
+            return ResultData.error(Languages.NO_TOPIC);
         }
         mapper.baseInsertAndReturnKey(exerciseInfo);
         return ResultData.success(exerciseInfo.getId());
@@ -41,7 +42,7 @@ public class ExerciseService {
     public ResultData getAll(){
         List<ExerciseInfo> list = mapper.baseSelectAll(new ExerciseInfo());
         if(list == null || list.size() < 1){
-            return ResultData.error("No Excise");
+            return ResultData.error(Languages.NO_EXERCISE);
         }
         return ResultData.success(list);
     }
@@ -51,7 +52,7 @@ public class ExerciseService {
         exercise.setId(id);
         exercise = mapper.baseSelectById(exercise);
         if(exercise == null){
-            return ResultData.error("No Excise");
+            return ResultData.error(Languages.NO_EXERCISE);
         }
         if(StringUtils.isNotEmpty(exercise.getImg())){
             exercise.setImg(myConfig.NGINX_PREFIX + exercise.getImg());

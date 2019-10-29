@@ -1,14 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.Languages;
 import com.example.demo.MyConfig;
 import com.example.demo.ServiceConfig;
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.Console;
 import com.example.demo.common.util.StringUtils;
-import com.example.demo.entity.ExerciseInfo;
-import com.example.demo.entity.Rate;
-import com.example.demo.entity.TopicInfo;
-import com.example.demo.entity.UserInfo;
+import com.example.demo.entity.*;
 import com.example.demo.mapper.*;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +34,9 @@ public class TopicService {
     @Resource
     private RateMapper rateMapper;
 
+    @Resource
+    private UserTopicMapper userTopicMapper;
+
 
 
     public ResultData save(TopicInfo topicInfo){
@@ -57,7 +58,7 @@ public class TopicService {
             }
             return ResultData.success(list);
         }
-        return ResultData.error("No Topic!");
+        return ResultData.error(Languages.NO_TOPIC);
     }
 
     public ResultData getById(int id){
@@ -65,7 +66,7 @@ public class TopicService {
         topicInfo.setId(id);
         topicInfo = topicInfoMapper.baseSelectById(topicInfo);
         if(topicInfo == null){
-            return ResultData.error("Not Exist");
+            return ResultData.error(Languages.NO_TOPIC);
         }
         if(StringUtils.isNotEmpty(topicInfo.getVideoUrl())) {
             topicInfo.setVideoUrl(myConfig.NGINX_PREFIX + topicInfo.getVideoUrl());
@@ -81,12 +82,12 @@ public class TopicService {
         UserInfo userInfo = new UserInfo(userId);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
-            return ResultData.error("User NotExist");
+            return ResultData.error(Languages.NO_USER);
         }
 
         List<TopicInfo> topicList = topicInfoMapper.selectAll();
         if(topicList == null || topicList.size() < 1){
-            return ResultData.error("No Topic!");
+            return ResultData.error(Languages.NO_TOPIC);
         }
 
         List<ExerciseInfo> exerciseList = exerciseMapper.selectAll();
@@ -183,27 +184,35 @@ public class TopicService {
         UserInfo userInfo = new UserInfo(userId);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
-            return ResultData.error("User NotExist");
+            return ResultData.error(Languages.NO_USER);
         }
-        Rate rate = new Rate();
-        rate.setId(userId);
+        //获取用户学习进度
+        Rate rate = new Rate(userId);
         rate = rateMapper.baseSelectById(rate);
+
+
+        Integer time ;
         if(rate == null){
-            return ResultData.error("Not GetMenu");
+            return ResultData.error(Languages.NO_RATE);
         }else {
+            //保存用户计时
+            time = rate.getTimer();
             //清空用户计时器，只要是获取下一题，就说明当前学习已完成，重置计时器状态，避免影响下一学习内容的计时
             rate.setTimer(null);
             rateMapper.updateTimer(rate);
-            Console.println("getNext updateTimer",rateMapper.baseSelectById(rate));
         }
 
         if(rate.getTopicOver() == Rate.OVER){
             return ResultData.error("Topic Over");
         }
+
+        //获取课程列表
         List<TopicInfo> topicList = topicInfoMapper.baseSelectAll(new TopicInfo());
         if(topicList == null || topicList.size() < 1){
-            return ResultData.error("No Topic!");
+            return ResultData.error(Languages.NO_TOPIC);
         }
+
+        //获取练习列表
         List<ExerciseInfo> exerciseList = exerciseMapper.baseSelectAll(new ExerciseInfo());
         if(exerciseList == null || exerciseList.size() < 1){
             return ResultData.error("No Exercise!");
@@ -225,6 +234,13 @@ public class TopicService {
             if(rate.getTopicId() == topicInfo.getId()){
                 //当前课程有练习，判断练习
                 if(topicInfo.getList() != null && topicInfo.getList().size() > 0){
+                    //有练习的课程需要记录学习时间
+                    UserTopic userTopic = new UserTopic(userId,topicInfo.getId());
+                    if(time == null){
+                        time = 0 ;
+                    }
+                    userTopic.setTime(ServiceConfig.TOPIC_TIME - time);
+                    saveUserTopic(userTopic);
                     for(int j = 0 ; j < topicInfo.getList().size(); j++){
                         ExerciseInfo exerciseInfo = topicInfo.getList().get(j);
                         //如果有下一个练习，返回下一个练习
@@ -253,7 +269,16 @@ public class TopicService {
                 }
             }
         }
-        return ResultData.error("Not find topic");
+        return ResultData.error(Languages.NO_TOPIC);
+    }
+
+    private void saveUserTopic(UserTopic userTopic){
+        List<UserTopic> list = userTopicMapper.baseSelectByCondition(userTopic);
+        if(list == null || list.size() < 1){
+            userTopicMapper.baseInsertAndReturnKey(userTopic);
+        }else{
+            return;
+        }
     }
 
     /**
@@ -266,23 +291,23 @@ public class TopicService {
         UserInfo userInfo = new UserInfo(userId);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
-            return ResultData.error("User NotExist");
+            return ResultData.error(Languages.NO_USER);
         }
         Rate rate = new Rate(userId);
         rate = rateMapper.baseSelectById(rate);
         if(rate == null || rate.getTopicId() == null){
-            return ResultData.error("Not GetMenu");
+            return ResultData.error(Languages.NO_RATE);
         }
         if(rate.getTopicOver() == Rate.OVER){
             return ResultData.error("Topic Over");
         }
         List<TopicInfo> topicList = topicInfoMapper.baseSelectAll(new TopicInfo());
         if(topicList == null || topicList.size() < 1){
-            return ResultData.error("No Topic!");
+            return ResultData.error(Languages.NO_TOPIC);
         }
         List<ExerciseInfo> exerciseList = exerciseMapper.baseSelectAll(new ExerciseInfo());
         if(exerciseList == null || exerciseList.size() < 1){
-            return ResultData.error("No Exercise!");
+            return ResultData.error(Languages.NO_EXERCISE);
         }
         TopicInfo topic = null;
         //练习添加到课程中
@@ -299,12 +324,15 @@ public class TopicService {
            }
         }
         if(topic == null){
-            return ResultData.error("Not Find Topic!");
+            return ResultData.error(Languages.NO_TOPIC);
         }
+
         if(StringUtils.isNotEmpty(topic.getVideoUrl())){
             topic.setVideoUrl(myConfig.NGINX_PREFIX + topic.getVideoUrl());
         }
         if(rate.getExerciseId() == null){
+            topic.setList(null);
+            topic.setTimer(rate.getTimer());
             return ResultData.success(topic);
         }
         ExerciseInfo exercise = null;

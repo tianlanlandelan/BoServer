@@ -39,12 +39,16 @@ public class RateController {
         if(RequestUtil.notValidInteger(userId,exerciseId,score) || StringUtils.isEmpty(answer)){
             return MyResponse.badRequest();
         }
+        //清空计时器
+        int time = rateService.setTimerAndReturnValue(userId,null);
+        //刷进度
+        topicService.getNext(userId);
         UserExercise userExercise = new UserExercise();
         userExercise.setUserId(userId);
         userExercise.setExerciseId(exerciseId);
         userExercise.setScore(score);
         userExercise.setUserAnswer(answer);
-        return MyResponse.ok(rateService.save(userExercise));
+        return MyResponse.ok(rateService.save(userExercise,time));
 
     }
 

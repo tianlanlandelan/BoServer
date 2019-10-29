@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.Languages;
+import com.example.demo.ServiceConfig;
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.Console;
 import com.example.demo.entity.ExerciseInfo;
@@ -69,9 +71,7 @@ public class RateService {
      * 添加一条用户成绩详细记录（userExercise）,并更新用户总成绩（user_scores）
      * @return
      */
-    public ResultData save(UserExercise userExercise){
-
-
+    public ResultData save(UserExercise userExercise,int time){
 
         if(userInfoMapper.baseUpdateById(new UserInfo(userExercise.getUserId())) == null){
             return ResultData.error("User NotExist");
@@ -86,16 +86,10 @@ public class RateService {
         if(rate == null){
             return ResultData.error("Rate NotExist");
         }else {
-            int time = rate.getTimer();
-            time = 90 - time;
             //添加答题记录
-            userExercise.setTime(time);
+            userExercise.setTime(ServiceConfig.EXERCISE_TIME - time);
             userExercise.setAnswer(exerciseInfo.getAnswer());
             userExerciseMapper.baseInsertAndReturnKey(userExercise);
-            //清空计时器
-            rateService.setTimer(userExercise.getUserId(),null);
-            //刷新学习进度
-            topicService.getNext(userExercise.getUserId());
             //刷新总分
             rate.setScore(rate.getScore() + userExercise.getScore());
             rateMapper.baseUpdateById(rate);
@@ -120,6 +114,16 @@ public class RateService {
         return ResultData.success();
     }
 
+    public Integer setTimerAndReturnValue(int userId,Integer timer){
+        Integer result;
+        Rate rate = new Rate(userId);
+        rate = rateMapper.baseSelectById(rate);
+        result = rate.getTimer();
+        rate.setTimer(timer);
+        rateMapper.updateTimer(rate);
+        return result;
+    }
+
     /**
      * 获取比当前用户得分高的
      * 当比用户排名高的人大于8个时，只显示前三个和后四个
@@ -130,12 +134,12 @@ public class RateService {
         UserInfo userInfo = new UserInfo(userId);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if (userInfo == null) {
-            return ResultData.error("User NotExist");
+            return ResultData.error(Languages.NO_USER);
         }
         Rate rate = new Rate(userId);
         rate = rateMapper.baseSelectById(rate);
         if(rate == null){
-            return ResultData.error("No Scores");
+            return ResultData.error(Languages.NO_RATE);
         }
         int sort = rateMapper.selectSort(rate) + 1;
         List<UserScores> list;
@@ -204,12 +208,12 @@ public class RateService {
         UserInfo userInfo = new UserInfo(userId);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if (userInfo == null) {
-            return ResultData.error("User NotExist");
+            return ResultData.error(Languages.NO_USER);
         }
         Rate rate = new Rate(userId);
         rate = rateMapper.baseSelectById(rate);
         if(rate == null){
-            return ResultData.error("No Scores");
+            return ResultData.error(Languages.NO_RATE);
         }
         int sort = rateMapper.selectSort(rate) + 1;
         rate.setBaseKylePageSize(ROWS);
@@ -245,12 +249,12 @@ public class RateService {
         UserInfo userInfo = new UserInfo(userId);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if (userInfo == null) {
-            return ResultData.error("User NotExist");
+            return ResultData.error(Languages.NO_USER);
         }
         Rate rate = new Rate(userId);
         rate = rateMapper.baseSelectById(rate);
         if(rate == null){
-            return ResultData.error("No Scores");
+            return ResultData.error(Languages.NO_RATE);
         }
 
         int sort = rateMapper.selectSort(rate) + 1;

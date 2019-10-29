@@ -2,7 +2,6 @@ package com.example.demo.common.util;
 
 import com.example.demo.ServiceConfig;
 import com.example.demo.common.PublicConfig;
-import com.example.demo.entity.EmailLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,37 +89,37 @@ public class SendEmailUtils {
      * @param email 收件人邮箱
      * @return 邮件实体类EmailEntity
      */
-    public static EmailLog sendVCode(int type, String email){
-        String code = StringUtils.getNumbserString(ServiceConfig.EMAIL_VERIFICATIONCODE_LENGTH);
-        EmailLog entity = new EmailLog();
-        entity.setEmail(email);
-        entity.setType(type);
-        entity.setTitle(ServiceConfig.EMAIL_VERIFICATIONCODE_TITLE);
-        String body;
-        switch (type){
-            case PublicConfig.RegisterType :
-                body = String.format(ServiceConfig.RegisterBody,code,email);
-                break;
-            case PublicConfig.LoginType :
-                body = String.format(ServiceConfig.LoginBody,code,email);
-                break;
-            case PublicConfig.ResetPasswordType :
-                body = String.format(ServiceConfig.ResetPasswordBody,code,email);
-                break;
-            default:return null;
-        }
-        entity.setContent(body);
-        entity.setCode(code);
-        try {
-            sendSimpleMail(entity.getEmail(),entity.getTitle(),entity.getContent());
-        }catch (Exception e){
-            e.printStackTrace();
-            logger.error("send sendVerificationCode error :" + e.getMessage());
-            entity.setResult(e.getMessage());
-            entity.setStatusCode(PublicConfig.FAILED);
-        }
-        return entity;
-    }
+//    public static EmailLog sendVCode(int type, String email){
+//        String code = StringUtils.getNumbserString(ServiceConfig.EMAIL_VERIFICATIONCODE_LENGTH);
+//        EmailLog entity = new EmailLog();
+//        entity.setEmail(email);
+//        entity.setType(type);
+//        entity.setTitle(ServiceConfig.EMAIL_VERIFICATIONCODE_TITLE);
+//        String body;
+//        switch (type){
+//            case PublicConfig.RegisterType :
+//                body = String.format(ServiceConfig.RegisterBody,code,email);
+//                break;
+//            case PublicConfig.LoginType :
+//                body = String.format(ServiceConfig.LoginBody,code,email);
+//                break;
+//            case PublicConfig.ResetPasswordType :
+//                body = String.format(ServiceConfig.ResetPasswordBody,code,email);
+//                break;
+//            default:return null;
+//        }
+//        entity.setContent(body);
+//        entity.setCode(code);
+//        try {
+//            sendSimpleMail(entity.getEmail(),entity.getTitle(),entity.getContent());
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            logger.error("send sendVerificationCode error :" + e.getMessage());
+//            entity.setResult(e.getMessage());
+//            entity.setStatusCode(PublicConfig.FAILED);
+//        }
+//        return entity;
+//    }
 
 
 }

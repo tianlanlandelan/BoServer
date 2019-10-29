@@ -4,7 +4,6 @@ import com.example.demo.common.response.MyResponse;
 import com.example.demo.common.util.Console;
 import com.example.demo.common.util.StringUtils;
 import com.example.demo.entity.UserInfo;
-import com.example.demo.service.SendEmailService;
 import com.example.demo.service.TopicService;
 import com.example.demo.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +20,8 @@ import javax.annotation.Resource;
 @RestController
 public class LoginController {
     @Resource
-    UserInfoService userInfoService;
+    private UserInfoService userInfoService;
 
-    @Resource
-    private SendEmailService sendEmailService;
 
     @Resource
     private TopicService topicService;
@@ -37,7 +34,7 @@ public class LoginController {
      * @param sid 学号
      * @param password 密码
      * @param code 邀请码，由管理员统一设定
-     * @return
+     * @return 注册成功返回UserId
      */
     @PostMapping("/register")
     public ResponseEntity register(Integer type,String email,String sid,String password,String code){

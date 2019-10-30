@@ -87,6 +87,7 @@ public class UserInfoService {
             return ResultData.error(Languages.NO_USER);
         }
         user.setStatus(UserInfo.FORGET_PASSWORD);
+        userInfoMapper.baseUpdateById(user);
         return ResultData.success(Languages.NOTIFIED_ADMIN);
     }
 
@@ -109,6 +110,46 @@ public class UserInfoService {
         userInfo.setAvatarId(avatarId);
         userInfoMapper.baseUpdateById(userInfo);
         return ResultData.success();
+    }
+
+    /**
+     * 重置密码
+     * @param id
+     * @param password
+     * @return
+     */
+    public ResultData resetPassword(int id ,String password){
+        UserInfo userInfo = new UserInfo(id);
+        userInfo = userInfoMapper.baseSelectById(userInfo);
+        if(userInfo == null){
+            return ResultData.error(Languages.NO_USER);
+        }
+        userInfo.setPassword(password);
+        userInfo.setStatus(0);
+        userInfoMapper.baseUpdateById(userInfo);
+        return ResultData.success();
+    }
+
+    /**
+     * 获取忘记密码的用户
+     * @return
+     */
+    public ResultData getFotPasswordUser(){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setStatus(UserInfo.FORGET_PASSWORD);
+        List<UserInfo> list = userInfoMapper.baseSelectByCondition(userInfo);
+        if(list == null || list.size() < 1){
+            return ResultData.error("暂时没有忘记密码的用户");
+        }
+        return ResultData.success(list);
+    }
+
+    /**
+     * 获取用户总数
+     * @return
+     */
+    public ResultData getUserCount(){
+        return ResultData.success(userInfoMapper.baseSelectCount(new UserInfo()));
     }
 
     /**

@@ -2,6 +2,7 @@ package com.example.demo.mapper;
 
 import com.example.demo.common.mybatis.BaseMapper;
 import com.example.demo.entity.ExerciseInfo;
+import com.example.demo.view.AdminResult;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -14,6 +15,9 @@ public interface ExerciseMapper extends BaseMapper<ExerciseInfo> {
     String score = "score_info";
     @Select("select id,topicId,sort,title from " + exercise)
     List<ExerciseInfo> selectAll();
+
+
+
 
 
 

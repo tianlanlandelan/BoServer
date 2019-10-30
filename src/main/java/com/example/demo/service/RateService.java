@@ -4,16 +4,15 @@ import com.example.demo.Languages;
 import com.example.demo.ServiceConfig;
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.Console;
-import com.example.demo.entity.ExerciseInfo;
-import com.example.demo.entity.Rate;
-import com.example.demo.entity.UserExercise;
-import com.example.demo.entity.UserInfo;
+import com.example.demo.entity.*;
 import com.example.demo.mapper.*;
+import com.example.demo.view.UserExer;
 import com.example.demo.view.UserScores;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,11 +23,9 @@ import java.util.List;
  */
 @Service
 public class RateService {
-    @Resource
-    private RateService rateService;
 
-    @Resource
-    private TopicService topicService;
+    private static HashMap<Integer,String> exerciseMap  = null;
+    private static HashMap<Integer,String> topicMap  = null;
 
     @Resource
     private UserInfoMapper userInfoMapper;
@@ -41,6 +38,9 @@ public class RateService {
 
     @Resource
     private ExerciseMapper exerciseMapper;
+
+    @Resource
+    private TopicInfoMapper topicInfoMapper;
 
     /**
      * 排行榜上显示的行数
@@ -307,4 +307,48 @@ public class RateService {
         return ResultData.success(setPercentage4List(list,firstScore));
     }
 
+
+
+    public ResultData getLeaderBoardByType(int type){
+
+        List<UserScores> list = rateMapper.getLeaderBoardByType(type);
+        HashMap<Integer,String> tMap = getTopicMap();
+        HashMap<Integer,String> eMap = getExerciseMap();
+        for (UserScores score :list){
+            score.setTopicTitle(tMap.get(score.getTopicId()));
+            score.setExerciseTitle(eMap.get(score.getExerciseId()));
+        }
+        return ResultData.success(list);
+    }
+    public ResultData getUserExerByType(int type){
+
+        List<UserExer> list = rateMapper.getUserExerByType(type);
+        HashMap<Integer,String> eMap = getExerciseMap();
+        for (UserExer userExer :list){
+            userExer.setExerciseTitle(eMap.get(userExer.getExerciseId()));
+        }
+        return ResultData.success(list);
+    }
+
+
+    public  HashMap<Integer,String> getExerciseMap(){
+        if(exerciseMap == null){
+            exerciseMap = new HashMap<>(32);
+            List<ExerciseInfo> list = exerciseMapper.selectAll();
+            for(ExerciseInfo info:list){
+                exerciseMap.put(info.getId(),info.getTitle());
+            }
+        }
+        return exerciseMap;
+    }
+    public  HashMap<Integer,String> getTopicMap(){
+        if(topicMap == null){
+            topicMap = new HashMap<>(16);
+            List<TopicInfo> list = topicInfoMapper.selectAll();
+            for(TopicInfo info:list){
+                topicMap.put(info.getId(),info.getTitle());
+            }
+        }
+        return topicMap;
+    }
 }

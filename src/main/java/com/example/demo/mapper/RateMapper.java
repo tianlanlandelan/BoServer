@@ -106,4 +106,5 @@ public interface RateMapper extends BaseMapper<Rate> {
             "on user.id = user_exercise.userId " +
             "order by userId,exerciseId ")
     List<UserExer>  getUserExerByType(int type);
+
 }

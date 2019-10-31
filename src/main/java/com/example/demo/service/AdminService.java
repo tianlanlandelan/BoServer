@@ -1,12 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.common.response.ResultData;
-import com.example.demo.entity.UserExercise;
-import com.example.demo.entity.UserInfo;
-import com.example.demo.entity.UserTopic;
-import com.example.demo.mapper.UserExerciseMapper;
-import com.example.demo.mapper.UserInfoMapper;
-import com.example.demo.mapper.UserTopicMapper;
+import com.example.demo.common.util.Console;
+import com.example.demo.entity.*;
+import com.example.demo.mapper.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,6 +21,15 @@ public class AdminService {
     @Resource
     private UserTopicMapper userTopicMapper;
 
+    @Resource
+    private RateMapper rateMapper;
+
+    @Resource
+    private TopicInfoMapper topicInfoMapper;
+
+    @Resource
+    private ExerciseMapper exerciseMapper;
+
     /**
      * 用户学习明细、答题明细等
      * @return
@@ -33,19 +39,41 @@ public class AdminService {
         userInfo.setType(type);
         List<UserInfo> userList = userInfoMapper.baseSelectByCondition(userInfo);
         HashMap<Integer,HashMap<String,String>> result = new HashMap<>();
+        HashMap<Integer,Rate> rateMap = getRateMap();
+
+        HashMap<Integer,String> topicTitleMap = getTopicTitleMap();
+        HashMap<Integer,String> exerciseTitleMap =getExerciseTitleMap();
+
         for(UserInfo user:userList){
             HashMap<String,String> map = new HashMap<>();
+
+            //添加用户名片
             map.put("userId",user.getId() + "");
             map.put("uid",user.getSid());
             map.put("uemail",user.getEmail());
             map.put("firstName",user.getFirstName());
             map.put("lastName",user.getLastName());
+
+            Rate rate = rateMap.get(user.getId());
+            if(rate != null){
+                //添加用户排名
+                map.put("sort", rate.getSort() + "");
+                map.put("score",rate.getScore() + "");
+                map.put("topic",topicTitleMap.get(rate.getTopicId()));
+                map.put("exercise",exerciseTitleMap.get(rate.getExerciseId()));
+                map.put("feedback1",rate.getFeedback1());
+                map.put("feedback2",rate.getFeedback2());
+            }
+
+
             result.put(user.getId(),map);
         }
         //添加答题明细
         result = addUserExercise(userList,result,type);
         //添加学习明细
         result = addUserTopic(userList,result,type);
+
+
 
         return ResultData.success(result.values());
     }
@@ -124,8 +152,8 @@ public class AdminService {
             }
             for (UserTopic topic:list){
                 map.put("userId",topic.getUserId() + "");
-                map.put("topic" + topic.getTopicId(),topic.getTopicId() + "");
-                map.put("topicTime" + topic.getTopicId(),topic.getTime() + "");
+                map.put("topic" + (topic.getTopicId() - 1),topic.getTopicId() + "");
+                map.put("topicTime" + (topic.getTopicId() - 1),topic.getTime() + "");
             }
             result.put(user.getId(),map);
         }
@@ -155,5 +183,39 @@ public class AdminService {
         return map;
     }
 
+    /**
+     * 获取排名信息
+     * @return
+     */
+    private HashMap<Integer,Rate> getRateMap(){
+        Rate rate = new Rate();
+        rate.setBaseKyleUseASC(false);
+        List<Rate> list = rateMapper.baseSelectByCondition(rate);
+        int index = 0;
+        HashMap<Integer,Rate> result = new HashMap<>();
+        //添加排名
+        for(Rate r: list){
+            r.setSort(++index);
+            result.put(r.getId(),r);
+        }
+        return result;
+    }
 
+    private HashMap<Integer,String> getTopicTitleMap(){
+        List<TopicInfo> list = topicInfoMapper.baseSelectAll(new TopicInfo());
+        HashMap<Integer,String> result = new HashMap<>();
+        for(TopicInfo topicInfo:list){
+            result.put(topicInfo.getId(),topicInfo.getTitle());
+        }
+        return result;
+    }
+
+    private HashMap<Integer,String> getExerciseTitleMap(){
+        List<ExerciseInfo> list = exerciseMapper.baseSelectAll(new ExerciseInfo());
+        HashMap<Integer,String> result = new HashMap<>();
+        for(ExerciseInfo exerciseInfo:list){
+            result.put(exerciseInfo.getId(),exerciseInfo.getTitle());
+        }
+        return result;
+    }
 }

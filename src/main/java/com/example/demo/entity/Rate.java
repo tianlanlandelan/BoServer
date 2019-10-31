@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import com.example.demo.common.mybatis.BaseEntity;
 import com.example.demo.common.mybatis.annotation.FieldAttribute;
 import com.example.demo.common.mybatis.annotation.KeyAttribute;
+import com.example.demo.common.mybatis.annotation.SortAttribute;
 import com.example.demo.common.mybatis.annotation.TableAttribute;
 
 @TableAttribute(name="rate",comment = "学习进度表")
@@ -28,6 +29,7 @@ public class Rate extends BaseEntity {
     private int topicOver;
 
     @FieldAttribute("总分")
+    @SortAttribute
     private int score;
 
     @FieldAttribute("用户反馈")

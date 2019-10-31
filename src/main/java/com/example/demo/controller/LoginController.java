@@ -1,9 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.Languages;
 import com.example.demo.common.response.MyResponse;
+import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.Console;
 import com.example.demo.common.util.StringUtils;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.service.AppConfigService;
 import com.example.demo.service.TopicService;
 import com.example.demo.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,10 @@ public class LoginController {
     @Resource
     private TopicService topicService;
 
+    @Resource
+    private AppConfigService appConfigService;
+
+
 
     /**
      * 注册功能
@@ -40,8 +47,11 @@ public class LoginController {
     public ResponseEntity register(Integer type,String email,String sid,String password,String code){
         Console.print("register","type",type,"email",email,"sid",sid,"password",password);
         if(!RequestUtil.validType(type) || StringUtils.isEmpty(email,sid,password,code)
-                || !code.equals("123456")){
+                ){
             return MyResponse.badRequest();
+        }
+        if(!code.equals(appConfigService.getInviteCode())){
+            return MyResponse.ok(ResultData.error(Languages.WRONG_CODE));
         }
         UserInfo userInfo = new UserInfo();
         userInfo.setType(type);

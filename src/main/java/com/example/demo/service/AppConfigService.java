@@ -12,17 +12,25 @@ public class AppConfigService {
     private AppConfigMapper mapper;
 
     /**
+     * 邀请码
+     */
+    private static String inviteCode = null;
+
+    /**
      * 获取邀请码
      * @return
      */
     public String getInviteCode(){
-        AppConfig appConfig = new AppConfig(AppConfig.INVITE_CODE);
-        appConfig = mapper.baseSelectByKey(appConfig);
-        if(appConfig == null){
-            return null;
-        }else{
-            return appConfig.getV();
+        if(inviteCode == null){
+            AppConfig appConfig = new AppConfig(AppConfig.INVITE_CODE);
+            appConfig = mapper.baseSelectByKey(appConfig);
+            if(appConfig == null){
+                inviteCode = null;
+            }else{
+                inviteCode = appConfig.getV();
+            }
         }
+        return inviteCode;
     }
 
     /**
@@ -38,6 +46,7 @@ public class AppConfigService {
         }else{
             appConfig.setV(value);
             mapper.baseUpdateByKey(appConfig);
+            inviteCode = value;
         }
     }
 }

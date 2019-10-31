@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.response.MyResponse;
+import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.StringUtils;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.AppConfigService;
@@ -39,6 +40,11 @@ public class AdminController {
         }
         appConfigService.setInviteCode(value);
         return MyResponse.ok();
+    }
+
+    @GetMapping("/getInviteCode")
+    public ResponseEntity getInviteCode(){
+        return MyResponse.ok(ResultData.success(appConfigService.getInviteCode()));
     }
 
     /**

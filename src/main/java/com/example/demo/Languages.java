@@ -24,6 +24,11 @@ public class Languages {
     public static final String NO_RATE = "Unable to find the user's learning progress";
 
     /**
+     * 邀请码错误
+     */
+    public static final String WRONG_CODE = "Wrong Invitation Code!";
+
+    /**
      * 重复注册
      */
     public static final String RE_REGISTER = "uid/umail entered has been registered! Please try another uid/umail.";

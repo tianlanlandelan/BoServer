@@ -30,6 +30,13 @@ public class AdminService {
     @Resource
     private ExerciseMapper exerciseMapper;
 
+
+    public ResultData getByEmail(String email){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setEmail(email);
+        return ResultData.success(userInfoMapper.baseSelectByCondition(userInfo));
+    }
+
     /**
      * 用户学习明细、答题明细等
      * @return

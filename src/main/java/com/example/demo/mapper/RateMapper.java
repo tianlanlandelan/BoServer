@@ -97,14 +97,11 @@ public interface RateMapper extends BaseMapper<Rate> {
         "order by score desc ")
     List<UserScores>  getLeaderBoardByType(int type);
 
-
-
-    @Select("select sid,email,firstName,lastName,exerciseId,answer,userAnswer,score,time,user_exercise.createTime createTime " +
-            "from (select id,sid,email,firstName,lastName " +
-            "      from user_info " +
-            "      where user_info.type = #{type} ) as user left join user_exercise " +
-            "on user.id = user_exercise.userId " +
-            "order by userId,exerciseId ")
-    List<UserExer>  getUserExerByType(int type);
+    @Select("select sid,email,firstName,lastName,type,score,feedback1,feedback2 " +
+            "from user_info user,rate " +
+            "where user.id = rate.id " +
+            "order by score desc " +
+            "limit 0,20 ")
+    List<UserScores>  getLeaderBoardTop20();
 
 }

@@ -21,11 +21,11 @@ public class UserTopic extends BaseEntity {
 
     @FieldAttribute("用户Id")
     @IndexAttribute
-    private int userId;
+    private Integer userId;
 
     @FieldAttribute("课程ID")
     @IndexAttribute
-    private int topicId;
+    private Integer topicId;
 
     @FieldAttribute("学习时间")
     private int time;
@@ -36,7 +36,7 @@ public class UserTopic extends BaseEntity {
     public UserTopic() {
     }
 
-    public UserTopic(int userId, int topicId) {
+    public UserTopic(Integer userId, Integer topicId) {
         this.userId = userId;
         this.topicId = topicId;
     }
@@ -49,19 +49,19 @@ public class UserTopic extends BaseEntity {
         this.id = id;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public int getTopicId() {
+    public Integer getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(int topicId) {
+    public void setTopicId(Integer topicId) {
         this.topicId = topicId;
     }
 

@@ -8,10 +8,7 @@ import com.example.demo.service.AppConfigService;
 import com.example.demo.service.RateService;
 import com.example.demo.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -108,6 +105,29 @@ public class AdminController {
     @GetMapping("/getInfoByType")
     public ResponseEntity getInfoByType(Integer type){
         return MyResponse.ok(adminService.selectInfoByType(type));
+    }
+
+
+    @GetMapping("/getByEmail")
+    public ResponseEntity getByEmail(String email){
+        if(StringUtils.isEmpty(email)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(adminService.getByEmail(email));
+    }
+
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity deleteUser(Integer userId){
+        if(RequestUtil.notValidInteger(userId)){
+            return MyResponse.badRequest();
+        }
+
+        return MyResponse.ok(userInfoService.delete(userId));
+    }
+
+    @GetMapping("/getLeaderBoardTop20")
+    public ResponseEntity getLeaderBoardTop20(){
+        return MyResponse.ok(rateService.getLeaderBoardTop20());
     }
 
 

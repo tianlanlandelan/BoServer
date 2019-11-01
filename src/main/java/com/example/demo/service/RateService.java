@@ -320,16 +320,6 @@ public class RateService {
         }
         return ResultData.success(list);
     }
-    public ResultData getUserExerByType(int type){
-
-        List<UserExer> list = rateMapper.getUserExerByType(type);
-        HashMap<Integer,String> eMap = getExerciseMap();
-        for (UserExer userExer :list){
-            userExer.setExerciseTitle(eMap.get(userExer.getExerciseId()));
-        }
-        return ResultData.success(list);
-    }
-
 
     public  HashMap<Integer,String> getExerciseMap(){
         if(exerciseMap == null){
@@ -350,5 +340,14 @@ public class RateService {
             }
         }
         return topicMap;
+    }
+
+    public ResultData getLeaderBoardTop20(){
+        List<UserScores> list = rateMapper.getLeaderBoardTop20();
+        int sort = 0;
+        for(UserScores userScores:list){
+            userScores.setSort(++sort);
+        }
+        return ResultData.success(list);
     }
 }

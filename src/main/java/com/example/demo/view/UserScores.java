@@ -23,6 +23,7 @@ public class UserScores {
     private String exerciseTitle;
     private String feedback1;
     private String feedback2;
+    private int type;
 
     /**
      * 用户得分
@@ -176,6 +177,14 @@ public class UserScores {
         this.exerciseTitle = exerciseTitle;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "UserScores{" +
@@ -188,6 +197,7 @@ public class UserScores {
                 ", exerciseTitle='" + exerciseTitle + '\'' +
                 ", feedback1='" + feedback1 + '\'' +
                 ", feedback2='" + feedback2 + '\'' +
+                ", type=" + type +
                 ", score=" + score +
                 ", sort=" + sort +
                 ", firstName='" + firstName + '\'' +

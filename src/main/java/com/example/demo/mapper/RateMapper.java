@@ -2,6 +2,7 @@ package com.example.demo.mapper;
 
 import com.example.demo.common.mybatis.BaseMapper;
 import com.example.demo.entity.Rate;
+import com.example.demo.view.UserExer;
 import com.example.demo.view.UserScores;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -61,5 +62,46 @@ public interface RateMapper extends BaseMapper<Rate> {
             "FROM rate a,user_info b " +
             "WHERE a.id = b.id AND b.type=1 AND a.score >#{score}")
     Integer selectSort(Rate rate);
+
+
+/**
+ * select sid,email,firstName,lastName,topicId,exerciseId,score,feedback1,feedback2
+ * from
+ *   (select id,sid,email,firstName,lastName
+ *    from user_info
+ *     where user_info.type = 2 ) as user
+ *    left join rate
+ * on user.id = rate.id
+ * order by score desc ;
+ *
+ * select sid,email,firstName,lastName,exerciseId,answer,userAnswer,score,time,user_exercise.createTime
+ * from (select id,sid,email,firstName,lastName
+ *       from user_info
+ *       where user_info.type = 1 ) as user left join user_exercise
+ * on user.id = user_exercise.userId
+ * order by userId,exerciseId;
+ *
+ * select sid,email,firstName,lastName,topicId,time,user_topic.createTime
+ * from user_info left join user_topic
+ *     on user_info.id = user_topic.userId
+ * order by userId,topicId;
+ */
+
+    @Select("select sid,email,firstName,lastName,topicId,exerciseId,score,feedback1,feedback2 " +
+        "from " +
+        "  (select id,sid,email,firstName,lastName " +
+        "   from user_info " +
+        "    where user_info.type = #{type} ) as user " +
+        "   left join rate " +
+        "on user.id = rate.id " +
+        "order by score desc ")
+    List<UserScores>  getLeaderBoardByType(int type);
+
+    @Select("select sid,email,firstName,lastName,type,score,feedback1,feedback2 " +
+            "from user_info user,rate " +
+            "where user.id = rate.id " +
+            "order by score desc " +
+            "limit 0,20 ")
+    List<UserScores>  getLeaderBoardTop20();
 
 }

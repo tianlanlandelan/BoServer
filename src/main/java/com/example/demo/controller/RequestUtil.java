@@ -15,14 +15,21 @@ public class RequestUtil {
 
     /**
      * 验证是不是子网站的用户类型 1 ~ 6
+     * Admin 99
      * @param type
      * @return
      */
     public static boolean validType(Integer type){
-        if(type == null || type > 6 || type < 1 ){
+        if(type == null){
             return false;
         }
-        return true;
+        if(type >= 1 && type <= 6){
+            return true;
+        }
+        if(type == 99){
+            return true;
+        }
+        return false;
     }
 
     /**

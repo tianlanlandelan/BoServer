@@ -96,14 +96,15 @@ public class SqlFieldReader {
             }
             int index = builder.lastIndexOf(condition);
             if(index < 0){
-                return null;
+                return "";
             }
             return builder.substring(0,index);
 
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        //注意，不要return null
+        return "";
     }
 
     /**

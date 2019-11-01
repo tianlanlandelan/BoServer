@@ -6,9 +6,11 @@ import com.example.demo.common.util.Console;
 import com.example.demo.entity.Rate;
 import com.example.demo.entity.UserExercise;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.entity.UserTopic;
 import com.example.demo.mapper.RateMapper;
 import com.example.demo.mapper.UserExerciseMapper;
 import com.example.demo.mapper.UserInfoMapper;
+import com.example.demo.mapper.UserTopicMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -87,6 +89,7 @@ public class UserInfoService {
             return ResultData.error(Languages.NO_USER);
         }
         user.setStatus(UserInfo.FORGET_PASSWORD);
+        userInfoMapper.baseUpdateById(user);
         return ResultData.success(Languages.NOTIFIED_ADMIN);
     }
 
@@ -109,6 +112,46 @@ public class UserInfoService {
         userInfo.setAvatarId(avatarId);
         userInfoMapper.baseUpdateById(userInfo);
         return ResultData.success();
+    }
+
+    /**
+     * 重置密码
+     * @param id
+     * @param password
+     * @return
+     */
+    public ResultData resetPassword(int id ,String password){
+        UserInfo userInfo = new UserInfo(id);
+        userInfo = userInfoMapper.baseSelectById(userInfo);
+        if(userInfo == null){
+            return ResultData.error(Languages.NO_USER);
+        }
+        userInfo.setPassword(password);
+        userInfo.setStatus(0);
+        userInfoMapper.baseUpdateById(userInfo);
+        return ResultData.success();
+    }
+
+    /**
+     * 获取忘记密码的用户
+     * @return
+     */
+    public ResultData getFotPasswordUser(){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setStatus(UserInfo.FORGET_PASSWORD);
+        List<UserInfo> list = userInfoMapper.baseSelectByCondition(userInfo);
+        if(list == null || list.size() < 1){
+            return ResultData.error("暂时没有忘记密码的用户");
+        }
+        return ResultData.success(list);
+    }
+
+    /**
+     * 获取用户总数
+     * @return
+     */
+    public ResultData getUserCount(){
+        return ResultData.success(userInfoMapper.baseSelectCount(new UserInfo()));
     }
 
     /**
@@ -136,6 +179,9 @@ public class UserInfoService {
     @Resource
     private RateMapper rateMapper;
 
+    @Resource
+    private UserTopicMapper userTopicMapper;
+
     /**
      * 删除用户，同时删除用户学习进度和答题记录
      * @param userId
@@ -148,11 +194,17 @@ public class UserInfoService {
 
         UserExercise userExercise = new UserExercise();
         userExercise.setUserId(userId);
-        userExercise.setBaseKyleUseAnd(false);
         userExerciseMapper.baseDeleteByCondition(userExercise);
+
+        UserTopic userTopic = new UserTopic();
+        userTopic.setUserId(userId);
+        userTopicMapper.baseDeleteByCondition(userTopic);
+
 
         UserInfo userInfo = new UserInfo(userId);
         userInfoMapper.baseDeleteById(userInfo);
+
+
 
         return  ResultData.success();
     }

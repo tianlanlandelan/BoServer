@@ -29,12 +29,27 @@ public class Console {
     }
 
     public static void info(String title,Object ... objects){
-        StringBuilder builder = new StringBuilder();
-        builder.append("======").append(title).append("======");
-        for (Object object:objects){
-            builder.append("\n").append(object);
+        if(logger.isInfoEnabled()){
+            StringBuilder builder = new StringBuilder();
+            builder.append("======").append(title).append("======");
+            for (Object object:objects){
+                builder.append("\n").append(object);
+            }
+            builder.append("\n");
+            logger.info(builder.toString());
         }
-        logger.info(builder.toString());
+    }
+
+    public static void error(String title,Object ... objects){
+        if(logger.isErrorEnabled()){
+            StringBuilder builder = new StringBuilder();
+            builder.append("======").append(title).append("======");
+            for (Object object:objects){
+                builder.append("\n").append(object);
+            }
+            builder.append("\n");
+            logger.error(builder.toString());
+        }
     }
 
 }

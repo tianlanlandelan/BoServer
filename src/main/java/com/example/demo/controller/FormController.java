@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 import com.example.demo.common.response.MyResponse;
+import com.example.demo.common.util.Console;
 import com.example.demo.common.util.RequestUtil;
 import com.example.demo.common.util.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -17,9 +19,9 @@ import java.util.Map;
  * 接口转发
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/form")
 @CrossOrigin(origins = "*",allowedHeaders="*", maxAge = 3600)
-public class ApiController {
+public class FormController {
 
     @Resource
     HttpServletRequest request;
@@ -30,76 +32,83 @@ public class ApiController {
     // TODO 转发前校验JWT和用户权限
 
     /**
-     * json 格式的GET请求
-     * @param params
+     * 表单形式的GET请求
      * @return
      */
     @GetMapping
-    public ResponseEntity get(@RequestBody Map<String,String> params){
-
-        ResponseEntity responseEntity;
+    public ResponseEntity get(){
+        Map<String,String> map = RequestUtil.getParam(request);
+        ResponseEntity responseEntity ;
         try {
-            responseEntity = restTemplate.getForEntity(RequestUtil.getUrl(params,request), String.class,params);
-            RequestUtil.successLog(request,params,responseEntity);
+            String url = RequestUtil.getUrl(map,request);
+            if(map == null){
+                responseEntity = restTemplate.getForEntity(url, String.class);
+            }else{
+                responseEntity = restTemplate.getForEntity(url, String.class,map);
+            }
+            RequestUtil.successLog(request,responseEntity);
         }catch (Exception e){
             responseEntity = ResponseUtils.getResponseFromException(e);
-            RequestUtil.errorLog(request,params,responseEntity);
+            RequestUtil.errorLog(request,responseEntity);
         }
         return responseEntity;
     }
 
 
     /**
-     * JSON  形式的 POST 请求
-     * @param params
+     * 表单形式的 POST 请求
      * @return
      */
     @PostMapping
-    public ResponseEntity post(@RequestBody Map<String,String> params){
+    public ResponseEntity post(){
+        Map<String,String> map = RequestUtil.getParam(request);
         ResponseEntity responseEntity;
         try {
-            responseEntity = restTemplate.postForEntity(RequestUtil.getUrl(params,request),null,String.class,params);
-            RequestUtil.successLog(request,params,responseEntity);
+            responseEntity = restTemplate.postForEntity(RequestUtil.getUrl(map,request),null,String.class,map);
+            RequestUtil.successLog(request,responseEntity);
         }catch (Exception e){
             responseEntity = ResponseUtils.getResponseFromException(e);
-            RequestUtil.errorLog(request,params,responseEntity);
+            RequestUtil.errorLog(request,responseEntity);
         }
         return responseEntity;
     }
 
+
     /**
-     * JSON 格式的 PUT 请求
-     * @param params
+     * 表单形式的 PUT  请求
      * @return
      */
     @PutMapping
-    public ResponseEntity put(@RequestBody Map<String,String> params){
+    public ResponseEntity put(){
+        Map<String,String> map = RequestUtil.getParam(request);
         ResponseEntity responseEntity = MyResponse.ok();
         try {
-            restTemplate.put(RequestUtil.getUrl(params,request),null,params);
-            RequestUtil.successLog(request,params,responseEntity);
+            restTemplate.put(RequestUtil.getUrl(map,request),null,map);
+            RequestUtil.successLog(request,responseEntity);
         }catch (Exception e){
             responseEntity = ResponseUtils.getResponseFromException(e);
-            RequestUtil.errorLog(request,params,responseEntity);
+            RequestUtil.errorLog(request,responseEntity);
         }
         return responseEntity;
     }
 
     /**
-     * JSON 形式的 DELETE 请求
-     * @param params
+     * 表单形式的 DELETE 请求
      * @return
      */
     @DeleteMapping
-    public ResponseEntity delete(@RequestBody Map<String,String> params){
+    public ResponseEntity delete(){
+        Map<String,String> map = RequestUtil.getParam(request);
         ResponseEntity responseEntity = MyResponse.ok();
         try {
-            restTemplate.delete(RequestUtil.getUrl(params,request),params);
-            RequestUtil.successLog(request,params,responseEntity);
+            restTemplate.delete(RequestUtil.getUrl(map,request),map);
+            RequestUtil.successLog(request,responseEntity);
         }catch (Exception e){
             responseEntity = ResponseUtils.getResponseFromException(e);
-            RequestUtil.errorLog(request,params,responseEntity);
+            RequestUtil.errorLog(request,responseEntity);
         }
         return responseEntity;
+
     }
+
 }

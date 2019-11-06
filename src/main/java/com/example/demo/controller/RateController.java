@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.response.MyResponse;
+import com.example.demo.common.util.RequestUtil;
 import com.example.demo.common.util.StringUtils;
 import com.example.demo.entity.Rate;
 import com.example.demo.entity.UserExercise;

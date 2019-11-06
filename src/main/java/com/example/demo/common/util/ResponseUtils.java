@@ -17,17 +17,23 @@ public class ResponseUtils {
      * @param exception
      * @return
      */
-    public static ResponseEntity getResponseFromException(HttpClientErrorException exception){
+    public static ResponseEntity getResponseFromException(Exception exception){
         ResponseEntity response;
-        switch (exception.getStatusCode()){
-            case FORBIDDEN:  response = MyResponse.forbidden(); break;
-            case BAD_REQUEST: response = MyResponse.badRequest();break;
-            case UNAUTHORIZED: response = MyResponse.unauthorized();break;
-            case INTERNAL_SERVER_ERROR: response = MyResponse.error();break;
-            default:{
-                ResultData resultData = ResultData.error("ERROR");
-                response = ResponseEntity.status(exception.getStatusCode()).contentType(MediaType.APPLICATION_JSON).body(resultData);
+        if(exception instanceof HttpClientErrorException){
+            HttpClientErrorException errorException = (HttpClientErrorException) exception;
+            switch (errorException.getStatusCode()){
+                case FORBIDDEN:  response = MyResponse.forbidden(); break;
+                case BAD_REQUEST: response = MyResponse.badRequest();break;
+                case UNAUTHORIZED: response = MyResponse.unauthorized();break;
+                case INTERNAL_SERVER_ERROR: response = MyResponse.error();break;
+                default:{
+                    ResultData resultData = ResultData.error("ERROR");
+                    response = ResponseEntity.status(errorException.getStatusCode()).contentType(MediaType.APPLICATION_JSON).body(resultData);
+                }
             }
+
+        }else {
+            response = MyResponse.badRequest();
         }
         return  response;
     }

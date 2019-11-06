@@ -1,8 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.Languages;
+import com.example.demo.config.Languages;
 import com.example.demo.common.response.ResultData;
-import com.example.demo.common.util.Console;
 import com.example.demo.entity.Rate;
 import com.example.demo.entity.UserExercise;
 import com.example.demo.entity.UserInfo;
@@ -11,7 +10,6 @@ import com.example.demo.mapper.RateMapper;
 import com.example.demo.mapper.UserExerciseMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.mapper.UserTopicMapper;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

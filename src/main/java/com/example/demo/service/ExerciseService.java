@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.Languages;
-import com.example.demo.MyConfig;
+import com.example.demo.config.Languages;
+import com.example.demo.config.MyConfig;
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.StringUtils;
 import com.example.demo.entity.ExerciseInfo;

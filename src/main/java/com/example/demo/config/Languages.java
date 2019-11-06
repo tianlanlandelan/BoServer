@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.config;
 
 /**
  * 返回前端的统一话术

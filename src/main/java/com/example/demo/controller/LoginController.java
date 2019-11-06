@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.Languages;
+import com.example.demo.config.Languages;
 import com.example.demo.common.response.MyResponse;
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.Console;

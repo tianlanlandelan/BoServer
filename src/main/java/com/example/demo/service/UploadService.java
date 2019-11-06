@@ -1,15 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.MyConfig;
+import com.example.demo.config.MyConfig;
 import com.example.demo.common.response.ResultData;
 import com.example.demo.common.util.DateUtils;
 import com.example.demo.common.util.FileUtils;
-import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 

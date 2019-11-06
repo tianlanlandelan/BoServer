@@ -1,7 +1,5 @@
 package com.example.demo.common.util;
 
-import com.example.demo.ServiceConfig;
-import com.example.demo.common.PublicConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

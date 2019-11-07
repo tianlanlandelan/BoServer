@@ -1,5 +1,8 @@
 package com.example.demo.common.mybatis;
 
+import com.example.demo.common.util.Console;
+import com.example.demo.common.util.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,41 +12,86 @@ import java.util.Map;
  * @date 2019-09-12 09:08:43
  */
 public class TypeCaster {
+    /**
+     * varchar/varbinary类型，设置最大长度为65535，如果超过这个数，转换为text/blob
+     */
     private static final int MAX = 65535;
+
+    /**
+     * decimal类型的最大长度为65，根据平时使用的需要，设置为20，足够大多数场景使用了
+     */
+    private static final int DECIMAL_MAX = 20;
     private static Map<String,String> map = new HashMap<>(16);
-    static {
-        map.put("String","varchar(50)");
-        map.put("int","int");
-        map.put("Integer","int");
-        map.put("long","bigint");
-        map.put("Long","bigint");
-        map.put("Date","datetime");
-        map.put("byte[]","varbinary(50)");
-    }
-    private static final String STRING = "String";
+
+    private static final String STRING = "string";
+    private static final String INT = "int";
+    private static final String INTEGER = "integer";
+    private static final String LONG = "long";
+    private static final String DATE = "date";
     private static final String BYTE_ARRAY = "byte[]";
+    private static final String FLOAT = "float";
+    private static final String DOUBLE = "double";
+    static {
+        map.put(STRING,"varchar(50)");
+        map.put(INT,"int");
+        map.put(INTEGER,"int");
+        map.put(LONG,"bigint");
+        map.put(DATE,"datetime");
+        map.put(BYTE_ARRAY,"varbinary(50)");
+        map.put(FLOAT,"decimal(10,2)");
+        map.put(DOUBLE,"decimal(10,2)");
+    }
+    /**
+     * 根据Java数据类型和设置的长度，转换为MySQL的数据类型
+     * @param key
+     * @param length
+     * @return
+     */
     public static String getType(String key,int length){
-        if(length < 0){
+        if(StringUtils.isEmpty(key)){
          return null;
-        }else if(length == 0){
-            return map.get(key);
-        }else if(length > 0 && length < MAX){
-            if(STRING.equals(key)){
-                return "varchar(" + length + ")";
-            }else if(BYTE_ARRAY.equals(key)){
-                return "varbinary(" + length + ")";
-            }else {
-                return null;
-            }
-        }else{
-            if(STRING.equals(key)){
-                return "text";
-            }else if(STRING.equals(key)){
-                return "blob";
-            }else {
-                return null;
-            }
         }
 
+        if(length <= 0){
+            return map.get(key.toLowerCase());
+        }
+
+        /*
+        float/Float/double/Double类型判断设置的长度是否符合规则，如果超长，将长度设置为允许的最大长度
+         */
+        if(FLOAT.equalsIgnoreCase(key)
+                || DOUBLE.equalsIgnoreCase(key)){
+            length = length > DECIMAL_MAX ? DECIMAL_MAX:length;
+            return "decimal(" + length + ",2)";
+        }
+
+        //String 根据长度，转换为 varchar 或 text
+        if(STRING.equalsIgnoreCase(key)){
+            if(length < MAX){
+                return "varchar(" + length + ")";
+            }
+            return "text";
+        }
+
+        //byte[] 根据长度，转换为 varbinary 或 blob
+        if(BYTE_ARRAY.equalsIgnoreCase(key)){
+            if(length < MAX){
+                return "varbinary(" + length + ")";
+            }
+            return "blob";
+        }
+
+        return map.get(key.toLowerCase());
+    }
+
+    public static void main(String[] args){
+        Console.println("String",getType("String",100));
+        Console.println("Integer",getType("Integer",100));
+        Console.println("float",getType("float",100));
+        Console.println("Float",getType("Float",10));
+        Console.println("long",getType("long",10));
+        Console.println("Long",getType("Long",10));
+        Console.println("Date",getType("Date",10));
+        Console.println("double",getType("double",10));
     }
 }

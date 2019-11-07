@@ -1,9 +1,9 @@
 package com.example.demo;
 
-import com.example.demo.common.util.Console;
-import com.example.demo.common.util.StringUtils;
-import com.example.demo.entity.*;
-import com.example.demo.mapper.*;
+import com.justdoit.kyle.common.util.Console;
+import com.justdoit.kyle.common.util.StringUtils;
+import com.justdoit.kyle.entity.*;
+import com.justdoit.kyle.mapper.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +35,9 @@ public class MyTests {
     @Resource
     UserTopicMapper userTopicMapper;
 
+    @Resource
+    CourseMapper couseMapper;
+
     @Test
     public void init(){
         AppConfig appConfig = new AppConfig(AppConfig.INVITE_CODE,"123456");
@@ -44,6 +47,10 @@ public class MyTests {
 
     @Test
     public void contextLoads() {
+    }
+    @Test
+    public void createCouseTable(){
+        couseMapper.baseCreate(new CourseInfo());
     }
 
     @Test

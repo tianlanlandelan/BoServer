@@ -6,7 +6,7 @@ import com.justdoit.kyle.common.mybatis.annotation.*;
 /**
  * @author yangkaile
  * @date 2019-10-20 14:00:10
- * 练习题
+ * 练习题：单选、多选、判断
  */
 @TableAttribute(name = "exercise_info", comment = "练习题(单选/多选，2到5个选项)")
 public class ExerciseInfo extends BaseEntity {

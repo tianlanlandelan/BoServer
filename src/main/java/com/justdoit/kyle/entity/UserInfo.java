@@ -45,7 +45,7 @@ public class UserInfo extends BaseEntity {
     @FieldAttribute
     private Date createTime = new Date();
 
-    @FieldAttribute
+    @FieldAttribute("用户账号状态")
     @IndexAttribute
     private Integer status ;
 

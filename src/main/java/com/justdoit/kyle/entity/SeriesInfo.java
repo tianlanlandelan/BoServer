@@ -15,4 +15,6 @@ public class SeriesInfo extends BaseEntity {
     @AutoIncrKeyAttribute
     private int id;
 
+    
+
 }

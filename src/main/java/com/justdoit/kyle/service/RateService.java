@@ -1,7 +1,7 @@
 package com.justdoit.kyle.service;
 
 import com.justdoit.kyle.config.Languages;
-import com.justdoit.kyle.config.ServiceConfig;
+
 import com.justdoit.kyle.common.response.ResultData;
 import com.justdoit.kyle.common.util.Console;
 import com.justdoit.kyle.view.UserScores;
@@ -29,17 +29,11 @@ public class RateService {
     @Resource
     private UserInfoMapper userInfoMapper;
 
-    @Resource
-    private UserExerciseMapper userExerciseMapper;
 
     @Resource
     private RateMapper rateMapper;
 
-    @Resource
-    private ExerciseMapper exerciseMapper;
 
-    @Resource
-    private TopicInfoMapper topicInfoMapper;
 
     /**
      * 排行榜上显示的行数
@@ -51,77 +45,7 @@ public class RateService {
      */
     public static final int MIDDLE_ROWS = 2;
 
-    public ResultData saveFeedBack(Rate rate){
 
-
-        Rate result = rateMapper.baseSelectById(rate);
-        if(result ==null){
-            return ResultData.error("User NotExist");
-        }else{
-            result.setFeedback1(rate.getFeedback1());
-            result.setFeedback2(rate.getFeedback2());
-            rateMapper.baseUpdateById(result);
-            return ResultData.success();
-        }
-    }
-
-    /**
-     * 保存用户成绩
-     * 添加一条用户成绩详细记录（userExercise）,并更新用户总成绩（user_scores）
-     * @return
-     */
-    public ResultData save(UserExercise userExercise, int time){
-
-        if(userInfoMapper.baseUpdateById(new UserInfo(userExercise.getUserId())) == null){
-            return ResultData.error("User NotExist");
-        }
-        ExerciseInfo exerciseInfo = exerciseMapper.baseSelectById(new ExerciseInfo(userExercise.getExerciseId()));
-        if(exerciseInfo == null){
-            return ResultData.error("Exercise NotExist");
-        }
-
-        Rate rate = new Rate(userExercise.getUserId());
-        rate = rateMapper.baseSelectById(rate);
-        if(rate == null){
-            return ResultData.error("Rate NotExist");
-        }else {
-            //添加答题记录
-            userExercise.setTime(ServiceConfig.EXERCISE_TIME - time);
-            userExercise.setAnswer(exerciseInfo.getAnswer());
-            userExerciseMapper.baseInsertAndReturnKey(userExercise);
-            //刷新总分
-            rate.setScore(rate.getScore() + userExercise.getScore());
-            rateMapper.baseUpdateById(rate);
-        }
-        return ResultData.success();
-    }
-
-    /**
-     * 用户开始答题时，每秒更新答题倒计时
-     * @param userId
-     * @param timer
-     * @return
-     */
-    public ResultData setTimer(int userId,Integer timer){
-        Rate rate = new Rate(userId);
-        rate = rateMapper.baseSelectById(rate);
-        if(rate == null){
-            return ResultData.error("Rate NotExist");
-        }
-        rate.setTimer(timer);
-        rateMapper.updateTimer(rate);
-        return ResultData.success();
-    }
-
-    public Integer setTimerAndReturnValue(int userId,Integer timer){
-        Integer result;
-        Rate rate = new Rate(userId);
-        rate = rateMapper.baseSelectById(rate);
-        result = rate.getTimer();
-        rate.setTimer(timer);
-        rateMapper.updateTimer(rate);
-        return result;
-    }
 
     /**
      * 获取比当前用户得分高的
@@ -135,7 +59,7 @@ public class RateService {
         if (userInfo == null) {
             return ResultData.error(Languages.NO_USER);
         }
-        Rate rate = new Rate(userId);
+        Rate rate = new Rate();
         rate = rateMapper.baseSelectById(rate);
         if(rate == null){
             return ResultData.error(Languages.NO_RATE);
@@ -209,7 +133,7 @@ public class RateService {
         if (userInfo == null) {
             return ResultData.error(Languages.NO_USER);
         }
-        Rate rate = new Rate(userId);
+        Rate rate = new Rate();
         rate = rateMapper.baseSelectById(rate);
         if(rate == null){
             return ResultData.error(Languages.NO_RATE);
@@ -250,7 +174,7 @@ public class RateService {
         if (userInfo == null) {
             return ResultData.error(Languages.NO_USER);
         }
-        Rate rate = new Rate(userId);
+        Rate rate = new Rate();
         rate = rateMapper.baseSelectById(rate);
         if(rate == null){
             return ResultData.error(Languages.NO_RATE);
@@ -308,38 +232,7 @@ public class RateService {
 
 
 
-    public ResultData getLeaderBoardByType(int type){
 
-        List<UserScores> list = rateMapper.getLeaderBoardByType(type);
-        HashMap<Integer,String> tMap = getTopicMap();
-        HashMap<Integer,String> eMap = getExerciseMap();
-        for (UserScores score :list){
-            score.setTopicTitle(tMap.get(score.getTopicId()));
-            score.setExerciseTitle(eMap.get(score.getExerciseId()));
-        }
-        return ResultData.success(list);
-    }
-
-    public  HashMap<Integer,String> getExerciseMap(){
-        if(exerciseMap == null){
-            exerciseMap = new HashMap<>(32);
-            List<ExerciseInfo> list = exerciseMapper.selectAll();
-            for(ExerciseInfo info:list){
-                exerciseMap.put(info.getId(),info.getTitle());
-            }
-        }
-        return exerciseMap;
-    }
-    public  HashMap<Integer,String> getTopicMap(){
-        if(topicMap == null){
-            topicMap = new HashMap<>(16);
-            List<TopicInfo> list = topicInfoMapper.selectAll();
-            for(TopicInfo info:list){
-                topicMap.put(info.getId(),info.getTitle());
-            }
-        }
-        return topicMap;
-    }
 
     public ResultData getLeaderBoardTop20(){
         List<UserScores> list = rateMapper.getLeaderBoardTop20();

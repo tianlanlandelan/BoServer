@@ -38,16 +38,4 @@ public class UserInfoController {
         return MyResponse.ok(userInfoService.update(id,firstName,lastName,avatarId));
     }
 
-    /**
-     * 删除用户信息，同时删除该用户的学习进度和答题记录
-     * @param userId
-     * @return
-     */
-    @DeleteMapping
-    public ResponseEntity delete(Integer userId){
-        if(RequestUtil.notValidInteger(userId)){
-            return MyResponse.badRequest();
-        }
-        return MyResponse.ok(userInfoService.delete(userId));
-    }
 }

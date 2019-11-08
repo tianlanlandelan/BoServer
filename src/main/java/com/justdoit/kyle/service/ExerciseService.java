@@ -28,16 +28,6 @@ public class ExerciseService {
     @Resource
     private MyConfig myConfig;
 
-    public ResultData save(ExerciseInfo exerciseInfo){
-        TopicInfo topicInfo = new TopicInfo();
-        topicInfo.setId(exerciseInfo.getTopicId());
-        topicInfo = topicInfoMapper.baseSelectById(topicInfo);
-        if(topicInfo == null){
-            return ResultData.error(Languages.NO_TOPIC);
-        }
-        mapper.baseInsertAndReturnKey(exerciseInfo);
-        return ResultData.success(exerciseInfo.getId());
-    }
 
     public ResultData getAll(){
         List<ExerciseInfo> list = mapper.baseSelectAll(new ExerciseInfo());

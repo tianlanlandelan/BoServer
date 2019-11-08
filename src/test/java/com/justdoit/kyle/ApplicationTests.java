@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.justdoit.kyle;
 
 import com.justdoit.kyle.common.util.Console;
 import com.justdoit.kyle.common.util.StringUtils;
@@ -16,27 +16,32 @@ import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+public class ApplicationTests {
+    @Resource
+    private AppConfigMapper appConfigMapper;
+    @Resource
+    private ChapterMapper chapterMapper;
+    @Resource
+    private CourseMapper courseMapper;
+    @Resource
+    private ExamExerciseMapper examExerciseMapper;
+    @Resource
+    private ExamMapper examMapper;
+    @Resource
+    private ExerciseMapper exerciseMapper;
+    @Resource
+    private RateMapper rateMapper;
+    @Resource
+    private SeriesMapper seriesMapper;
+    @Resource
+    private TopicInfoMapper topicInfoMapper;
+    @Resource
+    private UserExamMapper userExamMapper;
+    @Resource
+    private UserExerciseMapper userExerciseMapper;
+    @Resource
+    private UserInfoMapper userInfoMapper;
 
-public class MyTests {
-
-    @Resource
-    UserInfoMapper userInfoMapper;
-    @Resource
-    TopicInfoMapper topicInfoMapper;
-    @Resource
-    ExerciseMapper exerciseMapper;
-    @Resource
-    RateMapper rateMapper;
-    @Resource
-    UserExerciseMapper userExerciseMapper;
-    @Resource
-    AppConfigMapper appConfigMapper;
-
-    @Resource
-    UserTopicMapper userTopicMapper;
-
-    @Resource
-    CourseMapper couseMapper;
 
     @Test
     public void init(){
@@ -50,35 +55,59 @@ public class MyTests {
     }
     @Test
     public void createCouseTable(){
-        couseMapper.baseCreate(new CourseInfo());
+        courseMapper.baseCreate(new CourseInfo());
     }
 
     @Test
     public void createTable(){
-        createTopicInfoTable();
-        createExerciseInfoTable();
-        createUserInfoTable();
-        createUserExerciseTable();
-        createRateTable();
         createAppConfigTable();
-        createUserTopicTable();
+        createChapterTable();
+        createCouseTable();
+        createExamExerciseTable();
+        createExamTable();
+        createExerciseInfoTable();
+        createRateTable();
+        createSeriesTable();
+        createTopicInfoTable();
+        createUserExamTable();
+        createUserExerciseTable();
+        createUserInfoTable();
     }
 
     @Test
-    public void createUserTopicTable(){
-        userTopicMapper.baseCreate(new UserTopic());
-    }
-    @Test
     public void createAppConfigTable(){
         appConfigMapper.baseCreate(new AppConfig());
+    }
+    @Test
+    public void createChapterTable(){
+        chapterMapper.baseCreate(new ChapterInfo());
     }
     @Test
     public void createUserInfoTable(){
         userInfoMapper.baseCreate(new UserInfo());
     }
     @Test
+    public void createExamExerciseTable(){
+        examExerciseMapper.baseCreate(new ExamExercise());
+    }
+
+    @Test
+    public void createExamTable(){
+        examMapper.baseCreate(new ExamInfo());
+    }
+    @Test
+    public void createSeriesTable(){
+        seriesMapper.baseCreate(new SeriesInfo());
+    }
+
+    @Test
     public void createTopicInfoTable(){
         topicInfoMapper.baseCreate(new TopicInfo());
+    }
+
+    @Test
+    public void createUserExamTable(){
+        userExamMapper.baseCreate(new UserExam());
     }
     @Test
     public void createExerciseInfoTable(){
@@ -146,15 +175,6 @@ public class MyTests {
             userInfo.setAvatarId(new Random().nextInt(10) + 1);
             userInfo.setFirstName("Test"+i);
             userInfo.setLastName(StringUtils.getAllCharString(4));
-
-            try{
-                userInfoMapper.baseInsertAndReturnKey(userInfo);
-                Rate rate = new Rate(userInfo.getId());
-                rate.setScore(new Random().nextInt(2000) + 100);
-                rateMapper.baseInsert(rate);
-            }catch (DuplicateKeyException e){
-                Console.print("error",e.getMessage());
-            }
         }
     }
 }

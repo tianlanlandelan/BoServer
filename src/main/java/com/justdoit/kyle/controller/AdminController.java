@@ -87,26 +87,6 @@ public class AdminController {
     }
 
 
-    /**
-     * 按类型获取排行榜
-     * @param type
-     * @return
-     */
-    @GetMapping("/getLeaderBoard")
-    public ResponseEntity getLeaderBoard(Integer type){
-
-        return MyResponse.ok(rateService.getLeaderBoardByType(type));
-    }
-
-    /**
-     * 按类型获取用户所有学习记录
-     * @param type
-     * @return
-     */
-    @GetMapping("/getInfoByType")
-    public ResponseEntity getInfoByType(Integer type){
-        return MyResponse.ok(adminService.selectInfoByType(type));
-    }
 
 
     @GetMapping("/getByEmail")
@@ -117,14 +97,6 @@ public class AdminController {
         return MyResponse.ok(adminService.getByEmail(email));
     }
 
-    @DeleteMapping("/deleteUser")
-    public ResponseEntity deleteUser(Integer userId){
-        if(RequestUtil.notValidInteger(userId)){
-            return MyResponse.badRequest();
-        }
-
-        return MyResponse.ok(userInfoService.delete(userId));
-    }
 
     @GetMapping("/getLeaderBoardTop20")
     public ResponseEntity getLeaderBoardTop20(){

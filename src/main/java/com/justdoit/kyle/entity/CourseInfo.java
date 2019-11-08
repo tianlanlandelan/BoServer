@@ -8,13 +8,17 @@ import java.util.Date;
 /**
  * @author yangkaile
  * @date 2019-11-06 14:02:26
- * 课程，一个课程下有多个课时
+ * 课程，一个课程下有多个课时，课程可以单独存在，也可以属于某个专题
  */
 @TableAttribute(name = "course_info",comment = "课程，一个课程下面有多个课时")
 public class CourseInfo extends BaseEntity {
     @FieldAttribute
     @AutoIncrKeyAttribute
     private int id;
+
+    @FieldAttribute("专题Id，课程可以单独存在，也可以是某个专题下的")
+    @IndexAttribute
+    private Integer seriesId;
 
     @FieldAttribute(value = "标题",length = 200)
     private String title;
@@ -93,10 +97,19 @@ public class CourseInfo extends BaseEntity {
     }
 
 
+    public Integer getSeriesId() {
+        return seriesId;
+    }
+
+    public void setSeriesId(Integer seriesId) {
+        this.seriesId = seriesId;
+    }
+
     @Override
     public String toString() {
         return "CourseInfo{" +
                 "id=" + id +
+                ", seriesId=" + seriesId +
                 ", title='" + title + '\'' +
                 ", subTitle='" + subTitle + '\'' +
                 ", img='" + img + '\'' +

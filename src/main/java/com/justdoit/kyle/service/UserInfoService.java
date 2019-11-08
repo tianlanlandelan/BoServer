@@ -175,33 +175,4 @@ public class UserInfoService {
     @Resource
     private RateMapper rateMapper;
 
-    @Resource
-    private UserTopicMapper userTopicMapper;
-
-    /**
-     * 删除用户，同时删除用户学习进度和答题记录
-     * @param userId
-     * @return
-     */
-    public ResultData delete(int userId){
-
-        Rate rate = new Rate(userId);
-        rateMapper.baseDeleteById(rate);
-
-        UserExercise userExercise = new UserExercise();
-        userExercise.setUserId(userId);
-        userExerciseMapper.baseDeleteByCondition(userExercise);
-
-        UserTopic userTopic = new UserTopic();
-        userTopic.setUserId(userId);
-        userTopicMapper.baseDeleteByCondition(userTopic);
-
-
-        UserInfo userInfo = new UserInfo(userId);
-        userInfoMapper.baseDeleteById(userInfo);
-
-
-
-        return  ResultData.success();
-    }
 }

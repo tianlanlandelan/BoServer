@@ -23,43 +23,6 @@ public class ExerciseController {
     @Resource
     private ExerciseService service;
 
-    /**
-     * 添加练习，如果练习绑定的课程不存在，添加失败
-     * @param topicId
-     * @param sort
-     * @param title
-     * @param content
-     * @param img
-     * @param optionA
-     * @param optionB
-     * @param optionC
-     * @param optionD
-     * @param answer
-     * @return
-     */
-    @PostMapping
-    public ResponseEntity save(Integer topicId,Integer sort,String title,String content,
-                               String img,String optionA,
-                               String optionB,String optionC,String optionD,
-                               String answer){
-        if(topicId == null || topicId < 0 || !RequestUtil.validAnswer(answer) ||
-                StringUtils.isEmpty(title,optionA,optionB,optionC,optionD)) {
-            return MyResponse.badRequest();
-        }
-        ExerciseInfo info = new ExerciseInfo();
-        info.setTopicId(topicId);
-        info.setSort(sort);
-        info.setTitle(title);
-        info.setContent(content);
-        info.setImg(img);
-        info.setOptionA(optionA);
-        info.setOptionB(optionB);
-        info.setOptionC(optionC);
-        info.setOptionD(optionD);
-        info.setAnswer(answer);
-
-        return MyResponse.ok(service.save(info));
-    }
 
     @GetMapping("getAll")
     public ResponseEntity getAll(){

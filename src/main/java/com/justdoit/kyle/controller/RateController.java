@@ -24,53 +24,7 @@ public class RateController {
     @Resource
     private RateService rateService;
 
-    @Resource
-    private TopicService topicService;
 
-    /**
-     * 保存练习的得分，此时，将练习的倒计时清空，将当前进度向后推进
-     * @param userId 用户id
-     * @param exerciseId 练习id
-     * @param score 得分
-     * @param answer 用户答案
-     * @return
-     */
-    @PostMapping
-    public ResponseEntity save(Integer userId,Integer exerciseId,Integer score,String answer){
-        if(RequestUtil.notValidInteger(userId,exerciseId,score) || StringUtils.isEmpty(answer)){
-            return MyResponse.badRequest();
-        }
-        //清空计时器
-        int time = rateService.setTimerAndReturnValue(userId,null);
-        //刷进度
-        topicService.getNext(userId);
-        UserExercise userExercise = new UserExercise();
-        userExercise.setUserId(userId);
-        userExercise.setExerciseId(exerciseId);
-        userExercise.setScore(score);
-        userExercise.setUserAnswer(answer);
-        return MyResponse.ok(rateService.save(userExercise,time));
-
-    }
-
-    @PutMapping
-    public ResponseEntity timer(Integer userId,Integer timer){
-        if(RequestUtil.notValidInteger(userId)){
-            return MyResponse.badRequest();
-        }
-        return MyResponse.ok(rateService.setTimer(userId,timer));
-    }
-
-    @PutMapping("/feedback")
-    public ResponseEntity feedback(Integer userId,String feedback1,String feedback2){
-        if(RequestUtil.notValidInteger(userId) || StringUtils.isEmpty(feedback1,feedback2)){
-            return MyResponse.badRequest();
-        }
-        Rate rate = new Rate(userId);
-        rate.setFeedback1(feedback1);
-        rate.setFeedback2(feedback2);
-        return MyResponse.ok(rateService.saveFeedBack(rate));
-    }
 
     /**
      * 获取比自己排名高的用户的信息

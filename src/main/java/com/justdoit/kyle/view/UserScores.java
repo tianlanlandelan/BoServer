@@ -51,7 +51,7 @@ public class UserScores {
 
     public UserScores(UserInfo userInfo, Rate rate ) {
         id = userInfo.getId();
-        score = rate.getScore();
+
         firstName = userInfo.getFirstName();
         lastName = userInfo.getLastName();
         avatarId = userInfo.getAvatarId();

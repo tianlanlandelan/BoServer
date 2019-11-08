@@ -35,9 +35,6 @@ public class CourseInfo extends BaseEntity {
     @SortAttribute
     private Date createTime;
 
-    @FieldAttribute("课程状态")
-    @IndexAttribute
-    private int status;
 
     public int getId() {
         return id;
@@ -95,13 +92,6 @@ public class CourseInfo extends BaseEntity {
         this.createTime = createTime;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 
     @Override
     public String toString() {
@@ -113,7 +103,6 @@ public class CourseInfo extends BaseEntity {
                 ", overview='" + overview + '\'' +
                 ", price=" + price +
                 ", createTime=" + createTime +
-                ", status=" + status +
                 '}';
     }
 }

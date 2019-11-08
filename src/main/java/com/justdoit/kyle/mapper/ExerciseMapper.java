@@ -10,15 +10,4 @@ import java.util.List;
 @Mapper
 public interface ExerciseMapper extends BaseMapper<ExerciseInfo> {
 
-    String exercise = "exercise_info";
-    String score = "score_info";
-    @Select("select id,topicId,sort,title from " + exercise)
-    List<ExerciseInfo> selectAll();
-
-
-
-
-
-
-
 }

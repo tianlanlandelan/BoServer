@@ -8,7 +8,6 @@ import com.justdoit.kyle.entity.UserInfo;
 import com.justdoit.kyle.mapper.RateMapper;
 import com.justdoit.kyle.mapper.UserExerciseMapper;
 import com.justdoit.kyle.mapper.UserInfoMapper;
-import com.justdoit.kyle.mapper.UserTopicMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

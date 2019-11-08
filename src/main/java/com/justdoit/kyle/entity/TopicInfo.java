@@ -43,6 +43,9 @@ public class TopicInfo extends BaseEntity {
     @FieldAttribute("课时类型，0 视频课程；1 练习")
     private int type;
 
+    @FieldAttribute("试题id,如果该课时是练习题时设置该字段")
+    private Integer examId;
+
     @FieldAttribute("课时标签，如：练习课、实验课等")
     private String label;
 
@@ -127,6 +130,14 @@ public class TopicInfo extends BaseEntity {
         this.label = label;
     }
 
+    public Integer getExamId() {
+        return examId;
+    }
+
+    public void setExamId(Integer examId) {
+        this.examId = examId;
+    }
+
     @Override
     public String toString() {
         return "TopicInfo{" +
@@ -139,6 +150,7 @@ public class TopicInfo extends BaseEntity {
                 ", videoUrl='" + videoUrl + '\'' +
                 ", createTime=" + createTime +
                 ", type=" + type +
+                ", examId=" + examId +
                 ", label='" + label + '\'' +
                 '}';
     }

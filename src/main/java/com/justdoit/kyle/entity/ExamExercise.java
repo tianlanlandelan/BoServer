@@ -32,4 +32,73 @@ public class ExamExercise extends BaseEntity {
 
     @FieldAttribute
     private Date createTime = new Date();
+
+    public ExamExercise() {
+    }
+
+    public ExamExercise(int examId, int exerciseId, int score) {
+        this.examId = examId;
+        this.exerciseId = exerciseId;
+        this.score = score;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getExamId() {
+        return examId;
+    }
+
+    public void setExamId(int examId) {
+        this.examId = examId;
+    }
+
+    public int getExerciseId() {
+        return exerciseId;
+    }
+
+    public void setExerciseId(int exerciseId) {
+        this.exerciseId = exerciseId;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    @Override
+    public String toString() {
+        return "ExamExercise{" +
+                "id=" + id +
+                ", examId=" + examId +
+                ", exerciseId=" + exerciseId +
+                ", score=" + score +
+                ", sort=" + sort +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

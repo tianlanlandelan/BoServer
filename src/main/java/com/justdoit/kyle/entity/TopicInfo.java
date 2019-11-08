@@ -1,42 +1,38 @@
 package com.justdoit.kyle.entity;
 
 import com.justdoit.kyle.common.mybatis.BaseEntity;
-import com.justdoit.kyle.common.mybatis.annotation.AutoIncrKeyAttribute;
-import com.justdoit.kyle.common.mybatis.annotation.FieldAttribute;
-import com.justdoit.kyle.common.mybatis.annotation.SortAttribute;
-import com.justdoit.kyle.common.mybatis.annotation.TableAttribute;
-
-import java.util.ArrayList;
+import com.justdoit.kyle.common.mybatis.annotation.*;
 import java.util.Date;
-import java.util.List;
 
 /**
- * 课程，包含内容和视频
+ * 课时内容
  * @author yangkaile
  * @date 2019-10-15 15:06:32
  */
-@TableAttribute(name = "topic_info",comment = "课程详情")
+@TableAttribute(name = "topic_info",comment = "课时内容")
 public class TopicInfo extends BaseEntity {
 
     @FieldAttribute
     @AutoIncrKeyAttribute
     private int id;
 
+    @FieldAttribute("课程id")
+    @IndexAttribute
+    private int courseId;
+
+    @FieldAttribute("章节id")
+    @IndexAttribute
+    private int chapterId;
+
     @FieldAttribute("排序")
     @SortAttribute
     private Integer sort;
 
-    @FieldAttribute(value = "课程标题",length = 200)
+    @FieldAttribute(value = "课时标题",length = 200)
     private String title;
 
-    @FieldAttribute(value = "课程标题1",length = 200)
-    private String title1;
-
-    @FieldAttribute(value = "课程内容",length = 5000)
+    @FieldAttribute(value = "课时内容",length = 5000)
     private String content;
-
-    @FieldAttribute(value = "ppt预览地址",length = 400)
-    private String pptUrl;
 
     @FieldAttribute(value = "视频地址",length = 400)
     private String videoUrl;
@@ -44,23 +40,12 @@ public class TopicInfo extends BaseEntity {
     @FieldAttribute
     private Date createTime = new Date();
 
-    /**
-     * 课程进行状态
-     */
-    private int status;
+    @FieldAttribute("课时类型，0 视频课程；1 练习")
+    private int type;
 
-    /**
-     * 视频观看状态
-     */
-    private int videoStatus;
+    @FieldAttribute("课时标签")
+    private String label;
 
-    /**
-     * 是不是当前要学习的课程
-     */
-    private boolean current = false;
-    private Integer timer;
-
-    private List<ExerciseInfo> list = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -68,6 +53,22 @@ public class TopicInfo extends BaseEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+    public int getChapterId() {
+        return chapterId;
+    }
+
+    public void setChapterId(int chapterId) {
+        this.chapterId = chapterId;
     }
 
     public Integer getSort() {
@@ -94,7 +95,6 @@ public class TopicInfo extends BaseEntity {
         this.content = content;
     }
 
-
     public String getVideoUrl() {
         return videoUrl;
     }
@@ -111,78 +111,35 @@ public class TopicInfo extends BaseEntity {
         this.createTime = createTime;
     }
 
-    public List<ExerciseInfo> getList() {
-        return list;
+    public int getType() {
+        return type;
     }
 
-    public void setList(List<ExerciseInfo> list) {
-        this.list = list;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    public int getStatus() {
-        return status;
+    public String getLabel() {
+        return label;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public boolean isCurrent() {
-        return current;
-    }
-
-    public void setCurrent(boolean current) {
-        this.current = current;
-    }
-
-    public int getVideoStatus() {
-        return videoStatus;
-    }
-
-    public void setVideoStatus(int videoStatus) {
-        this.videoStatus = videoStatus;
-    }
-
-    public String getPptUrl() {
-        return pptUrl;
-    }
-
-    public void setPptUrl(String pptUrl) {
-        this.pptUrl = pptUrl;
-    }
-
-    public String getTitle1() {
-        return title1;
-    }
-
-    public void setTitle1(String title1) {
-        this.title1 = title1;
-    }
-
-    public Integer getTimer() {
-        return timer;
-    }
-
-    public void setTimer(Integer timer) {
-        this.timer = timer;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override
     public String toString() {
         return "TopicInfo{" +
                 "id=" + id +
+                ", courseId=" + courseId +
+                ", chapterId=" + chapterId +
                 ", sort=" + sort +
                 ", title='" + title + '\'' +
-                ", title1='" + title1 + '\'' +
                 ", content='" + content + '\'' +
-                ", pptUrl='" + pptUrl + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
                 ", createTime=" + createTime +
-                ", status=" + status +
-                ", videoStatus=" + videoStatus +
-                ", current=" + current +
-                ", timer=" + timer +
-                ", list=" + list +
+                ", type=" + type +
+                ", label='" + label + '\'' +
                 '}';
     }
 }

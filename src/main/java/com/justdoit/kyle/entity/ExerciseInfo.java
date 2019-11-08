@@ -8,20 +8,12 @@ import com.justdoit.kyle.common.mybatis.annotation.*;
  * @date 2019-10-20 14:00:10
  * 练习题
  */
-@TableAttribute(name = "exercise_info", comment = "练习题(单选题)")
+@TableAttribute(name = "exercise_info", comment = "练习题(单选/多选，2到5个选项)")
 public class ExerciseInfo extends BaseEntity {
 
     @FieldAttribute
     @AutoIncrKeyAttribute
     private int id;
-
-    @FieldAttribute
-    @IndexAttribute
-    private Integer topicId;
-
-    @FieldAttribute
-    @SortAttribute
-    private Integer sort;
 
     @FieldAttribute(value = "标题",length = 200)
     private String title;
@@ -31,7 +23,6 @@ public class ExerciseInfo extends BaseEntity {
 
     @FieldAttribute(value = "图片地址",length = 200)
     private String img;
-
 
     @FieldAttribute(value = "A选项",length = 1000)
     private String optionA;
@@ -45,11 +36,14 @@ public class ExerciseInfo extends BaseEntity {
     @FieldAttribute(value = "D选项",length = 1000)
     private String optionD;
 
-    @FieldAttribute(value = "答案",length = 10)
+    @FieldAttribute(value = "E选项",length = 1000)
+    private String optionE;
+
+    @FieldAttribute(value = "答案",length = 2)
     private String answer;
 
-    private int status;
-    private Integer timer;
+    @FieldAttribute(value = "试题解析",length = 1000)
+    private String explanation;
 
     public ExerciseInfo() {
     }
@@ -64,14 +58,6 @@ public class ExerciseInfo extends BaseEntity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Integer getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(Integer topicId) {
-        this.topicId = topicId;
     }
 
     public String getTitle() {
@@ -90,6 +76,13 @@ public class ExerciseInfo extends BaseEntity {
         this.content = content;
     }
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public String getOptionA() {
         return optionA;
@@ -123,6 +116,14 @@ public class ExerciseInfo extends BaseEntity {
         this.optionD = optionD;
     }
 
+    public String getOptionE() {
+        return optionE;
+    }
+
+    public void setOptionE(String optionE) {
+        this.optionE = optionE;
+    }
+
     public String getAnswer() {
         return answer;
     }
@@ -131,44 +132,18 @@ public class ExerciseInfo extends BaseEntity {
         this.answer = answer;
     }
 
-    public String getImg() {
-        return img;
+    public String getExplanation() {
+        return explanation;
     }
 
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public Integer getTimer() {
-        return timer;
-    }
-
-    public void setTimer(Integer timer) {
-        this.timer = timer;
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
     }
 
     @Override
     public String toString() {
         return "ExerciseInfo{" +
                 "id=" + id +
-                ", topicId=" + topicId +
-                ", sort=" + sort +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", img='" + img + '\'' +
@@ -176,9 +151,9 @@ public class ExerciseInfo extends BaseEntity {
                 ", optionB='" + optionB + '\'' +
                 ", optionC='" + optionC + '\'' +
                 ", optionD='" + optionD + '\'' +
+                ", optionE='" + optionE + '\'' +
                 ", answer='" + answer + '\'' +
-                ", status=" + status +
-                ", timer=" + timer +
+                ", explanation='" + explanation + '\'' +
                 '}';
     }
 }

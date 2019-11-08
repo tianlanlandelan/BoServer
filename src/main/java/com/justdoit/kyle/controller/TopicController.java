@@ -25,7 +25,7 @@ public class TopicController {
 
     @PostMapping
     public ResponseEntity saveTopic(Integer sort,String title,
-                                    String content,String pptUrl,String videoUrl){
+                                    String content ,String videoUrl){
         if(StringUtils.isEmpty(title)){
             return MyResponse.badRequest();
         }
@@ -34,7 +34,6 @@ public class TopicController {
         topicInfo.setTitle(title);
         topicInfo.setContent(content);
         topicInfo.setVideoUrl(videoUrl);
-        topicInfo.setPptUrl(pptUrl);
 
         return MyResponse.ok(topicService.save(topicInfo));
     }

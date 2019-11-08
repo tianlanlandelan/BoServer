@@ -24,21 +24,21 @@ public class UserExercise extends BaseEntity {
     @IndexAttribute
     private Integer userId;
 
-    @FieldAttribute("练习题id")
+    @FieldAttribute("练习题Id")
     @IndexAttribute
     private Integer exerciseId;
 
-    @FieldAttribute("练习题答案")
+    @FieldAttribute("用户的回答")
     private String answer;
 
-    @FieldAttribute("得分")
-    private int score;
+    public UserExercise() {
+    }
 
-    @FieldAttribute("答题所花费的时间")
-    private int time;
-
-    @FieldAttribute("用户的回答")
-    private String userAnswer;
+    public UserExercise(Integer userId, Integer exerciseId, String answer) {
+        this.userId = userId;
+        this.exerciseId = exerciseId;
+        this.answer = answer;
+    }
 
     @FieldAttribute
     private Date createTime = new Date();
@@ -68,12 +68,12 @@ public class UserExercise extends BaseEntity {
         this.exerciseId = exerciseId;
     }
 
-    public int getScore() {
-        return score;
+    public String getAnswer() {
+        return answer;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
     public Date getCreateTime() {
@@ -84,30 +84,6 @@ public class UserExercise extends BaseEntity {
         this.createTime = createTime;
     }
 
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public String getUserAnswer() {
-        return userAnswer;
-    }
-
-    public void setUserAnswer(String userAnswer) {
-        this.userAnswer = userAnswer;
-    }
-
-    public int getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
-
     @Override
     public String toString() {
         return "UserExercise{" +
@@ -115,9 +91,6 @@ public class UserExercise extends BaseEntity {
                 ", userId=" + userId +
                 ", exerciseId=" + exerciseId +
                 ", answer='" + answer + '\'' +
-                ", score=" + score +
-                ", time=" + time +
-                ", userAnswer='" + userAnswer + '\'' +
                 ", createTime=" + createTime +
                 '}';
     }

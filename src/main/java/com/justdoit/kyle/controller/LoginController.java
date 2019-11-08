@@ -96,13 +96,4 @@ public class LoginController {
         return MyResponse.ok(userInfoService.forgetPassword(userInfo));
     }
 
-    @GetMapping("/getMenu")
-    public ResponseEntity getMenu(Integer userId){
-        if(RequestUtil.notValidInteger(userId)){
-            return MyResponse.badRequest();
-        }
-        return MyResponse.ok(topicService.getMenu(userId));
-    }
-
-
 }

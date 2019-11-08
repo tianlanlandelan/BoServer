@@ -5,7 +5,6 @@ import com.justdoit.kyle.common.response.ResultData;
 import com.justdoit.kyle.entity.Rate;
 import com.justdoit.kyle.entity.UserExercise;
 import com.justdoit.kyle.entity.UserInfo;
-import com.justdoit.kyle.entity.UserTopic;
 import com.justdoit.kyle.mapper.RateMapper;
 import com.justdoit.kyle.mapper.UserExerciseMapper;
 import com.justdoit.kyle.mapper.UserInfoMapper;

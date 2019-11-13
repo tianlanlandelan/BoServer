@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * 课程
+ * @author yangkaile
+ * @date 2019-11-12 14:29:39
+ */
 @RestController
 @RequestMapping("/course")
 public class CourseController {
@@ -19,7 +24,7 @@ public class CourseController {
     private CourseService service;
 
     @PostMapping
-    public ResponseEntity save(String title,String subTitle,String img,String overview,float price){
+    public ResponseEntity save(String title,String subTitle,String img,String overview,Float price,Integer status){
         if(StringUtils.isEmpty(title,subTitle,overview)){
             return MyResponse.badRequest();
         }
@@ -28,12 +33,17 @@ public class CourseController {
         courseInfo.setSubTitle(subTitle);
         courseInfo.setImg(img);
         courseInfo.setOverview(overview);
-        courseInfo.setPrice(price);
+        if(price != null && price > 0){
+            courseInfo.setPrice(price);
+        }
+        if(status == 0 || status == CourseInfo.SAVE){
+            courseInfo.setStatus(status);
+        }
 
         return MyResponse.ok(service.save(courseInfo));
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity getAll(){
         return MyResponse.ok(service.getAll());
     }

@@ -16,10 +16,6 @@ public class CourseInfo extends BaseEntity {
     @AutoIncrKeyAttribute
     private int id;
 
-    @FieldAttribute("专题Id，课程可以单独存在，也可以是某个专题下的")
-    @IndexAttribute
-    private Integer seriesId;
-
     @FieldAttribute(value = "标题",length = 200)
     private String title;
 
@@ -39,6 +35,12 @@ public class CourseInfo extends BaseEntity {
     @SortAttribute
     private Date createTime;
 
+    @FieldAttribute("课程状态: 0 正常，1 未发布，2 删除")
+    @IndexAttribute
+    private int status;
+
+    public static final int SAVE = 1;
+    public static final int DELETE = 2;
 
     public int getId() {
         return id;
@@ -96,26 +98,25 @@ public class CourseInfo extends BaseEntity {
         this.createTime = createTime;
     }
 
-
-    public Integer getSeriesId() {
-        return seriesId;
+    public int getStatus() {
+        return status;
     }
 
-    public void setSeriesId(Integer seriesId) {
-        this.seriesId = seriesId;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
         return "CourseInfo{" +
                 "id=" + id +
-                ", seriesId=" + seriesId +
                 ", title='" + title + '\'' +
                 ", subTitle='" + subTitle + '\'' +
                 ", img='" + img + '\'' +
                 ", overview='" + overview + '\'' +
                 ", price=" + price +
                 ", createTime=" + createTime +
+                ", status=" + status +
                 '}';
     }
 }

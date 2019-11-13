@@ -1,5 +1,6 @@
 package com.justdoit.kyle;
 
+import com.justdoit.kyle.common.mybatis.annotation.TableAttribute;
 import com.justdoit.kyle.common.util.Console;
 import com.justdoit.kyle.common.util.StringUtils;
 import com.justdoit.kyle.entity.*;
@@ -42,6 +43,9 @@ public class ApplicationTests {
     @Resource
     private UserInfoMapper userInfoMapper;
 
+    @Resource
+    private SeriesCourseMapper seriesCourseMapper;
+
 
     @Test
     public void init(){
@@ -54,7 +58,7 @@ public class ApplicationTests {
     public void contextLoads() {
     }
     @Test
-    public void createCouseTable(){
+    public void createCourseTable(){
         courseMapper.baseCreate(new CourseInfo());
     }
 
@@ -62,18 +66,23 @@ public class ApplicationTests {
     public void createTable(){
         createAppConfigTable();
         createChapterTable();
-        createCouseTable();
+        createCourseTable();
         createExamExerciseTable();
         createExamTable();
         createExerciseInfoTable();
         createRateTable();
         createSeriesTable();
+        createSeriesCourseTable();
         createTopicInfoTable();
         createUserExamTable();
         createUserExerciseTable();
         createUserInfoTable();
     }
 
+    @Test
+    public void createSeriesCourseTable(){
+        seriesCourseMapper.baseCreate(new SeriesCourse());
+    }
     @Test
     public void createAppConfigTable(){
         appConfigMapper.baseCreate(new AppConfig());

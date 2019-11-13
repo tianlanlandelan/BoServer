@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.justdoit</groupId>
-    <artifactId>kyle</artifactId>
+    <artifactId>Training-website-server</artifactId>
     <version>1.0</version>
-    <name>website</name>
+    <name>Training-website-server</name>
     <description>一个简单的培训网站</description>
 
     <properties>

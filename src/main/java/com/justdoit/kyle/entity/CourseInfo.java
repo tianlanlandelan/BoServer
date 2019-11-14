@@ -29,18 +29,37 @@ public class CourseInfo extends BaseEntity {
     private String overview;
 
     @FieldAttribute("价格")
-    private Float price;
+    private float price;
 
     @FieldAttribute()
     @SortAttribute
-    private Date createTime;
+    private Date createTime = new Date();
 
     @FieldAttribute("课程状态: 0 正常，1 未发布，2 删除")
     @IndexAttribute
     private int status;
 
+    @FieldAttribute("课时数")
+    private int topicNumber;
+
+    @FieldAttribute("已学习人数")
+    private int gotNumber;
+
+    @FieldAttribute("评价数")
+    private int evaluatedNumber;
+
+    @FieldAttribute("评分 0~5分")
+    private float evaluation;
+
     public static final int SAVE = 1;
     public static final int DELETE = 2;
+
+    public CourseInfo() {
+    }
+
+    public CourseInfo(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;
@@ -82,11 +101,11 @@ public class CourseInfo extends BaseEntity {
         this.overview = overview;
     }
 
-    public Float getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 
@@ -106,6 +125,38 @@ public class CourseInfo extends BaseEntity {
         this.status = status;
     }
 
+    public int getTopicNumber() {
+        return topicNumber;
+    }
+
+    public void setTopicNumber(int topicNumber) {
+        this.topicNumber = topicNumber;
+    }
+
+    public int getGotNumber() {
+        return gotNumber;
+    }
+
+    public void setGotNumber(int gotNumber) {
+        this.gotNumber = gotNumber;
+    }
+
+    public int getEvaluatedNumber() {
+        return evaluatedNumber;
+    }
+
+    public void setEvaluatedNumber(int evaluatedNumber) {
+        this.evaluatedNumber = evaluatedNumber;
+    }
+
+    public float getEvaluation() {
+        return evaluation;
+    }
+
+    public void setEvaluation(float evaluation) {
+        this.evaluation = evaluation;
+    }
+
     @Override
     public String toString() {
         return "CourseInfo{" +
@@ -117,6 +168,10 @@ public class CourseInfo extends BaseEntity {
                 ", price=" + price +
                 ", createTime=" + createTime +
                 ", status=" + status +
+                ", topicNumber=" + topicNumber +
+                ", gotNumber=" + gotNumber +
+                ", evaluatedNumber=" + evaluatedNumber +
+                ", evaluation=" + evaluation +
                 '}';
     }
 }

@@ -1,6 +1,7 @@
 package com.justdoit.kyle.controller;
 
 import com.justdoit.kyle.common.response.MyResponse;
+import com.justdoit.kyle.common.util.RequestUtil;
 import com.justdoit.kyle.common.util.StringUtils;
 import com.justdoit.kyle.entity.CourseInfo;
 import com.justdoit.kyle.service.CourseService;
@@ -24,11 +25,12 @@ public class CourseController {
     private CourseService service;
 
     @PostMapping
-    public ResponseEntity save(String title,String subTitle,String img,String overview,Float price,Integer status){
+    public ResponseEntity save(Integer id,String title,String subTitle,String img,String overview,Float price,Integer status){
         if(StringUtils.isEmpty(title,subTitle,overview)){
             return MyResponse.badRequest();
         }
         CourseInfo courseInfo = new CourseInfo();
+        courseInfo.setId(id);
         courseInfo.setTitle(title);
         courseInfo.setSubTitle(subTitle);
         courseInfo.setImg(img);
@@ -42,9 +44,15 @@ public class CourseController {
 
         return MyResponse.ok(service.save(courseInfo));
     }
-
     @GetMapping("/getAll")
     public ResponseEntity getAll(){
         return MyResponse.ok(service.getAll());
+    }
+    @GetMapping
+    public ResponseEntity get(Integer id){
+        if(RequestUtil.validInteger(id)){
+            return MyResponse.ok(service.getById(id));
+        }
+        return MyResponse.badRequest();
     }
 }

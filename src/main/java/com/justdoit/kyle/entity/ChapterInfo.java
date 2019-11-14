@@ -18,7 +18,7 @@ public class ChapterInfo extends BaseEntity {
 
     @FieldAttribute("课程id")
     @IndexAttribute
-    private int CourseId;
+    private int courseId;
 
     @FieldAttribute("章节名称")
     private String name;
@@ -32,9 +32,11 @@ public class ChapterInfo extends BaseEntity {
 
     public ChapterInfo() {
     }
-
+    public ChapterInfo(int id) {
+        this.id = id;
+    }
     public ChapterInfo(int courseId, String name) {
-        CourseId = courseId;
+        this.courseId = courseId;
         this.name = name;
     }
 
@@ -47,11 +49,11 @@ public class ChapterInfo extends BaseEntity {
     }
 
     public int getCourseId() {
-        return CourseId;
+        return courseId;
     }
 
     public void setCourseId(int courseId) {
-        CourseId = courseId;
+        this.courseId = courseId;
     }
 
     public String getName() {
@@ -82,7 +84,7 @@ public class ChapterInfo extends BaseEntity {
     public String toString() {
         return "ChapterInfo{" +
                 "id=" + id +
-                ", CourseId=" + CourseId +
+                ", courseId=" + courseId +
                 ", name='" + name + '\'' +
                 ", sort=" + sort +
                 ", createTime=" + createTime +

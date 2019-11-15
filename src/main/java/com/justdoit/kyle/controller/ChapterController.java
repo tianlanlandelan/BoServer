@@ -35,13 +35,4 @@ public class ChapterController {
         info.setSort(sort);
         return MyResponse.ok(service.save(info));
     }
-
-    @GetMapping
-    public ResponseEntity get(Integer courseId){
-        if(RequestUtil.notValidInteger(courseId)){
-            return MyResponse.badRequest();
-        }
-        return MyResponse.ok(service.getByCourseId(courseId));
-    }
-
 }

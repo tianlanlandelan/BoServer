@@ -6,9 +6,11 @@ import com.justdoit.kyle.common.response.ResultData;
 import com.justdoit.kyle.common.util.StringUtils;
 import com.justdoit.kyle.entity.*;
 import com.justdoit.kyle.mapper.*;
+import com.justdoit.kyle.view.ChapterTopic;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,25 +25,62 @@ public class TopicService {
     @Resource
     private TopicInfoMapper mapper;
 
+    @Resource
+    private ChapterService chapterService;
 
+
+    /**
+     * 保存课程，有则更新，无则添加
+     * @param topicInfo
+     * @return
+     */
     public ResultData save(TopicInfo topicInfo){
-        mapper.baseInsertAndReturnKey(topicInfo);
+        if(topicInfo.getId() == 0){
+            mapper.baseInsertAndReturnKey(topicInfo);
+        }else{
+            TopicInfo result = mapper.baseSelectById(topicInfo);
+            if(result == null){
+                return ResultData.error("没有找到指定课程");
+            }
+            mapper.baseUpdateById(topicInfo);
+        }
         return ResultData.success(topicInfo.getId());
     }
 
     /**
-     * Admin 用到的
-     * @return
+     *
+     * @param courseId 课程id
+     * @return List<ChapterTopic>
      */
-    public ResultData getAll(){
-        List<TopicInfo> list = mapper.baseSelectAll(new TopicInfo());
+    public ResultData getByCourseId(int courseId){
+        TopicInfo info = new TopicInfo();
+        info.setCourseId(courseId);
+        //获取课程列表
+        List<TopicInfo> list = mapper.baseSelectByCondition(info);
+        //获取章节列表
+        List<ChapterInfo> chapterList = chapterService.getByCourseId(courseId);
         if(list != null && list.size() > 0){
             for(TopicInfo topic : list){
                 if(StringUtils.isNotEmpty(topic.getVideoUrl())) {
                     topic.setVideoUrl(myConfig.NGINX_PREFIX + topic.getVideoUrl());
                 }
             }
-            return ResultData.success(list);
+        }
+        List<ChapterTopic> result = new ArrayList<>();
+        /**
+         * 将课时放入章节中
+         */
+        for(ChapterInfo chapterInfo :chapterList){
+            ChapterTopic chapterTopic = new ChapterTopic(chapterInfo);
+            for(TopicInfo topicInfo:list){
+                if(topicInfo.getChapterId() == chapterInfo.getId()){
+                    chapterTopic.getList().add(topicInfo);
+                }
+            }
+            result.add(chapterTopic);
+        }
+        if(result.size() > 0){
+            return ResultData.success(result);
         }
         return ResultData.error(Languages.NO_TOPIC);
     }
@@ -57,26 +96,5 @@ public class TopicService {
             topicInfo.setVideoUrl(myConfig.NGINX_PREFIX + topicInfo.getVideoUrl());
         }
         return ResultData.success(topicInfo);
-    }
-
-    /**
-     * 获取下一个
-     * 根据用户学习的进度，获取下一步要展示的课程或练习
-     * @param userId
-     * @return
-     */
-    public ResultData getNext(int userId){
-
-        return ResultData.success();
-    }
-
-    /**
-     * 获取当前
-     * 根据用户学习的进度，获取当前要展示的课程或练习
-     * @param userId
-     * @return
-     */
-    public ResultData getCurrent(int userId){
-        return ResultData.success();
     }
 }

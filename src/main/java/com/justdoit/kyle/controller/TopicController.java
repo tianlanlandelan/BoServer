@@ -4,6 +4,7 @@ import com.justdoit.kyle.common.response.MyResponse;
 import com.justdoit.kyle.common.util.RequestUtil;
 import com.justdoit.kyle.common.util.StringUtils;
 import com.justdoit.kyle.entity.TopicInfo;
+import com.justdoit.kyle.service.ChapterService;
 import com.justdoit.kyle.service.TopicService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,26 +22,32 @@ import javax.annotation.Resource;
 @RequestMapping("/topicInfo")
 public class TopicController {
     @Resource
-    private TopicService topicService;
+    private TopicService service;
 
     @PostMapping
-    public ResponseEntity saveTopic(Integer sort,String title,
-                                    String content ,String videoUrl){
-        if(StringUtils.isEmpty(title)){
+    public ResponseEntity save(Integer id,Integer courseId,Integer chapterId,String title,
+                                    String content ,String videoUrl, Integer sort){
+        if(StringUtils.isEmpty(title) || RequestUtil.notValidInteger(courseId)){
             return MyResponse.badRequest();
         }
         TopicInfo topicInfo = new TopicInfo();
+        topicInfo.setId(id);
+        topicInfo.setCourseId(courseId);
+        topicInfo.setChapterId(chapterId);
         topicInfo.setSort(sort);
         topicInfo.setTitle(title);
         topicInfo.setContent(content);
         topicInfo.setVideoUrl(videoUrl);
 
-        return MyResponse.ok(topicService.save(topicInfo));
+        return MyResponse.ok(service.save(topicInfo));
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity getAll(){
-        return MyResponse.ok(topicService.getAll());
+    @GetMapping("/getList")
+    public ResponseEntity getByCourseId(Integer courseId){
+        if(RequestUtil.notValidInteger(courseId)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(service.getByCourseId(courseId));
     }
 
     @GetMapping
@@ -48,24 +55,6 @@ public class TopicController {
         if(id == null || id < 0){
             return MyResponse.badRequest();
         }
-        return MyResponse.ok(topicService.getById(id));
+        return MyResponse.ok(service.getById(id));
     }
-
-
-    @GetMapping("/getNext")
-    public ResponseEntity getNext(Integer userId){
-        if(RequestUtil.notValidInteger(userId)){
-            return MyResponse.badRequest();
-        }
-        return MyResponse.ok(topicService.getNext(userId));
-    }
-
-    @GetMapping("/getCurrent")
-    public ResponseEntity getCurrent(Integer userId){
-        if(RequestUtil.notValidInteger(userId)){
-            return MyResponse.badRequest();
-        }
-        return MyResponse.ok(topicService.getCurrent(userId));
-    }
-
 }

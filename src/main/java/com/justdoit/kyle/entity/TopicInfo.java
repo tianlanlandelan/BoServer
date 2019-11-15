@@ -18,11 +18,11 @@ public class TopicInfo extends BaseEntity {
 
     @FieldAttribute("课程id")
     @IndexAttribute
-    private int courseId;
+    private Integer courseId;
 
     @FieldAttribute("章节id")
     @IndexAttribute
-    private int chapterId;
+    private Integer chapterId;
 
     @FieldAttribute("排序")
     @SortAttribute
@@ -58,19 +58,19 @@ public class TopicInfo extends BaseEntity {
         this.id = id;
     }
 
-    public int getCourseId() {
+    public Integer getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(int courseId) {
+    public void setCourseId(Integer courseId) {
         this.courseId = courseId;
     }
 
-    public int getChapterId() {
+    public Integer getChapterId() {
         return chapterId;
     }
 
-    public void setChapterId(int chapterId) {
+    public void setChapterId(Integer chapterId) {
         this.chapterId = chapterId;
     }
 
@@ -122,20 +122,20 @@ public class TopicInfo extends BaseEntity {
         this.type = type;
     }
 
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
     public Integer getExamId() {
         return examId;
     }
 
     public void setExamId(Integer examId) {
         this.examId = examId;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override

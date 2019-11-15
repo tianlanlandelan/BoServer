@@ -37,14 +37,9 @@ public class ChapterService {
 
     }
 
-    public ResultData getByCourseId(int courseId){
+    public List<ChapterInfo> getByCourseId(int courseId){
         ChapterInfo info = new ChapterInfo();
         info.setCourseId(courseId);
-        List<ChapterInfo> list = mapper.baseSelectByCondition(info);
-        if(list == null || list.size() == 0){
-            return ResultData.error("没有章节");
-        }
-        return ResultData.success(list);
-
+        return mapper.baseSelectByCondition(info);
     }
 }

@@ -36,8 +36,32 @@ public class ChapterService {
         return ResultData.success(info.getId());
 
     }
+    /**
+     * 修改章节
+     * @param chapterInfo
+     * @return
+     */
+    public ResultData update(ChapterInfo chapterInfo){
+        ChapterInfo result = mapper.baseSelectById(chapterInfo);
+        if(result == null){
+            return ResultData.error("没有找到指定章节");
+        }
+        result.setSort(chapterInfo.getSort());
+        result.setName(chapterInfo.getName());
+        mapper.baseUpdateById(result);
+        return ResultData.success();
 
-    public List<ChapterInfo> getByCourseId(int courseId){
+    }
+    public ResultData getByCourseId(int courseId){
+        List<ChapterInfo> list = getListByCourseId(courseId);
+        if(list == null || list.size() == 0){
+            return ResultData.error("没有章节");
+        }
+        return ResultData.success(list);
+
+    }
+
+    public List<ChapterInfo> getListByCourseId(int courseId){
         ChapterInfo info = new ChapterInfo();
         info.setCourseId(courseId);
         return mapper.baseSelectByCondition(info);

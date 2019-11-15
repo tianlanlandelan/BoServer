@@ -58,7 +58,7 @@ public class TopicService {
         //获取课程列表
         List<TopicInfo> list = mapper.baseSelectByCondition(info);
         //获取章节列表
-        List<ChapterInfo> chapterList = chapterService.getByCourseId(courseId);
+        List<ChapterInfo> chapterList = chapterService.getListByCourseId(courseId);
         if(list != null && list.size() > 0){
             for(TopicInfo topic : list){
                 if(StringUtils.isNotEmpty(topic.getVideoUrl())) {
@@ -83,6 +83,17 @@ public class TopicService {
             return ResultData.success(result);
         }
         return ResultData.error(Languages.NO_TOPIC);
+    }
+
+    public ResultData updateSort(TopicInfo topicInfo){
+        TopicInfo result = mapper.baseSelectById(topicInfo);
+        if(result == null){
+            return ResultData.error(Languages.NO_TOPIC);
+        }
+        result.setChapterId(topicInfo.getChapterId());
+        result.setSort(topicInfo.getSort());
+        mapper.baseUpdateById(result);
+        return ResultData.success();
     }
 
     public ResultData getById(int id){

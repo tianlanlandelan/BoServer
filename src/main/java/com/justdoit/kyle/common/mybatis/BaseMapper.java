@@ -25,7 +25,7 @@ public interface BaseMapper<K> {
      * @param entity
      */
     @UpdateProvider(type = BaseCreateProvider.class , method = "create")
-    void baseCreate(K entity);
+    <T extends BaseEntity> void baseCreate(T entity);
 
     /**
      * 插入操作
@@ -35,7 +35,7 @@ public interface BaseMapper<K> {
      * @throws DuplicateKeyException 当唯一字段重复插入时，会抛该异常
      */
     @InsertProvider(type = BaseInsertProvider.class,method = "insert")
-    Integer baseInsert(K entity) throws DuplicateKeyException;
+    <T extends BaseEntity> Integer baseInsert(T entity) throws DuplicateKeyException;
 
     /**
      * 插入数据并返回自增的主键(建议使用id)
@@ -46,7 +46,7 @@ public interface BaseMapper<K> {
      */
     @InsertProvider(type = BaseInsertProvider.class,method = "insertAndReturnKey")
     @Options(useGeneratedKeys=true,keyProperty = "id", keyColumn = "id")
-    Integer baseInsertAndReturnKey(K entity) throws DuplicateKeyException;
+    <T extends BaseEntity> Integer baseInsertAndReturnKey(T entity) throws DuplicateKeyException;
 
 
     /**
@@ -55,7 +55,7 @@ public interface BaseMapper<K> {
      * @return
      */
     @DeleteProvider(type = BaseDeleteProvider.class,method = "deleteById")
-    Integer baseDeleteById(K entity);
+    <T extends BaseEntity> Integer baseDeleteById(T entity);
 
     /**
      * 根据条件删除
@@ -65,7 +65,7 @@ public interface BaseMapper<K> {
      * @return DELETE FROM router  WHERE name = #{name} AND serviceName = #{serviceName}
      */
     @SelectProvider(type= BaseDeleteProvider.class,method = "deleteByCondition")
-    Integer baseDeleteByCondition(K entity);
+    <T extends BaseEntity> Integer baseDeleteByCondition(T entity);
 
     /**
      * 根据id 更新数据，空值不更新 ，要求必须有id字段
@@ -73,7 +73,7 @@ public interface BaseMapper<K> {
      * @return
      */
     @UpdateProvider(type = BaseUpdateProvider.class,method = "updateById")
-    Integer baseUpdateById(K entity);
+    <T extends BaseEntity> Integer baseUpdateById(T entity);
 
     /**
      * 根据主键更新数据，空值不更新，要求数据至少有一个主键，且主键有值
@@ -81,9 +81,7 @@ public interface BaseMapper<K> {
      * @return
      */
     @UpdateProvider(type = BaseUpdateProvider.class,method = "updateByKey")
-    Integer baseUpdateByKey(K entity);
-
-
+    <T extends BaseEntity> Integer baseUpdateByKey(T entity);
 
     /**
      * 根据Id 查找数据，要求必须有id 字段
@@ -91,7 +89,7 @@ public interface BaseMapper<K> {
      * @return
      */
     @SelectProvider(type= BaseSelectProvider.class,method = "selectById")
-    K baseSelectById(K entity);
+    <T extends BaseEntity> K baseSelectById(T entity);
 
     /**
      * 根据主键查询数据，要求至少有一个主键，且主键必须有值
@@ -99,7 +97,7 @@ public interface BaseMapper<K> {
      * @return
      */
     @SelectProvider(type= BaseSelectProvider.class,method = "selectByKey")
-    K baseSelectByKey(K entity);
+    <T extends BaseEntity> K baseSelectByKey(T entity);
 
 
 
@@ -109,7 +107,7 @@ public interface BaseMapper<K> {
      * @return
      */
     @SelectProvider(type= BaseSelectProvider.class,method = "selectAll")
-    List<K> baseSelectAll(K entity);
+    <T extends BaseEntity> List<K> baseSelectAll(T entity);
 
     /**
      * 带条件的查询，该查询为动态查询，不可缓存
@@ -132,7 +130,7 @@ public interface BaseMapper<K> {
      * @return
      */
     @SelectProvider(type = BaseSelectProvider.class,method = "selectCount")
-    Integer baseSelectCount(K entity);
+    <T extends BaseEntity> Integer baseSelectCount(T entity);
 
     /**
      * 根据条件查询记录总数

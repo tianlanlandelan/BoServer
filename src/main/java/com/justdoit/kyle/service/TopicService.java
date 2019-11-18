@@ -28,6 +28,8 @@ public class TopicService {
     @Resource
     private ChapterService chapterService;
 
+    @Resource
+    private CourseService courseService;
 
     /**
      * 保存课程，有则更新，无则添加
@@ -35,9 +37,12 @@ public class TopicService {
      * @return
      */
     public ResultData save(TopicInfo topicInfo){
+        //添加课时，修改课程中的课时数
         if(topicInfo.getId() == 0){
             mapper.baseInsertAndReturnKey(topicInfo);
+            courseService.addTopicNumber(topicInfo.getCourseId());
         }else{
+            //修改课时
             TopicInfo result = mapper.baseSelectById(topicInfo);
             if(result == null){
                 return ResultData.error("没有找到指定课程");

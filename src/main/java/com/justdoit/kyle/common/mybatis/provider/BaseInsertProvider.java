@@ -1,5 +1,6 @@
 package com.justdoit.kyle.common.mybatis.provider;
 
+import com.justdoit.kyle.common.mybatis.BaseEntity;
 import com.justdoit.kyle.common.mybatis.SqlFieldReader;
 import com.justdoit.kyle.common.util.Console;
 import com.justdoit.kyle.common.util.StringUtils;
@@ -25,16 +26,16 @@ public class BaseInsertProvider {
      * @param <T>
      * @return
      */
-    public static <T> String insert(T entity) {
+    public static <T extends BaseEntity> String insert(T entity) {
         Class cls = entity.getClass();
         String className = cls.getName();
         String sql = insertMap.get(className);
         if(StringUtils.isEmpty(sql)){
-            String fieldStr = SqlFieldReader.getFieldStr(cls);
+            String fieldStr = SqlFieldReader.getFieldStr(entity);
 
             StringBuilder builder = new StringBuilder();
             builder.append("INSERT INTO ")
-                    .append(SqlFieldReader.getTableName(cls)).append(" ")
+                    .append(SqlFieldReader.getTableName(entity)).append(" ")
                     .append("(").append(fieldStr).append(") ")
                     .append("VALUES(");
 
@@ -52,12 +53,12 @@ public class BaseInsertProvider {
         return sql;
     }
 
-    public static <T> String insertAndReturnKey(T entity) {
+    public static <T extends BaseEntity> String insertAndReturnKey(T entity) {
         Class cls = entity.getClass();
         String className = cls.getName();
         String sql = insertAndReturnKeyMap.get(className);
         if(StringUtils.isEmpty(sql)){
-            String fieldStr = SqlFieldReader.getFieldStr(cls);
+            String fieldStr = SqlFieldReader.getFieldStr(entity);
             String[] arrays = fieldStr.split(",");
 
             StringBuilder builder = new StringBuilder();
@@ -65,7 +66,7 @@ public class BaseInsertProvider {
             StringBuilder valuesStr = new StringBuilder();
 
             builder.append("INSERT INTO ")
-                    .append(SqlFieldReader.getTableName(cls)).append(" ")
+                    .append(SqlFieldReader.getTableName(entity)).append(" ")
                     .append("(");
             for(String str:arrays){
                 if("id".equals(str)){

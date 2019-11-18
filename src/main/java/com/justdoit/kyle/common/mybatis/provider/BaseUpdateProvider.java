@@ -1,6 +1,7 @@
 package com.justdoit.kyle.common.mybatis.provider;
 
 
+import com.justdoit.kyle.common.mybatis.BaseEntity;
 import com.justdoit.kyle.common.mybatis.SqlFieldReader;
 import com.justdoit.kyle.common.util.Console;
 
@@ -18,7 +19,7 @@ public class BaseUpdateProvider {
      * @param <T>
      * @return UPDATE router SET methodName = #{methodName} ,createTime = #{createTime} WHERE id = #{id}
      */
-    public static <T> String updateById(T entity){
+    public static <T extends BaseEntity> String updateById(T entity){
         String sql = getUpdatePrefix(entity) + " WHERE id = #{id}";
         Console.info("updateById",sql,entity);
         return sql;
@@ -30,7 +31,7 @@ public class BaseUpdateProvider {
      * @param <T>
      * @return
      */
-    public static  <T> String updateByKey(T entity){
+    public static <T extends BaseEntity> String updateByKey(T entity){
         try {
             String sql = getUpdatePrefix(entity) + SqlFieldReader.getConditionByKeySuffix(entity);
             Console.info("updateByKey",sql,entity);
@@ -45,10 +46,10 @@ public class BaseUpdateProvider {
      * @param entity
      * @return UPDATE 表名 SET
      */
-    private static <T> String getUpdatePrefix(T entity){
+    private static <T extends BaseEntity> String getUpdatePrefix(T entity){
         Class cls = entity.getClass();
         StringBuilder builder = new StringBuilder();
-        builder.append("UPDATE ").append(SqlFieldReader.getTableName(cls)).append(" SET ");
+        builder.append("UPDATE ").append(SqlFieldReader.getTableName(entity)).append(" SET ");
         List<String> fields = SqlFieldReader.getFields(cls);
         try{
             for(String field:fields){
@@ -63,9 +64,4 @@ public class BaseUpdateProvider {
         }
         return null;
     }
-
-    public static void main(String[] args){
-
-    }
-
 }

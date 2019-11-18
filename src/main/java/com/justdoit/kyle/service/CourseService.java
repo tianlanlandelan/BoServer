@@ -18,6 +18,8 @@ public class CourseService {
     @Resource
     private CourseMapper mapper;
 
+
+
     /**
      * 保存课程，如果有课程id，则更新，否则新增
      * @param courseInfo
@@ -38,7 +40,9 @@ public class CourseService {
          return ResultData.success(courseInfo.getId());
     }
     public ResultData getAll(){
-        List<CourseInfo> list = mapper.baseSelectAll(new CourseInfo());
+        CourseInfo courseInfo = new CourseInfo();
+        courseInfo.setBaseKyleDetailed(false);
+        List<CourseInfo> list = mapper.baseSelectAll(courseInfo);
         return ResultData.success(list);
     }
     public ResultData getById(int id){
@@ -48,6 +52,19 @@ public class CourseService {
         }else {
             return ResultData.success(courseInfo);
         }
+    }
+
+    /**
+     * 修改课程中的课时数
+     * @param id
+     */
+    public void addTopicNumber(int id){
+        CourseInfo result = mapper.baseSelectById(new CourseInfo(id));
+        if(result == null){
+            return;
+        }
+        result.setTopicNumber(result.getTopicNumber() + 1);
+        mapper.baseUpdateById(result);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.justdoit.kyle.common.mybatis.provider;
 
 
+import com.justdoit.kyle.common.mybatis.BaseEntity;
 import com.justdoit.kyle.common.mybatis.SqlFieldReader;
 
 /**
@@ -19,7 +20,7 @@ public class BaseCreateProvider {
      * @param <T>
      * @return
      */
-    public static <T> String create(T entity){
-        return SqlFieldReader.getCreateTableSql(entity.getClass());
+    public static <T extends BaseEntity> String create(T entity){
+        return SqlFieldReader.getCreateTableSql(entity);
     }
 }

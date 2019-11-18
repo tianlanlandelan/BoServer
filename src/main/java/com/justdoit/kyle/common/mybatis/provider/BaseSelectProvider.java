@@ -17,14 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class BaseSelectProvider {
 
-    /**
-     * 缓存selectById语句
-     * @param args
-     */
-    public static Map<String,String> selectByIdMap = new ConcurrentHashMap<>(16);
-
-    public static Map<String,String> selectAllMap = new ConcurrentHashMap<>(16);
-
+    public static Map<String,String> selectPrefixWithDetailedMap = new ConcurrentHashMap<>(16);
     public static Map<String,String> selectPrefixMap = new ConcurrentHashMap<>(16);
 
 
@@ -34,14 +27,8 @@ public class BaseSelectProvider {
      * @param <T> 实体类型
      * @return SELECT id,name... FROM route WHERE id = #{id}
      */
-    public static  <T> String selectById(T entity){
-        Class cls = entity.getClass();
-        String className = cls.getName();
-        String sql = selectByIdMap.get(className);
-        if(StringUtils.isEmpty(sql)){
-            sql = getSelectPrefix(cls) + " WHERE id = #{id}";
-            selectByIdMap.put(className,sql);
-        }
+    public static <T extends BaseEntity> String selectById(T entity){
+        String sql = getSelectPrefix(entity) + " WHERE id = #{id}";
         Console.info("selectById",sql,entity);
         return sql;
     }
@@ -52,9 +39,9 @@ public class BaseSelectProvider {
      * @param <T>
      * @return
      */
-    public static  <T> String selectByKey(T entity){
+    public static <T extends BaseEntity> String selectByKey(T entity){
         try {
-            String sql = getSelectPrefix(entity.getClass()) + SqlFieldReader.getConditionByKeySuffix(entity);
+            String sql = getSelectPrefix(entity) + SqlFieldReader.getConditionByKeySuffix(entity);
             Console.info("selectByKey",sql,entity);
             return sql;
         }catch (Exception e){
@@ -69,14 +56,8 @@ public class BaseSelectProvider {
      * @param <T> 实体类型
      * @return SELECT id,name... FROM router
      */
-    public static <T> String selectAll(T entity){
-        Class cls = entity.getClass();
-        String className = cls.getName();
-        String sql = selectAllMap.get(className);
-        if(StringUtils.isEmpty(sql)){
-            sql = getSelectPrefix(cls);
-            selectAllMap.put(className,sql);
-        }
+    public static <T extends BaseEntity> String selectAll(T entity){
+        String sql = getSelectPrefix(entity);
         Console.info("selectAll",sql,entity);
         return sql;
     }
@@ -94,7 +75,7 @@ public class BaseSelectProvider {
      * @return SELECT id,name... FROM router  WHERE name = #{name} AND serviceName = #{serviceName}  ORDER BY createTime ASC
      */
     public static <T extends BaseEntity> String selectByCondition(T entity){
-        String sql = getSelectPrefix(entity.getClass())
+        String sql = getSelectPrefix(entity)
                 + SqlFieldReader.getConditionSuffix(entity)
                 + SqlFieldReader.getSortSuffix(entity);
         Console.info("selectByCondition",sql,entity);
@@ -107,8 +88,8 @@ public class BaseSelectProvider {
      * @param <T>
      * @return SELECT COUNT(1) FROM router
      */
-    public static <T> String selectCount(T entity){
-        String sql = "SELECT COUNT(1) FROM " + SqlFieldReader.getTableName(entity.getClass());
+    public static <T extends BaseEntity> String selectCount(T entity){
+        String sql = "SELECT COUNT(1) FROM " + SqlFieldReader.getTableName(entity);
         Console.info("selectCount",sql,entity);
         return sql;
     }
@@ -160,17 +141,26 @@ public class BaseSelectProvider {
 
     /**
      * 获取通用查询前缀
-     * @param cls 实体类类型
+     * @param entity 实体类类型
      * @return SELECT 所有字段 FROM 表名
      */
-    private static <T> String getSelectPrefix(Class cls){
-        String className = cls.getName();
-        String sql = selectPrefixMap.get(className);
-        if(StringUtils.isNotEmpty(sql)){
-            return sql;
+    private static <T extends BaseEntity> String getSelectPrefix(T entity){
+        String className = entity.getClass().getName();
+        String sql;
+        if(entity.isBaseKyleDetailed()){
+            sql = selectPrefixWithDetailedMap.get(className);
         }else {
-            sql = "SELECT " + SqlFieldReader.getFieldStr(cls) + " FROM " + SqlFieldReader.getTableName(cls) + " ";
-            return sql;
+            sql = selectPrefixMap.get(className);
         }
+        if(StringUtils.isEmpty(sql)){
+            sql = "SELECT " + SqlFieldReader.getFieldStr(entity) + " FROM " + SqlFieldReader.getTableName(entity) + " ";
+            if(entity.isBaseKyleDetailed()){
+                selectPrefixWithDetailedMap.put(className,sql);
+            }else {
+                selectPrefixMap.put(className,sql);
+            }
+        }
+        return sql;
+
     }
 }

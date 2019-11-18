@@ -10,6 +10,10 @@ package com.justdoit.kyle.common.mybatis;
  */
 public class BaseEntity {
     /**
+     * 是否查询明细字段
+     */
+    private boolean baseKyleDetailed = true;
+    /**
      * 多个查询条件是否用And连接
      */
     private Boolean baseKyleUseAnd = true;
@@ -69,5 +73,13 @@ public class BaseEntity {
     public void setBaseKyleCurrentPage(int baseKyleCurrentPage) {
         this.baseKyleStartRows = this.baseKylePageSize * (this.baseKyleCurrentPage - 1);
         this.baseKyleCurrentPage = baseKyleCurrentPage;
+    }
+
+    public boolean isBaseKyleDetailed() {
+        return baseKyleDetailed;
+    }
+
+    public void setBaseKyleDetailed(boolean baseKyleDetailed) {
+        this.baseKyleDetailed = baseKyleDetailed;
     }
 }

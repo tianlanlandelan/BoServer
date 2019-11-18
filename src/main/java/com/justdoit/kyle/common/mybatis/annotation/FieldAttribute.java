@@ -36,4 +36,10 @@ public @interface FieldAttribute {
      * @return
      */
     boolean unique() default false;
+
+    /**
+     * 是否是明细字段，如果是明细字段，在查询列表时不显示该字段
+     * @return
+     */
+    boolean detailed() default false;
 }

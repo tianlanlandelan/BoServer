@@ -60,6 +60,8 @@ public class TopicService {
     public ResultData getByCourseId(int courseId){
         TopicInfo info = new TopicInfo();
         info.setCourseId(courseId);
+        //获取课时列表，不获取课时明细（课时内容），因为课时内容字段可能较大，且在列表中不展示
+        info.setBaseKyleDetailed(false);
         //获取课程列表
         List<TopicInfo> list = mapper.baseSelectByCondition(info);
         //获取章节列表

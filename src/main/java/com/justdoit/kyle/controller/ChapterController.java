@@ -63,4 +63,16 @@ public class ChapterController {
         return MyResponse.ok(service.update(info));
     }
 
+    /**
+     * 删除章节
+     * @param id 章节id
+     * @return
+     */
+    @DeleteMapping
+    public ResponseEntity delete(Integer id){
+        if(RequestUtil.notValidInteger(id)){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(service.deleteById(id));
+    }
 }

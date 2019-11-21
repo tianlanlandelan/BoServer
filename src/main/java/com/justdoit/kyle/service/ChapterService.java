@@ -2,6 +2,7 @@ package com.justdoit.kyle.service;
 
 import com.justdoit.kyle.common.response.ResultData;
 import com.justdoit.kyle.entity.ChapterInfo;
+import com.justdoit.kyle.entity.TopicInfo;
 import com.justdoit.kyle.mapper.ChapterMapper;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ import java.util.List;
 public class ChapterService {
     @Resource
     private ChapterMapper mapper;
+
+    @Resource
+    private TopicService topicService;
 
     /**
      * 保存章节，有则更新，无则添加
@@ -59,6 +63,27 @@ public class ChapterService {
         }
         return ResultData.success(list);
 
+    }
+
+    /**
+     * 删除章节，如果章节下面有课时，删除失败
+     * @param id
+     * @return
+     */
+    public ResultData deleteById(int id){
+        ChapterInfo info = getById(id);
+        if(info == null){
+            return ResultData.success();
+        }
+        List<TopicInfo> list = topicService.getByChapterId(id);
+        if(list != null && list.size() > 0){
+            return ResultData.error("章节下有课时，不能删除");
+        }
+        mapper.baseDeleteById(info);
+        return ResultData.success();
+    }
+    public ChapterInfo getById(int id){
+        return mapper.baseSelectById(new ChapterInfo(id));
     }
 
     public List<ChapterInfo> getListByCourseId(int courseId){

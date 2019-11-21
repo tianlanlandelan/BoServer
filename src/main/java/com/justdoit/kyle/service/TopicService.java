@@ -92,6 +92,19 @@ public class TopicService {
         return ResultData.error(Languages.NO_TOPIC);
     }
 
+    /**
+     * 获取章节下的课时
+     * @param chapterId
+     * @return
+     */
+    public List<TopicInfo> getByChapterId(int chapterId){
+        TopicInfo info = new TopicInfo();
+        info.setChapterId(chapterId);
+        //获取课时列表，不获取课时明细（课时内容），因为课时内容字段可能较大，且在列表中不展示
+        info.setBaseKyleDetailed(false);
+        return mapper.baseSelectByCondition(info);
+    }
+
     public ResultData updateSort(TopicInfo topicInfo){
         TopicInfo result = mapper.baseSelectById(topicInfo);
         if(result == null){

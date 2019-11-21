@@ -92,19 +92,17 @@ public class UserInfoService {
     /**
      * 修改用户信息，只修改名称、头像
      * @param id
-     * @param firstName
-     * @param lastName
+     * @param nickName
      * @param avatarId
      * @return
      */
-    public ResultData update(int id,String firstName,String lastName,int avatarId){
+    public ResultData update(int id,String nickName,int avatarId){
         UserInfo userInfo = new UserInfo(id);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
             return ResultData.error(Languages.NO_USER);
         }
-        userInfo.setFirstName(firstName);
-        userInfo.setLastName(lastName);
+        userInfo.setNickName(nickName);
         userInfo.setAvatarId(avatarId);
         userInfoMapper.baseUpdateById(userInfo);
         return ResultData.success();
@@ -151,13 +149,12 @@ public class UserInfoService {
     }
 
     /**
-     * 获取用户信息，需同时指定三个条件：type/email/uid
+     * 获取用户信息，需同时指定三个条件：type/email
      * @param info
      * @return
      */
     private boolean checkExist(UserInfo info){
         UserInfo userInfo = new UserInfo();
-        userInfo.setSid(info.getSid());
         userInfo.setEmail(info.getEmail());
         userInfo.setBaseKyleUseAnd(false);
         List<UserInfo> list = userInfoMapper.baseSelectByCondition(userInfo);
@@ -168,11 +165,4 @@ public class UserInfoService {
         }
         return false;
     }
-
-    @Resource
-    private UserExerciseMapper userExerciseMapper;
-
-    @Resource
-    private RateMapper rateMapper;
-
 }

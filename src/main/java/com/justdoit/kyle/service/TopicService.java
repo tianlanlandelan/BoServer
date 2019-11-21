@@ -23,7 +23,7 @@ public class TopicService {
     private MyConfig myConfig;
 
     @Resource
-    private TopicInfoMapper mapper;
+    private TopicMapper mapper;
 
     @Resource
     private ChapterService chapterService;
@@ -117,8 +117,7 @@ public class TopicService {
     }
 
     public ResultData getById(int id){
-        TopicInfo topicInfo = new TopicInfo();
-        topicInfo.setId(id);
+        TopicInfo topicInfo = new TopicInfo(id);
         topicInfo = mapper.baseSelectById(topicInfo);
         if(topicInfo == null){
             return ResultData.error(Languages.NO_TOPIC);
@@ -127,5 +126,11 @@ public class TopicService {
             topicInfo.setVideoUrl(myConfig.NGINX_PREFIX + topicInfo.getVideoUrl());
         }
         return ResultData.success(topicInfo);
+    }
+
+
+    public ResultData delete(int id) {
+        mapper.baseDeleteById(new TopicInfo(id));
+        return ResultData.success();
     }
 }

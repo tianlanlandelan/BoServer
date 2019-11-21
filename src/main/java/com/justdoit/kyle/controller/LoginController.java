@@ -8,10 +8,8 @@ import com.justdoit.kyle.common.util.Console;
 import com.justdoit.kyle.common.util.StringUtils;
 import com.justdoit.kyle.entity.UserInfo;
 import com.justdoit.kyle.service.AppConfigService;
-import com.justdoit.kyle.service.TopicService;
 import com.justdoit.kyle.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,10 +24,6 @@ public class LoginController {
     @Resource
     private UserInfoService userInfoService;
 
-
-    @Resource
-    private TopicService topicService;
-
     @Resource
     private AppConfigService appConfigService;
 
@@ -39,15 +33,13 @@ public class LoginController {
      * 注册功能
      * @param type 用户类型
      * @param email 邮箱
-     * @param sid 学号
      * @param password 密码
      * @param code 邀请码，由管理员统一设定
      * @return 注册成功返回UserId
      */
     @PostMapping("/register")
-    public ResponseEntity register(Integer type,String email,String sid,String password,String code){
-        Console.print("register","type",type,"email",email,"sid",sid,"password",password);
-        if(!RequestUtil.validType(type) || StringUtils.isEmpty(email,sid,password,code)
+    public ResponseEntity register(Integer type,String email ,String password,String code){
+        if(!RequestUtil.validType(type) || StringUtils.isEmpty(email,password,code)
                 ){
             return MyResponse.badRequest();
         }
@@ -57,7 +49,6 @@ public class LoginController {
         UserInfo userInfo = new UserInfo();
         userInfo.setType(type);
         userInfo.setEmail(email);
-        userInfo.setSid(sid);
         userInfo.setPassword(password);
 
         return MyResponse.ok(userInfoService.insert(userInfo));

@@ -96,12 +96,4 @@ public class AdminController {
         }
         return MyResponse.ok(adminService.getByEmail(email));
     }
-
-
-    @GetMapping("/getLeaderBoardTop20")
-    public ResponseEntity getLeaderBoardTop20(){
-        return MyResponse.ok(rateService.getLeaderBoardTop20());
-    }
-
-
 }

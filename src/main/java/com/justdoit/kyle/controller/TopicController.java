@@ -74,4 +74,11 @@ public class TopicController {
         }
         return MyResponse.ok(service.getById(id));
     }
+    @DeleteMapping
+    public ResponseEntity delete(Integer id){
+        if(id == null || id < 0){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(service.delete(id));
+    }
 }

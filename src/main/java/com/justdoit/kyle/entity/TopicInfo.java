@@ -52,6 +52,12 @@ public class TopicInfo extends BaseEntity {
     @FieldAttribute("课时标签，如：练习课、实验课等")
     private String label;
 
+    public TopicInfo() {
+    }
+
+    public TopicInfo(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;

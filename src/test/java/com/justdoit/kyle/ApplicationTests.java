@@ -1,6 +1,5 @@
 package com.justdoit.kyle;
 
-import com.justdoit.kyle.common.mybatis.annotation.TableAttribute;
 import com.justdoit.kyle.common.util.Console;
 import com.justdoit.kyle.common.util.StringUtils;
 import com.justdoit.kyle.entity.*;
@@ -35,7 +34,9 @@ public class ApplicationTests {
     @Resource
     private SeriesMapper seriesMapper;
     @Resource
-    private TopicInfoMapper topicInfoMapper;
+    private TopicMapper topicMapper;
+    @Resource
+    private TopicDiscussionMapper topicDiscussionMapper;
     @Resource
     private UserExamMapper userExamMapper;
     @Resource
@@ -74,11 +75,16 @@ public class ApplicationTests {
         createSeriesTable();
         createSeriesCourseTable();
         createTopicInfoTable();
+        createTopicDiscussionTable();
         createUserExamTable();
         createUserExerciseTable();
         createUserInfoTable();
     }
 
+    @Test
+    public void createTopicDiscussionTable(){
+        topicDiscussionMapper.baseCreate(new TopicDiscussion());
+    }
     @Test
     public void createSeriesCourseTable(){
         seriesCourseMapper.baseCreate(new SeriesCourse());
@@ -111,7 +117,7 @@ public class ApplicationTests {
 
     @Test
     public void createTopicInfoTable(){
-        topicInfoMapper.baseCreate(new TopicInfo());
+        topicMapper.baseCreate(new TopicInfo());
     }
 
     @Test
@@ -139,7 +145,6 @@ public class ApplicationTests {
         UserInfo userInfo = new UserInfo();
         userInfo.setType(1);
         userInfo.setEmail("a@a.edu");
-        userInfo.setSid("u100");
         userInfo.setPassword("123456");
         try{
             userInfoMapper.baseInsertAndReturnKey(userInfo);
@@ -149,19 +154,7 @@ public class ApplicationTests {
 
         Console.print("userInfo",userInfo.getId(),userInfo);
     }
-    @Test
-    public void updateUserInfo(){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setId(1);
-        userInfo = userInfoMapper.baseSelectById(userInfo);
-        Console.print("更新前",userInfo);
-        userInfo.setFirstName("FirstName");
-        userInfo.setLastName("LastName");
-        userInfo.setAvatarId(1);
-        userInfoMapper.baseUpdateById(userInfo);
-        userInfo = userInfoMapper.baseSelectById(userInfo);
-        Console.print("更新后",userInfo);
-    }
+
     @Test
     public void getUserInfo(){
         UserInfo userInfo = new UserInfo();
@@ -179,11 +172,10 @@ public class ApplicationTests {
             UserInfo userInfo = new UserInfo();
             userInfo.setType(1);
             userInfo.setEmail(StringUtils.getAllCharString(10));
-            userInfo.setSid(StringUtils.getAllCharString(10));
             userInfo.setPassword("123456");
             userInfo.setAvatarId(new Random().nextInt(10) + 1);
-            userInfo.setFirstName("Test"+i);
-            userInfo.setLastName(StringUtils.getAllCharString(4));
+            userInfo.setNickName("Test"+i);
+            userInfoMapper.baseInsertAndReturnKey(userInfo);
         }
     }
 }

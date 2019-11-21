@@ -5,9 +5,8 @@ import com.justdoit.kyle.config.MyConfig;
 import com.justdoit.kyle.common.response.ResultData;
 import com.justdoit.kyle.common.util.StringUtils;
 import com.justdoit.kyle.entity.ExerciseInfo;
-import com.justdoit.kyle.entity.TopicInfo;
 import com.justdoit.kyle.mapper.ExerciseMapper;
-import com.justdoit.kyle.mapper.TopicInfoMapper;
+import com.justdoit.kyle.mapper.TopicMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,7 +22,7 @@ public class ExerciseService {
     private ExerciseMapper mapper;
 
     @Resource
-    private TopicInfoMapper topicInfoMapper;
+    private TopicMapper topicMapper;
 
     @Resource
     private MyConfig myConfig;

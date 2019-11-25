@@ -6,21 +6,22 @@ import com.justdoit.kyle.common.mybatis.annotation.*;
 import java.util.Date;
 
 /**
+ * 章节目录
  * @author yangkaile
  * @date 2019-11-08 13:57:22
- * 课程章节信息，每个课程下面有多个章节，每个章节下面有多个课时
+ *
  */
-@TableAttribute(name = "chapter_info",comment = "课程章节详情表")
-public class ChapterInfo extends BaseEntity {
+@TableAttribute(name = "chapter_info",comment = "笔记本的目录")
+public class Chapter extends BaseEntity {
     @FieldAttribute
     @AutoIncrKeyAttribute
     private int id;
 
-    @FieldAttribute("课程id")
+    @FieldAttribute("笔记本Id")
     @IndexAttribute
-    private int courseId;
+    private int notesId;
 
-    @FieldAttribute("章节名称")
+    @FieldAttribute("目录名称")
     private String name;
 
     @FieldAttribute("排序")
@@ -30,13 +31,13 @@ public class ChapterInfo extends BaseEntity {
     @FieldAttribute
     private Date createTime = new Date();
 
-    public ChapterInfo() {
+    public Chapter() {
     }
-    public ChapterInfo(int id) {
+    public Chapter(int id) {
         this.id = id;
     }
-    public ChapterInfo(int courseId, String name) {
-        this.courseId = courseId;
+    public Chapter(int notesId, String name) {
+        this.notesId = notesId;
         this.name = name;
     }
 
@@ -48,12 +49,12 @@ public class ChapterInfo extends BaseEntity {
         this.id = id;
     }
 
-    public int getCourseId() {
-        return courseId;
+    public int getNotesId() {
+        return notesId;
     }
 
-    public void setCourseId(int courseId) {
-        this.courseId = courseId;
+    public void setNotesId(int notesId) {
+        this.notesId = notesId;
     }
 
     public String getName() {
@@ -82,9 +83,9 @@ public class ChapterInfo extends BaseEntity {
 
     @Override
     public String toString() {
-        return "ChapterInfo{" +
+        return "Chapter{" +
                 "id=" + id +
-                ", courseId=" + courseId +
+                ", notesId=" + notesId +
                 ", name='" + name + '\'' +
                 ", sort=" + sort +
                 ", createTime=" + createTime +

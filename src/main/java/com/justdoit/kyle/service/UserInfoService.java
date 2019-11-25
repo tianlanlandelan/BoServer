@@ -4,11 +4,7 @@ import com.justdoit.kyle.config.Languages;
 import com.justdoit.kyle.common.response.ResultData;
 import com.justdoit.kyle.config.PublicConfig;
 import com.justdoit.kyle.entity.EmailLog;
-import com.justdoit.kyle.entity.Rate;
-import com.justdoit.kyle.entity.UserExercise;
 import com.justdoit.kyle.entity.UserInfo;
-import com.justdoit.kyle.mapper.RateMapper;
-import com.justdoit.kyle.mapper.UserExerciseMapper;
 import com.justdoit.kyle.mapper.UserInfoMapper;
 import org.springframework.stereotype.Service;
 

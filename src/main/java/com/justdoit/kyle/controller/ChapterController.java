@@ -3,7 +3,7 @@ package com.justdoit.kyle.controller;
 import com.justdoit.kyle.common.response.MyResponse;
 import com.justdoit.kyle.common.util.RequestUtil;
 import com.justdoit.kyle.common.util.StringUtils;
-import com.justdoit.kyle.entity.ChapterInfo;
+import com.justdoit.kyle.entity.Chapter;
 import com.justdoit.kyle.service.ChapterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 /**
- * 章节管理
+ * 笔记本目录
  * @author yangkaile
  * @date 2019-11-14 09:36:52
  */
@@ -21,33 +21,42 @@ public class ChapterController {
     @Resource
     private ChapterService service;
 
+    /**
+     * 保存目录
+     * 有则修改，无则添加
+     * @param id id
+     * @param notesId 笔记本ID
+     * @param name 章节名称
+     * @param sort 排序
+     * @return
+     */
     @PostMapping
-    public ResponseEntity save(Integer id,Integer courseId,String name,Integer sort){
-        if(RequestUtil.notValidInteger(id,courseId,sort) || StringUtils.isEmpty(name)){
+    public ResponseEntity save(Integer id,Integer notesId,String name,Integer sort){
+        if(RequestUtil.notValidInteger(id,notesId,sort) || StringUtils.isEmpty(name)){
             return MyResponse.badRequest();
         }
-        ChapterInfo info = new ChapterInfo(id);
-        info.setCourseId(courseId);
+        Chapter info = new Chapter(id);
+        info.setNotesId(notesId);
         info.setName(name);
         info.setSort(sort);
         return MyResponse.ok(service.save(info));
     }
 
     /**
-     * 获取章节列表
-     * @param courseId
+     * 获取目录列表
+     * @param notesId 笔记本ID
      * @return
      */
     @GetMapping
-    public ResponseEntity get(Integer courseId){
-        if(RequestUtil.notValidInteger(courseId)){
+    public ResponseEntity get(Integer notesId){
+        if(RequestUtil.notValidInteger(notesId)){
             return MyResponse.badRequest();
         }
-        return MyResponse.ok(service.getByCourseId(courseId));
+        return MyResponse.ok(service.getByNotesId(notesId));
     }
 
     /**
-     * 修改章节，可修改排序和名称
+     * 修改目录，可修改排序和名称
      * @param id
      * @param sort
      * @return
@@ -57,15 +66,15 @@ public class ChapterController {
         if(RequestUtil.notValidInteger(id,sort) || StringUtils.isEmpty(name)){
             return MyResponse.badRequest();
         }
-        ChapterInfo info = new ChapterInfo(id);
+        Chapter info = new Chapter(id);
         info.setName(name);
         info.setSort(sort);
         return MyResponse.ok(service.update(info));
     }
 
     /**
-     * 删除章节
-     * @param id 章节id
+     * 删除目录
+     * @param id id
      * @return
      */
     @DeleteMapping

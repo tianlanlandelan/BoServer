@@ -1,7 +1,7 @@
 package com.justdoit.kyle.mapper;
 
 import com.justdoit.kyle.common.mybatis.BaseMapper;
-import com.justdoit.kyle.entity.CourseInfo;
+import com.justdoit.kyle.entity.Notes;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-11-07 09:30:17
  */
 @Mapper
-public interface CourseMapper extends BaseMapper<CourseInfo> {
+public interface NotesMapper extends BaseMapper<Notes> {
 }

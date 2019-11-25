@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * @author yangkaile
+ * @date 2019-11-25 15:02:18
+ */
 @RestController
 @RequestMapping("/config")
 public class AppConfigController {

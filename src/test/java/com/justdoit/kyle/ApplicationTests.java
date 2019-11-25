@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,32 +28,15 @@ public class ApplicationTests {
     @Resource
     private ChapterMapper chapterMapper;
     @Resource
-    private CourseMapper courseMapper;
+    private NotesMapper notesMapper;
     @Resource
     private EmailMapper emailMapper;
-    @Resource
-    private ExamExerciseMapper examExerciseMapper;
-    @Resource
-    private ExamMapper examMapper;
-    @Resource
-    private ExerciseMapper exerciseMapper;
-    @Resource
-    private RateMapper rateMapper;
-    @Resource
-    private SeriesMapper seriesMapper;
-    @Resource
-    private TopicMapper topicMapper;
-    @Resource
-    private TopicDiscussionMapper topicDiscussionMapper;
-    @Resource
-    private UserExamMapper userExamMapper;
-    @Resource
-    private UserExerciseMapper userExerciseMapper;
-    @Resource
-    private UserInfoMapper userInfoMapper;
 
     @Resource
-    private SeriesCourseMapper seriesCourseMapper;
+    private NoteMapper noteMapper;
+
+    @Resource
+    private UserInfoMapper userInfoMapper;
 
 
     @Test
@@ -69,7 +51,7 @@ public class ApplicationTests {
     }
     @Test
     public void createCourseTable(){
-        courseMapper.baseCreate(new CourseInfo());
+        notesMapper.baseCreate(new Notes());
     }
 
     @Test
@@ -77,16 +59,8 @@ public class ApplicationTests {
         createAppConfigTable();
         createChapterTable();
         createCourseTable();
-        createExamExerciseTable();
-        createExamTable();
-        createExerciseInfoTable();
-        createRateTable();
-        createSeriesTable();
-        createSeriesCourseTable();
+        createEmailTable();
         createTopicInfoTable();
-        createTopicDiscussionTable();
-        createUserExamTable();
-        createUserExerciseTable();
         createUserInfoTable();
     }
 
@@ -95,61 +69,22 @@ public class ApplicationTests {
         emailMapper.baseCreate(new EmailLog());
     }
     @Test
-    public void createTopicDiscussionTable(){
-        topicDiscussionMapper.baseCreate(new TopicDiscussion());
-    }
-    @Test
-    public void createSeriesCourseTable(){
-        seriesCourseMapper.baseCreate(new SeriesCourse());
-    }
-    @Test
     public void createAppConfigTable(){
         appConfigMapper.baseCreate(new AppConfig());
     }
     @Test
     public void createChapterTable(){
-        chapterMapper.baseCreate(new ChapterInfo());
+        chapterMapper.baseCreate(new Chapter());
     }
     @Test
     public void createUserInfoTable(){
         userInfoMapper.baseCreate(new UserInfo());
     }
-    @Test
-    public void createExamExerciseTable(){
-        examExerciseMapper.baseCreate(new ExamExercise());
-    }
 
-    @Test
-    public void createExamTable(){
-        examMapper.baseCreate(new ExamInfo());
-    }
-    @Test
-    public void createSeriesTable(){
-        seriesMapper.baseCreate(new SeriesInfo());
-    }
 
     @Test
     public void createTopicInfoTable(){
-        topicMapper.baseCreate(new TopicInfo());
-    }
-
-    @Test
-    public void createUserExamTable(){
-        userExamMapper.baseCreate(new UserExam());
-    }
-    @Test
-    public void createExerciseInfoTable(){
-        exerciseMapper.baseCreate(new ExerciseInfo());
-    }
-
-    @Test
-    public void createRateTable(){
-        rateMapper.baseCreate(new Rate());
-    }
-
-    @Test
-    public void createUserExerciseTable(){
-        userExerciseMapper.baseCreate(new UserExercise());
+        noteMapper.baseCreate(new Note());
     }
 
 

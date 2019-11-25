@@ -1,8 +1,8 @@
 package com.justdoit.kyle.service;
 
 import com.justdoit.kyle.common.response.ResultData;
-import com.justdoit.kyle.entity.ChapterInfo;
-import com.justdoit.kyle.entity.TopicInfo;
+import com.justdoit.kyle.entity.Chapter;
+import com.justdoit.kyle.entity.Note;
 import com.justdoit.kyle.mapper.ChapterMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,18 +20,18 @@ public class ChapterService {
     private ChapterMapper mapper;
 
     @Resource
-    private TopicService topicService;
+    private NoteService noteService;
 
     /**
      * 保存章节，有则更新，无则添加
      * @param info
      * @return
      */
-    public ResultData save(ChapterInfo info){
+    public ResultData save(Chapter info){
         if(info.getId() == 0){
             mapper.baseInsertAndReturnKey(info);
         }else{
-            ChapterInfo result = mapper.baseSelectById(info);
+            Chapter result = mapper.baseSelectById(info);
             if(result == null){
                 return ResultData.error("没有找到指定章节");
             }
@@ -42,22 +42,28 @@ public class ChapterService {
     }
     /**
      * 修改章节
-     * @param chapterInfo
+     * @param chapter
      * @return
      */
-    public ResultData update(ChapterInfo chapterInfo){
-        ChapterInfo result = mapper.baseSelectById(chapterInfo);
+    public ResultData update(Chapter chapter){
+        Chapter result = mapper.baseSelectById(chapter);
         if(result == null){
             return ResultData.error("没有找到指定章节");
         }
-        result.setSort(chapterInfo.getSort());
-        result.setName(chapterInfo.getName());
+        result.setSort(chapter.getSort());
+        result.setName(chapter.getName());
         mapper.baseUpdateById(result);
         return ResultData.success();
 
     }
-    public ResultData getByCourseId(int courseId){
-        List<ChapterInfo> list = getListByCourseId(courseId);
+
+    /**
+     * 获取笔记本的章节
+     * @param notesId
+     * @return
+     */
+    public ResultData getByNotesId(int notesId){
+        List<Chapter> list = getListByNotesId(notesId);
         if(list == null || list.size() == 0){
             return ResultData.error("没有章节");
         }
@@ -66,29 +72,29 @@ public class ChapterService {
     }
 
     /**
-     * 删除章节，如果章节下面有课时，删除失败
+     * 删除目录，如果目录下面有笔记，删除失败
      * @param id
      * @return
      */
     public ResultData deleteById(int id){
-        ChapterInfo info = getById(id);
+        Chapter info = getById(id);
         if(info == null){
             return ResultData.success();
         }
-        List<TopicInfo> list = topicService.getByChapterId(id);
+        List<Note> list = noteService.getByChapterId(id);
         if(list != null && list.size() > 0){
-            return ResultData.error("章节下有课时，不能删除");
+            return ResultData.error("目录下面有笔记，不能删除");
         }
         mapper.baseDeleteById(info);
         return ResultData.success();
     }
-    public ChapterInfo getById(int id){
-        return mapper.baseSelectById(new ChapterInfo(id));
+    public Chapter getById(int id){
+        return mapper.baseSelectById(new Chapter(id));
     }
 
-    public List<ChapterInfo> getListByCourseId(int courseId){
-        ChapterInfo info = new ChapterInfo();
-        info.setCourseId(courseId);
+    public List<Chapter> getListByNotesId(int notesId){
+        Chapter info = new Chapter();
+        info.setNotesId(notesId);
         return mapper.baseSelectByCondition(info);
     }
 }

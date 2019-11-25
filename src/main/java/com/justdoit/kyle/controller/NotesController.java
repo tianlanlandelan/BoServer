@@ -1,11 +1,10 @@
 package com.justdoit.kyle.controller;
 
 import com.justdoit.kyle.common.response.MyResponse;
-import com.justdoit.kyle.common.util.Base64Utils;
 import com.justdoit.kyle.common.util.RequestUtil;
 import com.justdoit.kyle.common.util.StringUtils;
-import com.justdoit.kyle.entity.CourseInfo;
-import com.justdoit.kyle.service.CourseService;
+import com.justdoit.kyle.entity.Notes;
+import com.justdoit.kyle.service.NotesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,36 +14,33 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 /**
- * 课程
+ * 笔记本
  * @author yangkaile
  * @date 2019-11-12 14:29:39
  */
 @RestController
-@RequestMapping("/course")
-public class CourseController {
+@RequestMapping("/notes")
+public class NotesController {
     @Resource
-    private CourseService service;
+    private NotesService service;
 
+    /**
+     * 保存笔记
+     * @param id id
+     * @param userId 用户id
+     * @param title 标题
+     * @param subTitle 副标题
+     * @return
+     */
     @PostMapping
-    public ResponseEntity save(Integer id,String title,String subTitle,String img,String overviewMD,String overview,Float price,Integer status){
-        if(StringUtils.isEmpty(title,subTitle,overview)){
+    public ResponseEntity save(Integer id,Integer userId,String title,String subTitle ){
+        if(StringUtils.isEmpty(title) || RequestUtil.notValidInteger(userId)){
             return MyResponse.badRequest();
         }
-        CourseInfo courseInfo = new CourseInfo();
-        courseInfo.setId(id);
-        courseInfo.setTitle(title);
-        courseInfo.setSubTitle(subTitle);
-        courseInfo.setImg(img);
-        courseInfo.setOverview(overview);
-        courseInfo.setOverviewMD(overviewMD);
-        if(price != null && price > 0){
-            courseInfo.setPrice(price);
-        }
-        if(status == 0 || status == CourseInfo.SAVE){
-            courseInfo.setStatus(status);
-        }
-
-        return MyResponse.ok(service.save(courseInfo));
+        Notes notes = new Notes(id,userId);
+        notes.setTitle(title);
+        notes.setSubTitle(subTitle);
+        return MyResponse.ok(service.save(notes));
     }
     @GetMapping("/getAll")
     public ResponseEntity getAll(){

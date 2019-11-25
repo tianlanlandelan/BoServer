@@ -25,9 +25,6 @@ public class BaseController {
     @Resource
     private UserInfoService userInfoService;
 
-    @Resource
-    private EmailService emailService;
-
     /**
      * 注册功能
      * @param email 邮箱

@@ -1,7 +1,10 @@
 package com.justdoit.kyle;
 
 import com.justdoit.kyle.common.util.Console;
+import com.justdoit.kyle.common.util.SendEmailUtils;
 import com.justdoit.kyle.common.util.StringUtils;
+import com.justdoit.kyle.config.MyConfig;
+import com.justdoit.kyle.config.PublicConfig;
 import com.justdoit.kyle.entity.*;
 import com.justdoit.kyle.mapper.*;
 import org.junit.Test;
@@ -9,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -18,11 +22,16 @@ import java.util.Random;
 @SpringBootTest
 public class ApplicationTests {
     @Resource
+    private MyConfig myConfig;
+
+    @Resource
     private AppConfigMapper appConfigMapper;
     @Resource
     private ChapterMapper chapterMapper;
     @Resource
     private CourseMapper courseMapper;
+    @Resource
+    private EmailMapper emailMapper;
     @Resource
     private ExamExerciseMapper examExerciseMapper;
     @Resource
@@ -81,6 +90,10 @@ public class ApplicationTests {
         createUserInfoTable();
     }
 
+    @Test
+    public void createEmailTable(){
+        emailMapper.baseCreate(new EmailLog());
+    }
     @Test
     public void createTopicDiscussionTable(){
         topicDiscussionMapper.baseCreate(new TopicDiscussion());
@@ -177,5 +190,24 @@ public class ApplicationTests {
             userInfo.setNickName("Test"+i);
             userInfoMapper.baseInsertAndReturnKey(userInfo);
         }
+    }
+
+
+    @Test
+    public void sendEmail() throws Exception{
+        Console.println("",myConfig.mailServerUser);
+        SendEmailUtils.getSender(myConfig.mailServerHost,myConfig.mailServerUser,myConfig.mailServerPassword)
+                .sendSimpleMail("atomiclong@aliyun.com",
+                        "你好",
+                        "邮件内容");
+
+    }
+
+    @Test
+    public void sendRegisterCode() throws Exception{
+        Console.println("",myConfig.mailServerUser);
+        EmailLog emailLog = SendEmailUtils.getSender(myConfig.mailServerHost,myConfig.mailServerUser,myConfig.mailServerPassword)
+                .sendVCode(PublicConfig.RegisterType,"atomiclong@aliyun.com");
+        Console.println("emailLog",emailLog);
     }
 }

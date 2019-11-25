@@ -1,6 +1,6 @@
 package com.justdoit.kyle.common.util;
 
-import com.justdoit.kyle.common.PublicConfig;
+import com.justdoit.kyle.config.PublicConfig;
 import com.justdoit.kyle.common.RequestConfig;
 import org.springframework.http.ResponseEntity;
 

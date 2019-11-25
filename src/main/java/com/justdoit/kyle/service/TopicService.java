@@ -69,7 +69,7 @@ public class TopicService {
         if(list != null && list.size() > 0){
             for(TopicInfo topic : list){
                 if(StringUtils.isNotEmpty(topic.getVideoUrl())) {
-                    topic.setVideoUrl(myConfig.NGINX_PREFIX + topic.getVideoUrl());
+                    topic.setVideoUrl(myConfig.nginxPrefix + topic.getVideoUrl());
                 }
             }
         }
@@ -123,7 +123,7 @@ public class TopicService {
             return ResultData.error(Languages.NO_TOPIC);
         }
         if(StringUtils.isNotEmpty(topicInfo.getVideoUrl())) {
-            topicInfo.setVideoUrl(myConfig.NGINX_PREFIX + topicInfo.getVideoUrl());
+            topicInfo.setVideoUrl(myConfig.nginxPrefix + topicInfo.getVideoUrl());
         }
         return ResultData.success(topicInfo);
     }

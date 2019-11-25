@@ -57,11 +57,11 @@ public class UploadService {
         String url;
 
         if(type == IMG){
-            path = myConfig.IMG_PATH + fileName;
-            url = myConfig.IMG_NGINX_PATH + fileName;
+            path = myConfig.imgPath + fileName;
+            url = myConfig.imgNginxPath + fileName;
         }else {
-            path = myConfig.VIDEO_PATH  + fileName;
-            url = myConfig.VIDEO_NGINX_PATH + fileName;
+            path = myConfig.videoPath + fileName;
+            url = myConfig.videoNginxPath + fileName;
         }
 
         //保存文件

@@ -59,14 +59,7 @@ public class AdminController {
         return MyResponse.ok(userInfoService.resetPassword(userId,password));
     }
 
-    /**
-     * 获取忘记密码的用户
-     * @return
-     */
-    @GetMapping("/getFotPasswordUser")
-    public ResponseEntity getFotPasswordUser(){
-        return MyResponse.ok(userInfoService.getFotPasswordUser());
-    }
+
 
     /**
      * 获取总用户数

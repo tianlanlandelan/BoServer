@@ -44,7 +44,7 @@ public class ExerciseService {
             return ResultData.error(Languages.NO_EXERCISE);
         }
         if(StringUtils.isNotEmpty(exercise.getImg())){
-            exercise.setImg(myConfig.NGINX_PREFIX + exercise.getImg());
+            exercise.setImg(myConfig.nginxPrefix + exercise.getImg());
         }
         return ResultData.success(exercise);
     }

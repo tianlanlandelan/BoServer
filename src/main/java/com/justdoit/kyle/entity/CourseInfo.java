@@ -25,7 +25,10 @@ public class CourseInfo extends BaseEntity {
     @FieldAttribute(value = "课程介绍里要展示的图片",length = 200)
     private String img;
 
-    @FieldAttribute(value = "课程介绍",length = 4000)
+    @FieldAttribute(value = "课程介绍的MarkDown文本,该字段在查询列表时不展示",length = 4000,detailed = true)
+    private String overviewMD;
+
+    @FieldAttribute(value = "课程介绍，该字段在查询列表时不展示",length = 4000,detailed = true)
     private String overview;
 
     @FieldAttribute("价格")
@@ -157,6 +160,14 @@ public class CourseInfo extends BaseEntity {
         this.evaluation = evaluation;
     }
 
+    public String getOverviewMD() {
+        return overviewMD;
+    }
+
+    public void setOverviewMD(String overviewMD) {
+        this.overviewMD = overviewMD;
+    }
+
     @Override
     public String toString() {
         return "CourseInfo{" +
@@ -164,6 +175,7 @@ public class CourseInfo extends BaseEntity {
                 ", title='" + title + '\'' +
                 ", subTitle='" + subTitle + '\'' +
                 ", img='" + img + '\'' +
+                ", overviewMD='" + overviewMD + '\'' +
                 ", overview='" + overview + '\'' +
                 ", price=" + price +
                 ", createTime=" + createTime +

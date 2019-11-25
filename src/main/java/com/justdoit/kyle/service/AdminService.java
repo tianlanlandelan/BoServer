@@ -6,7 +6,6 @@ import com.justdoit.kyle.mapper.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class AdminService {
     private RateMapper rateMapper;
 
     @Resource
-    private TopicInfoMapper topicInfoMapper;
+    private TopicMapper topicMapper;
 
     @Resource
     private ExerciseMapper exerciseMapper;
@@ -37,7 +36,7 @@ public class AdminService {
 
 
     private HashMap<Integer,String> getTopicTitleMap(){
-        List<TopicInfo> list = topicInfoMapper.baseSelectAll(new TopicInfo());
+        List<TopicInfo> list = topicMapper.baseSelectAll(new TopicInfo());
         HashMap<Integer,String> result = new HashMap<>();
         for(TopicInfo topicInfo:list){
             result.put(topicInfo.getId(),topicInfo.getTitle());

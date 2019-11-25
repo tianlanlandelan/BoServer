@@ -23,21 +23,15 @@ public class UserInfo extends BaseEntity {
     private Integer type;
 
     @FieldAttribute(length = 200)
-    private String firstName;
+    private String nickName;
 
-    @FieldAttribute(length = 200)
-    private String lastName;
 
     @FieldAttribute(value = "密码",length = 200)
     private String password;
 
-    @FieldAttribute(value = "学校邮箱",notNull = true,length = 200)
+    @FieldAttribute(value = "邮箱",notNull = true,length = 200)
     @IndexAttribute
     private String email;
-
-    @FieldAttribute(value = "学号",notNull = true,length = 200)
-    @IndexAttribute
-    private String sid;
 
     @FieldAttribute("头像id")
     private Integer avatarId;
@@ -74,22 +68,6 @@ public class UserInfo extends BaseEntity {
         this.type = type;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -104,14 +82,6 @@ public class UserInfo extends BaseEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getSid() {
-        return sid;
-    }
-
-    public void setSid(String sid) {
-        this.sid = sid;
     }
 
     public Integer getAvatarId() {
@@ -138,16 +108,22 @@ public class UserInfo extends BaseEntity {
         this.status = status;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
                 "id=" + id +
                 ", type=" + type +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", nickName='" + nickName + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", sid='" + sid + '\'' +
                 ", avatarId=" + avatarId +
                 ", createTime=" + createTime +
                 ", status=" + status +

@@ -23,11 +23,11 @@ public class SqlFieldReader {
 
     /**
      * 读取表名，要求类上有@TableAttribute注解
-     * @param cls 实体类型
+     * @param entity 实体对象
      * @return tableName
      */
-    public static String getTableName(Class cls){
-        TableAttribute table = (TableAttribute) cls.getAnnotation(TableAttribute.class);
+    public static <T extends BaseEntity> String getTableName(T entity){
+        TableAttribute table = entity.getClass().getAnnotation(TableAttribute.class);
         if(table == null){
             return null;
         }
@@ -38,10 +38,11 @@ public class SqlFieldReader {
      * 将所有字段名以逗号拼接起来返回
      * 从属性前的@FieldAttribute注解解析要查询的字段名
      * 当所有属性都没有@FieldAttribute注解时，解析所有属性名作为字段名
-     * @param cls 实体类型
+     * @param entity 实体对象
      * @return id,name
      */
-    public static String getFieldStr(Class cls){
+    public static <T extends BaseEntity> String getFieldStr(T entity){
+        Class cls = entity.getClass();
         Field[] fields = cls.getDeclaredFields();
         //带@FieldAttribute注解的属性名
         StringBuilder builder = new StringBuilder();
@@ -50,7 +51,17 @@ public class SqlFieldReader {
         for(Field field:fields){
             allFields.append(field.getName()).append(",");
             if(field.getAnnotation(FieldAttribute.class) != null){
-                builder.append(field.getName()).append(",");
+                FieldAttribute fieldAttribute = field.getAnnotation(FieldAttribute.class);
+                //如果查询明细字段，返回明细字段
+                if(entity.isBaseKyleDetailed()){
+                    builder.append(field.getName()).append(",");
+                //如果不查询明细字段，不返回明细字段
+                }else {
+                    if(!fieldAttribute.detailed()){
+                        builder.append(field.getName()).append(",");
+                    }
+                }
+
             }
         }
         if(builder.length() > 0){
@@ -215,12 +226,12 @@ public class SqlFieldReader {
      * 读取@IndexAttribute注解，解析索引
      *
      * 创建的数据表，含表名、数据表描述、字段名、字段描述、主键、自增主键、索引
-     * @param cls
+     * @param entity
      * @return
      */
-    public static String getCreateTableSql(Class cls){
-
-        TableAttribute table = (TableAttribute) cls.getAnnotation(TableAttribute.class);
+    public static <T extends BaseEntity> String getCreateTableSql(T entity){
+        Class cls = entity.getClass();
+        TableAttribute table =  entity.getClass().getAnnotation(TableAttribute.class);
         if(table == null){
             return null;
         }

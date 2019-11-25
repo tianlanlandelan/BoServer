@@ -1,4 +1,4 @@
-package com.justdoit.kyle.common;
+package com.justdoit.kyle.config;
 
 /**
  * @author yangkaile
@@ -6,7 +6,7 @@ package com.justdoit.kyle.common;
  */
 public class PublicConfig {
 
-    public static final String AppName = "Chat";
+    public static final String AppName = "KyleBlog";
 
     public static final int SUCCESS  = 0;
     public static final int FAILED = 1;
@@ -18,10 +18,6 @@ public class PublicConfig {
 
     public static final String SERVICE_URL = "http://127.0.0.1:8080";
 
-    /**
-     * 验证码有效期，5分钟
-     */
-    public static final int CodeValidatyTime = 5;
 
     /**
      * 通用，不做访问权限设置

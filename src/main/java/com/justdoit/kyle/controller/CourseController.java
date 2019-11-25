@@ -1,6 +1,7 @@
 package com.justdoit.kyle.controller;
 
 import com.justdoit.kyle.common.response.MyResponse;
+import com.justdoit.kyle.common.util.Base64Utils;
 import com.justdoit.kyle.common.util.RequestUtil;
 import com.justdoit.kyle.common.util.StringUtils;
 import com.justdoit.kyle.entity.CourseInfo;
@@ -25,7 +26,7 @@ public class CourseController {
     private CourseService service;
 
     @PostMapping
-    public ResponseEntity save(Integer id,String title,String subTitle,String img,String overview,Float price,Integer status){
+    public ResponseEntity save(Integer id,String title,String subTitle,String img,String overviewMD,String overview,Float price,Integer status){
         if(StringUtils.isEmpty(title,subTitle,overview)){
             return MyResponse.badRequest();
         }
@@ -35,6 +36,7 @@ public class CourseController {
         courseInfo.setSubTitle(subTitle);
         courseInfo.setImg(img);
         courseInfo.setOverview(overview);
+        courseInfo.setOverviewMD(overviewMD);
         if(price != null && price > 0){
             courseInfo.setPrice(price);
         }

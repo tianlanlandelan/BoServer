@@ -1,7 +1,7 @@
 package com.justdoit.kyle.common.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.justdoit.kyle.config.PublicConfig;
+import com.justdoit.kyle.entity.EmailLog;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -11,24 +11,60 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 /**
+ * SendEmailUtils.getSender(
+ *  myConfig.mailServerHost,
+ *  myConfig.mailServerUser,
+ *  myConfig.mailServerPassword)
+ * .sendSimpleMail("atomiclong@aliyun.com",
+ *                         "你好",
+ *                         "邮件内容");
  * @author yangkaile
  * @date 2018-09-11 14:34:03
  */
 public class SendEmailUtils {
-    private static Logger logger = LoggerFactory.getLogger(SendEmailUtils.class);
+    /**
+     * 邮件验证码标题
+     */
+    public static final String TITLE ="【From】" + PublicConfig.AppName;
+
+    public static final int TIME = 5;
 
     /**
-     * 邮件服务器地址
+     * 邮件验证码正文内容
      */
-    private static final String HOST = "smtp.qq.com";
+    public static final String RegisterBody =
+            "验证码:%1$s，用于账号： %2$s 注册，泄露有风险。"
+                    + TIME + "分钟内使用有效。";
+
+    public static final String LoginBody =
+            "验证码:%1$s，用于账号： %2$s 登录，泄露有风险。"
+                    + TIME + "分钟内使用有效。";
+
+    public static final String ResetPasswordBody =
+            "验证码:%1$s，用于账号： %2$s 找回密码，泄露有风险。"
+                    + TIME + "分钟内使用有效。";
+
     /**
-     * 发件人名称
+     * 邮件验证码长度
      */
-    private static final String USER = "guyexing@foxmail.com";
-    /**
-     * 发件人密码
-     */
-    private static final String PASSWORD = "pmjpoliwxjyadifd";
+    public static final int LENGTH = 6;
+
+
+    private  String host;
+    private  String user;
+    private  String password;
+
+    private static SendEmailUtils sender = new SendEmailUtils();
+
+    private SendEmailUtils() {
+    }
+
+    public static SendEmailUtils getSender(String host, String user, String password){
+        sender.host = host;
+        sender.user = user;
+        sender.password = password;
+        return sender;
+    }
 
     /**
      * 初始化Session
@@ -58,12 +94,13 @@ public class SendEmailUtils {
      * @param content 邮件内容
      * @throws Exception
      */
-    public static void sendSimpleMail(String toEmailAddress,String title,String content)    throws Exception {
+    public void sendSimpleMail(String toEmailAddress,String title,String content)
+            throws Exception {
         Session session = initSession();
         //创建邮件对象
         MimeMessage message = new MimeMessage(session);
         //指明邮件的发件人
-        message.setFrom(new InternetAddress(USER));
+        message.setFrom(new InternetAddress(user));
         //指明邮件的收件人
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmailAddress));
         //邮件的标题
@@ -73,7 +110,7 @@ public class SendEmailUtils {
         //返回创建好的邮件对象
         Transport transport = session.getTransport();
         //使用邮箱的用户名和密码连上邮件服务器，发送邮件时，发件人需要提交邮箱的用户名和密码给smtp服务器,用户名和密码都通过验证之后才能够正常发送邮件给收件人
-        transport.connect(HOST,USER,PASSWORD);
+        transport.connect(host,user,password);
         transport.sendMessage(message, message.getAllRecipients());
         transport.close();
     }
@@ -87,37 +124,36 @@ public class SendEmailUtils {
      * @param email 收件人邮箱
      * @return 邮件实体类EmailEntity
      */
-//    public static EmailLog sendVCode(int type, String email){
-//        String code = StringUtils.getNumbserString(ServiceConfig.EMAIL_VERIFICATIONCODE_LENGTH);
-//        EmailLog entity = new EmailLog();
-//        entity.setEmail(email);
-//        entity.setType(type);
-//        entity.setTitle(ServiceConfig.EMAIL_VERIFICATIONCODE_TITLE);
-//        String body;
-//        switch (type){
-//            case PublicConfig.RegisterType :
-//                body = String.format(ServiceConfig.RegisterBody,code,email);
-//                break;
-//            case PublicConfig.LoginType :
-//                body = String.format(ServiceConfig.LoginBody,code,email);
-//                break;
-//            case PublicConfig.ResetPasswordType :
-//                body = String.format(ServiceConfig.ResetPasswordBody,code,email);
-//                break;
-//            default:return null;
-//        }
-//        entity.setContent(body);
-//        entity.setCode(code);
-//        try {
-//            sendSimpleMail(entity.getEmail(),entity.getTitle(),entity.getContent());
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            logger.error("send sendVerificationCode error :" + e.getMessage());
-//            entity.setResult(e.getMessage());
-//            entity.setStatusCode(PublicConfig.FAILED);
-//        }
-//        return entity;
-//    }
+    public  EmailLog sendVCode(int type, String email){
+        String code = StringUtils.getNumbserString(LENGTH);
+        EmailLog entity = new EmailLog();
+        entity.setEmail(email);
+        entity.setType(type);
+        entity.setTitle(TITLE);
+        String body;
+        switch (type){
+            case PublicConfig.RegisterType :
+                body = String.format(RegisterBody,code,email);
+                break;
+            case PublicConfig.LoginType :
+                body = String.format(LoginBody,code,email);
+                break;
+            case PublicConfig.ResetPasswordType :
+                body = String.format(ResetPasswordBody,code,email);
+                break;
+            default:return null;
+        }
+        entity.setContent(body);
+        entity.setCode(code);
+        try {
+            sendSimpleMail(entity.getEmail(),entity.getTitle(),entity.getContent());
+        }catch (Exception e){
+            Console.error("send sendVerificationCode error :",e.getMessage());
+            entity.setResult(e.getMessage());
+            entity.setStatusCode(PublicConfig.FAILED);
+        }
+        return entity;
+    }
 
 
 }

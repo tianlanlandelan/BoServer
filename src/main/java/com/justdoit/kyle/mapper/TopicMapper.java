@@ -8,5 +8,5 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 @Mapper
-public interface TopicInfoMapper extends BaseMapper<TopicInfo> {
+public interface TopicMapper extends BaseMapper<TopicInfo> {
 }

@@ -13,9 +13,9 @@ import java.util.Map;
  */
 public class TypeCaster {
     /**
-     * varchar/varbinary类型，设置最大长度为65535，如果超过这个数，转换为text/blob
+     * varchar/varbinary类型，允许最大长度为65535，在这里限制：如果超过3000，转换为text/blob
      */
-    private static final int MAX = 65535;
+    private static final int MAX = 3000;
 
     /**
      * decimal类型的最大长度为65，根据平时使用的需要，设置为20，足够大多数场景使用了

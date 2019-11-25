@@ -2,6 +2,8 @@ package com.justdoit.kyle.service;
 
 import com.justdoit.kyle.config.Languages;
 import com.justdoit.kyle.common.response.ResultData;
+import com.justdoit.kyle.config.PublicConfig;
+import com.justdoit.kyle.entity.EmailLog;
 import com.justdoit.kyle.entity.Rate;
 import com.justdoit.kyle.entity.UserExercise;
 import com.justdoit.kyle.entity.UserInfo;
@@ -22,17 +24,54 @@ public class UserInfoService {
     @Resource
     UserInfoMapper userInfoMapper;
 
+    @Resource
+    EmailService emailService;
+
+
     /**
-     * 添加用户，如果同一个网站下有已注册的邮箱、学号，注册失败
+     * 发送注册验证码
+     * @param userType 用户类型
+     * @param email 邮箱
+     * @return
+     */
+    public ResultData sendRegisterCode(int userType,String email){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setType(userType);
+        userInfo.setEmail(email);
+        if(checkExist(userInfo)){
+            return ResultData.error("账号已注册，请直接登录");
+        }
+        return emailService.sendCode(PublicConfig.RegisterType,email);
+    }
+
+    public ResultData register(UserInfo userInfo,String code){
+
+        EmailLog emailLog = new EmailLog();
+        emailLog.setEmail(userInfo.getEmail());
+        emailLog.setType(PublicConfig.RegisterType);
+        emailLog.setCode(code);
+        if(emailService.checkCode(emailLog)){
+            userInfo = insert(userInfo);
+            if(userInfo == null){
+                return ResultData.error("注册失败");
+            }
+            return ResultData.success();
+        }
+        return ResultData.error("验证码错误");
+    }
+
+    /**
+     * 添加用户
      * @param userInfo
      * @return
      */
-    public ResultData insert(UserInfo userInfo){
+    public UserInfo insert(UserInfo userInfo){
+        userInfo.setType(1);
         if(checkExist(userInfo)){
-            return ResultData.error(Languages.RE_REGISTER);
+            return null;
         }
         userInfoMapper.baseInsertAndReturnKey(userInfo);
-        return ResultData.success(userInfo.getId());
+        return userInfo;
     }
 
 
@@ -73,38 +112,22 @@ public class UserInfoService {
         return list.get(0);
     }
 
-    /**
-     * 忘记密码
-     * 设置用户状态为忘记密码，等待管理员操作
-     * @param userInfo
-     * @return
-     */
-    public ResultData forgetPassword(UserInfo userInfo){
-        UserInfo user = getUserByEmailAndType(userInfo);
-        if(user == null){
-            return ResultData.error(Languages.NO_USER);
-        }
-        user.setStatus(UserInfo.FORGET_PASSWORD);
-        userInfoMapper.baseUpdateById(user);
-        return ResultData.success(Languages.NOTIFIED_ADMIN);
-    }
+
 
     /**
      * 修改用户信息，只修改名称、头像
      * @param id
-     * @param firstName
-     * @param lastName
+     * @param nickName
      * @param avatarId
      * @return
      */
-    public ResultData update(int id,String firstName,String lastName,int avatarId){
+    public ResultData update(int id,String nickName,int avatarId){
         UserInfo userInfo = new UserInfo(id);
         userInfo = userInfoMapper.baseSelectById(userInfo);
         if(userInfo == null){
             return ResultData.error(Languages.NO_USER);
         }
-        userInfo.setFirstName(firstName);
-        userInfo.setLastName(lastName);
+        userInfo.setNickName(nickName);
         userInfo.setAvatarId(avatarId);
         userInfoMapper.baseUpdateById(userInfo);
         return ResultData.success();
@@ -128,19 +151,7 @@ public class UserInfoService {
         return ResultData.success();
     }
 
-    /**
-     * 获取忘记密码的用户
-     * @return
-     */
-    public ResultData getFotPasswordUser(){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setStatus(UserInfo.FORGET_PASSWORD);
-        List<UserInfo> list = userInfoMapper.baseSelectByCondition(userInfo);
-        if(list == null || list.size() < 1){
-            return ResultData.error("暂时没有忘记密码的用户");
-        }
-        return ResultData.success(list);
-    }
+
 
     /**
      * 获取用户总数
@@ -151,28 +162,20 @@ public class UserInfoService {
     }
 
     /**
-     * 获取用户信息，需同时指定三个条件：type/email/uid
+     * 判断用户是否已存在
      * @param info
      * @return
      */
     private boolean checkExist(UserInfo info){
         UserInfo userInfo = new UserInfo();
-        userInfo.setSid(info.getSid());
         userInfo.setEmail(info.getEmail());
         userInfo.setBaseKyleUseAnd(false);
         List<UserInfo> list = userInfoMapper.baseSelectByCondition(userInfo);
         for(UserInfo user : list){
             if(user.getType().equals(info.getType())){
-                return true;
-            }
+
+            } return true;
         }
         return false;
     }
-
-    @Resource
-    private UserExerciseMapper userExerciseMapper;
-
-    @Resource
-    private RateMapper rateMapper;
-
 }

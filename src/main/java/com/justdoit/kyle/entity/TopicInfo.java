@@ -31,7 +31,10 @@ public class TopicInfo extends BaseEntity {
     @FieldAttribute(value = "课时标题",length = 200)
     private String title;
 
-    @FieldAttribute(value = "课时内容",length = 5000)
+    @FieldAttribute(value = "课时内容",length = 5000,detailed = true)
+    private String contentMD;
+
+    @FieldAttribute(value = "课时内容",length = 5000,detailed = true)
     private String content;
 
     @FieldAttribute(value = "视频地址",length = 400)
@@ -49,6 +52,12 @@ public class TopicInfo extends BaseEntity {
     @FieldAttribute("课时标签，如：练习课、实验课等")
     private String label;
 
+    public TopicInfo() {
+    }
+
+    public TopicInfo(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;
@@ -138,6 +147,14 @@ public class TopicInfo extends BaseEntity {
         this.label = label;
     }
 
+    public String getContentMD() {
+        return contentMD;
+    }
+
+    public void setContentMD(String contentMD) {
+        this.contentMD = contentMD;
+    }
+
     @Override
     public String toString() {
         return "TopicInfo{" +
@@ -146,6 +163,7 @@ public class TopicInfo extends BaseEntity {
                 ", chapterId=" + chapterId +
                 ", sort=" + sort +
                 ", title='" + title + '\'' +
+                ", contentMD='" + contentMD + '\'' +
                 ", content='" + content + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
                 ", createTime=" + createTime +

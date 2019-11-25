@@ -24,21 +24,21 @@ public class BaseDeleteProvider {
      * @param <T>
      * @return DELETE FROM router  WHERE id = #{id}
      */
-    public static <T> String deleteById(T entity){
+    public static <T extends BaseEntity> String deleteById(T entity){
         Class cls = entity.getClass();
         String className = cls.getName();
         String sql = deleteByIdMap.get(className);
         if(StringUtils.isEmpty(sql)){
-            sql = getDeletePrefix(cls) + " WHERE id = #{id} ";
+            sql = getDeletePrefix(entity) + " WHERE id = #{id} ";
             deleteByIdMap.put(className,sql);
         }
         Console.info("deleteById",sql,entity);
         return sql;
     }
 
-    public static  <T> String deleteByKey(T entity){
+    public static <T extends BaseEntity> String deleteByKey(T entity){
         try {
-            String sql =  getDeletePrefix(entity.getClass()) + SqlFieldReader.getConditionByKeySuffix(entity);
+            String sql =  getDeletePrefix(entity) + SqlFieldReader.getConditionByKeySuffix(entity);
             Console.info("deleteByKey",sql,entity);
             return sql;
         }catch (Exception e){
@@ -56,13 +56,13 @@ public class BaseDeleteProvider {
      * @return DELETE FROM router  WHERE name = #{name} AND serviceName = #{serviceName}
      */
     public static <T extends BaseEntity> String deleteByCondition(T entity){
-        String sql = getDeletePrefix(entity.getClass()) + SqlFieldReader.getConditionSuffix(entity);
+        String sql = getDeletePrefix(entity) + SqlFieldReader.getConditionSuffix(entity);
         Console.info("deleteByCondition",sql,entity);
         return sql;
     }
 
-    private static String getDeletePrefix(Class cls){
-        return "DELETE FROM " + SqlFieldReader.getTableName(cls) + " ";
+    private static <T extends BaseEntity> String getDeletePrefix(T entity){
+        return "DELETE FROM " + SqlFieldReader.getTableName(entity) + " ";
     }
 
     public static void main(String[] args){

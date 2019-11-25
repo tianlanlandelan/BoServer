@@ -23,8 +23,8 @@ public class TopicController {
 
     @PostMapping
     public ResponseEntity save(Integer id,Integer courseId,Integer chapterId,String title,
-                                    String content ,String videoUrl, Integer sort){
-        if(StringUtils.isEmpty(title) || RequestUtil.notValidInteger(courseId)){
+                                    String contentMD,String content ,String videoUrl, Integer sort){
+        if(StringUtils.isEmpty(title) || RequestUtil.notValidInteger(courseId,chapterId)){
             return MyResponse.badRequest();
         }
         TopicInfo topicInfo = new TopicInfo();
@@ -33,6 +33,7 @@ public class TopicController {
         topicInfo.setChapterId(chapterId);
         topicInfo.setSort(sort);
         topicInfo.setTitle(title);
+        topicInfo.setContentMD(contentMD);
         topicInfo.setContent(content);
         topicInfo.setVideoUrl(videoUrl);
 
@@ -72,5 +73,12 @@ public class TopicController {
             return MyResponse.badRequest();
         }
         return MyResponse.ok(service.getById(id));
+    }
+    @DeleteMapping
+    public ResponseEntity delete(Integer id){
+        if(id == null || id < 0){
+            return MyResponse.badRequest();
+        }
+        return MyResponse.ok(service.delete(id));
     }
 }

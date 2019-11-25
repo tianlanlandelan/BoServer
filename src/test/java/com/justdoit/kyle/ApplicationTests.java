@@ -1,8 +1,10 @@
 package com.justdoit.kyle;
 
-import com.justdoit.kyle.common.mybatis.annotation.TableAttribute;
 import com.justdoit.kyle.common.util.Console;
+import com.justdoit.kyle.common.util.SendEmailUtils;
 import com.justdoit.kyle.common.util.StringUtils;
+import com.justdoit.kyle.config.MyConfig;
+import com.justdoit.kyle.config.PublicConfig;
 import com.justdoit.kyle.entity.*;
 import com.justdoit.kyle.mapper.*;
 import org.junit.Test;
@@ -10,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -19,11 +22,16 @@ import java.util.Random;
 @SpringBootTest
 public class ApplicationTests {
     @Resource
+    private MyConfig myConfig;
+
+    @Resource
     private AppConfigMapper appConfigMapper;
     @Resource
     private ChapterMapper chapterMapper;
     @Resource
     private CourseMapper courseMapper;
+    @Resource
+    private EmailMapper emailMapper;
     @Resource
     private ExamExerciseMapper examExerciseMapper;
     @Resource
@@ -35,7 +43,9 @@ public class ApplicationTests {
     @Resource
     private SeriesMapper seriesMapper;
     @Resource
-    private TopicInfoMapper topicInfoMapper;
+    private TopicMapper topicMapper;
+    @Resource
+    private TopicDiscussionMapper topicDiscussionMapper;
     @Resource
     private UserExamMapper userExamMapper;
     @Resource
@@ -74,11 +84,20 @@ public class ApplicationTests {
         createSeriesTable();
         createSeriesCourseTable();
         createTopicInfoTable();
+        createTopicDiscussionTable();
         createUserExamTable();
         createUserExerciseTable();
         createUserInfoTable();
     }
 
+    @Test
+    public void createEmailTable(){
+        emailMapper.baseCreate(new EmailLog());
+    }
+    @Test
+    public void createTopicDiscussionTable(){
+        topicDiscussionMapper.baseCreate(new TopicDiscussion());
+    }
     @Test
     public void createSeriesCourseTable(){
         seriesCourseMapper.baseCreate(new SeriesCourse());
@@ -111,7 +130,7 @@ public class ApplicationTests {
 
     @Test
     public void createTopicInfoTable(){
-        topicInfoMapper.baseCreate(new TopicInfo());
+        topicMapper.baseCreate(new TopicInfo());
     }
 
     @Test
@@ -139,7 +158,6 @@ public class ApplicationTests {
         UserInfo userInfo = new UserInfo();
         userInfo.setType(1);
         userInfo.setEmail("a@a.edu");
-        userInfo.setSid("u100");
         userInfo.setPassword("123456");
         try{
             userInfoMapper.baseInsertAndReturnKey(userInfo);
@@ -149,19 +167,7 @@ public class ApplicationTests {
 
         Console.print("userInfo",userInfo.getId(),userInfo);
     }
-    @Test
-    public void updateUserInfo(){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setId(1);
-        userInfo = userInfoMapper.baseSelectById(userInfo);
-        Console.print("更新前",userInfo);
-        userInfo.setFirstName("FirstName");
-        userInfo.setLastName("LastName");
-        userInfo.setAvatarId(1);
-        userInfoMapper.baseUpdateById(userInfo);
-        userInfo = userInfoMapper.baseSelectById(userInfo);
-        Console.print("更新后",userInfo);
-    }
+
     @Test
     public void getUserInfo(){
         UserInfo userInfo = new UserInfo();
@@ -179,11 +185,29 @@ public class ApplicationTests {
             UserInfo userInfo = new UserInfo();
             userInfo.setType(1);
             userInfo.setEmail(StringUtils.getAllCharString(10));
-            userInfo.setSid(StringUtils.getAllCharString(10));
             userInfo.setPassword("123456");
             userInfo.setAvatarId(new Random().nextInt(10) + 1);
-            userInfo.setFirstName("Test"+i);
-            userInfo.setLastName(StringUtils.getAllCharString(4));
+            userInfo.setNickName("Test"+i);
+            userInfoMapper.baseInsertAndReturnKey(userInfo);
         }
+    }
+
+
+    @Test
+    public void sendEmail() throws Exception{
+        Console.println("",myConfig.mailServerUser);
+        SendEmailUtils.getSender(myConfig.mailServerHost,myConfig.mailServerUser,myConfig.mailServerPassword)
+                .sendSimpleMail("atomiclong@aliyun.com",
+                        "你好",
+                        "邮件内容");
+
+    }
+
+    @Test
+    public void sendRegisterCode() throws Exception{
+        Console.println("",myConfig.mailServerUser);
+        EmailLog emailLog = SendEmailUtils.getSender(myConfig.mailServerHost,myConfig.mailServerUser,myConfig.mailServerPassword)
+                .sendVCode(PublicConfig.RegisterType,"atomiclong@aliyun.com");
+        Console.println("emailLog",emailLog);
     }
 }

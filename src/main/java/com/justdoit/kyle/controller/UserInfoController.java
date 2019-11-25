@@ -24,18 +24,17 @@ public class UserInfoController {
     /**
      * 修改用户信息，可修改昵称、头像
      * @param id
-     * @param firstName
-     * @param lastName
+     * @param nickName
      * @param avatarId
      * @return
      */
     @PutMapping
-    public ResponseEntity update(Integer id,String firstName,String lastName,Integer avatarId){
-        Console.print("update",id,firstName,lastName,avatarId);
-        if(id == null || avatarId == null || StringUtils.isEmpty(firstName,lastName)){
+    public ResponseEntity update(Integer id,String nickName,Integer avatarId){
+
+        if(id == null || avatarId == null || StringUtils.isEmpty(nickName)){
             return MyResponse.badRequest();
         }
-        return MyResponse.ok(userInfoService.update(id,firstName,lastName,avatarId));
+        return MyResponse.ok(userInfoService.update(id,nickName,avatarId));
     }
 
 }

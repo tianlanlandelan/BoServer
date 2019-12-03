@@ -51,9 +51,9 @@ public class UserInfoService {
             if(userInfo == null){
                 return ResultData.error("注册失败");
             }
-            return ResultData.success();
+            return ResultData.success(userInfo.getId());
         }
-        return ResultData.error("验证码错误");
+        return ResultData.error("验证码错误或已过期,请重新获取");
     }
 
     /**
@@ -62,7 +62,6 @@ public class UserInfoService {
      * @return
      */
     public UserInfo insert(UserInfo userInfo){
-        userInfo.setType(1);
         if(checkExist(userInfo)){
             return null;
         }

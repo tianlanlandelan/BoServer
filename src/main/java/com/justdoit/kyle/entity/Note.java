@@ -9,7 +9,7 @@ import java.util.Date;
  * @author yangkaile
  * @date 2019-10-15 15:06:32
  */
-@TableAttribute(name = "topic_info",comment = "笔记")
+@TableAttribute(name = "note_info",comment = "笔记")
 public class Note extends BaseEntity {
 
     @FieldAttribute

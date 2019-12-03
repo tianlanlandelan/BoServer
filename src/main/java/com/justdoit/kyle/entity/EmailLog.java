@@ -44,7 +44,7 @@ public class EmailLog extends BaseEntity {
     @FieldAttribute("验证码")
      private String code;
 
-    @FieldAttribute("发送结果描述，如：发送失败的原因等")
+    @FieldAttribute(value = "发送结果描述，如：发送失败的原因等",length = 500)
      private String result;
     /**
      * 状态码

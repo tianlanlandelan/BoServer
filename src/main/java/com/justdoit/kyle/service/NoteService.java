@@ -32,6 +32,11 @@ public class NoteService {
     @Resource
     private NotesService notesService;
 
+
+    public static final String TITLE = "title";
+    public static final String CONTENT = "content";
+    public static final String CONTENT_MD = "contentMD";
+
     /**
      * 保存笔记，有则更新，无则添加
      * @param note
@@ -54,18 +59,18 @@ public class NoteService {
     }
 
     /**
-     *
+     * 获取笔记列表
      * @param notesId 笔记本id
      * @return List<ChapterNote>
      */
     public ResultData getByNotesId(int notesId){
         Note info = new Note();
         info.setNotesId(notesId);
-        //获取课时列表，不获取课时明细（课时内容），因为课时内容字段可能较大，且在列表中不展示
+        //不获取笔记内容，因为内容字段可能较大，且在列表中不展示
         info.setBaseKyleDetailed(false);
-        //获取课程列表
+        //获取笔记列表
         List<Note> list = mapper.baseSelectByCondition(info);
-        //获取章节列表
+        //获取目录列表
         List<Chapter> chapterList = chapterService.getListByNotesId(notesId);
 
         List<ChapterNote> result = new ArrayList<>();
@@ -115,6 +120,52 @@ public class NoteService {
         mapper.baseUpdateById(result);
         return ResultData.success();
     }
+
+    /**
+     *
+     * @param id
+     * @param name
+     * @param value
+     * @return
+     */
+    public ResultData setField(int id,String name,String value){
+        Note result = mapper.baseSelectById(new Note(id));
+        if(result == null){
+            return ResultData.error(Languages.NO_TOPIC);
+        }
+        if(TITLE.equals(name)){
+            result.setTitle(value);
+        }else if(CONTENT_MD.equals(name)){
+            result.setContentMD(value);
+        }else if(CONTENT.equals(name)){
+            result.setContent(value);
+        }else {
+            return ResultData.error("参数异常");
+        }
+        mapper.baseUpdateById(result);
+        return ResultData.success();
+    }
+
+    /**
+     * 获取字段值，因为笔记内容可能比较大，添加单独的获取笔记内容的方法
+     * @param id
+     * @param name
+     * @return
+     */
+    public ResultData getField(int id,String name){
+        Note result = mapper.baseSelectById(new Note(id));
+        if(result == null){
+            return ResultData.error(Languages.NO_TOPIC);
+        }
+        if(CONTENT_MD.equals(name)){
+            return ResultData.success(result.getContentMD());
+        }
+        if(CONTENT.equals(name)){
+            return ResultData.success(result.getContent());
+        }
+        return ResultData.error("参数异常");
+    }
+
 
     public ResultData getById(int id){
         Note note = new Note(id);

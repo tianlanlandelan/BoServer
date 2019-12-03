@@ -146,10 +146,7 @@ public class RequestUtil {
         if(type == null){
             return false;
         }
-        if(type >= 1 && type <= 6){
-            return true;
-        }
-        if(type == 99){
+        if(type == 0 || type == 99){
             return true;
         }
         return false;

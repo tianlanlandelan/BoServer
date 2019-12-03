@@ -41,18 +41,23 @@ public class EmailService {
     }
 
     public boolean checkCode(EmailLog emailLog){
-        EmailLog result = new EmailLog();
         emailLog.setEmail(emailLog.getEmail());
         emailLog.setBaseKyleUseASC(false);
-        List<EmailLog> list = mapper.baseSelectByCondition(result);
+        List<EmailLog> list = mapper.baseSelectByCondition(emailLog);
         if(list == null || list.size() <= 0){
             return false;
         }
-        result = list.get(0);
+        EmailLog result = list.get(0);
         if(result.isEfficientVerificationCode() &&
                 result.equalsCode(emailLog)){
+            setCodeUsed(result);
             return true;
         }
         return false;
+    }
+
+    private void setCodeUsed(EmailLog emailLog){
+        emailLog.setIsUsed(1);
+        mapper.baseUpdateById(emailLog);
     }
 }

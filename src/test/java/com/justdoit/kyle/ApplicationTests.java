@@ -50,7 +50,7 @@ public class ApplicationTests {
     public void contextLoads() {
     }
     @Test
-    public void createCourseTable(){
+    public void createNotesTable(){
         notesMapper.baseCreate(new Notes());
     }
 
@@ -58,9 +58,9 @@ public class ApplicationTests {
     public void createTable(){
         createAppConfigTable();
         createChapterTable();
-        createCourseTable();
+        createNotesTable();
         createEmailTable();
-        createTopicInfoTable();
+        createNoteTable();
         createUserInfoTable();
     }
 
@@ -83,7 +83,7 @@ public class ApplicationTests {
 
 
     @Test
-    public void createTopicInfoTable(){
+    public void createNoteTable(){
         noteMapper.baseCreate(new Note());
     }
 

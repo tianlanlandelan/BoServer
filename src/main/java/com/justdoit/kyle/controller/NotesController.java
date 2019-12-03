@@ -4,6 +4,7 @@ import com.justdoit.kyle.common.response.MyResponse;
 import com.justdoit.kyle.common.util.RequestUtil;
 import com.justdoit.kyle.common.util.StringUtils;
 import com.justdoit.kyle.entity.Notes;
+import com.justdoit.kyle.mapper.ChapterMapper;
 import com.justdoit.kyle.service.NotesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,9 +43,12 @@ public class NotesController {
         notes.setSubTitle(subTitle);
         return MyResponse.ok(service.save(notes));
     }
-    @GetMapping("/getAll")
-    public ResponseEntity getAll(){
-        return MyResponse.ok(service.getAll());
+    @GetMapping("/getList")
+    public ResponseEntity getList(Integer userId){
+        if(RequestUtil.validInteger(userId)){
+            return MyResponse.ok(service.getListByUserId(userId));
+        }
+        return MyResponse.badRequest();
     }
     @GetMapping
     public ResponseEntity get(Integer id){

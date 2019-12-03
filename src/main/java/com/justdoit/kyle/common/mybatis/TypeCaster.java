@@ -18,6 +18,14 @@ public class TypeCaster {
     private static final int MAX = 3000;
 
     /**
+     * TINYTEXT 	256 bytes
+     * TEXT 	65,535 bytes 	~64kb
+     * MEDIUMTEXT 	 16,777,215 bytes 	~16MB
+     * LONGTEXT 	4,294,967,295 bytes 	~4GB
+     */
+    private static final int TEXT_MAX = 65535;
+
+    /**
      * decimal类型的最大长度为65，根据平时使用的需要，设置为20，足够大多数场景使用了
      */
     private static final int DECIMAL_MAX = 20;
@@ -70,7 +78,13 @@ public class TypeCaster {
             if(length < MAX){
                 return "varchar(" + length + ")";
             }
-            return "text";
+            if(length < TEXT_MAX){
+                return "text";
+            }
+
+            return "mediumtext";
+
+
         }
 
         //byte[] 根据长度，转换为 varbinary 或 blob

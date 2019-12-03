@@ -1,7 +1,9 @@
 package com.justdoit.kyle.service;
 
 import com.justdoit.kyle.common.response.ResultData;
+import com.justdoit.kyle.entity.Chapter;
 import com.justdoit.kyle.entity.Notes;
+import com.justdoit.kyle.mapper.ChapterMapper;
 import com.justdoit.kyle.mapper.NotesMapper;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,8 @@ public class NotesService {
     @Resource
     private NotesMapper mapper;
 
-
+    @Resource
+    private ChapterMapper chapterMapper;
 
     /**
      * 保存课程，如果有课程id，则更新，否则新增
@@ -27,22 +30,42 @@ public class NotesService {
      */
     public ResultData save(Notes notes){
         if(notes.getId() <= 0){
-            notes.setId(0);
-            mapper.baseInsertAndReturnKey(notes);
+            insert(notes);
         }else{
             Notes result = mapper.baseSelectById(notes);
             if(result == null){
-                return ResultData.error("没有找到指定课程");
+                return ResultData.error("没有找到指定笔记本");
             }
             mapper.baseUpdateById(notes);
         }
 
          return ResultData.success(notes.getId());
     }
-    public ResultData getAll(){
+
+    private Notes insert(Notes notes){
+        mapper.baseInsertAndReturnKey(notes);
+        Chapter chapter = new Chapter(notes.getId(),"默认目录");
+        chapterMapper.baseInsertAndReturnKey(chapter);
+        return notes;
+    }
+
+
+    /**
+     * 获取用户的笔记本，如果没有，新建一个笔记本
+     * @param userId
+     * @return
+     */
+    public ResultData getListByUserId(int userId){
         Notes notes = new Notes();
-        notes.setBaseKyleDetailed(false);
-        List<Notes> list = mapper.baseSelectAll(notes);
+        notes.setUserId(userId);
+        List<Notes> list = mapper.baseSelectByCondition(notes);
+        //新建笔记本
+        if(list == null || list.size() < 1){
+            notes = new Notes(userId,"默认笔记本");
+            notes.setSubTitle("系统默认的笔记本");
+            notes = insert(notes);
+            list.add(notes);
+        }
         return ResultData.success(list);
     }
     public ResultData getById(int id){
